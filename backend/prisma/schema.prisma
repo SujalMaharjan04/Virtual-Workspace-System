@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+
+enum Role {
+  admin
+  employee
+}
+
+enum Status {
+  offline
+  online
+}
+
+model User {
+  user_id    BigInt   @id @unique @default(autoincrement())
+  name       String
+  email      String   @db.VarChar
+  password   String
+  role       Role     @default(employee)
+  status     Status   @default(offline)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+}
