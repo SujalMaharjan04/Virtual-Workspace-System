@@ -20,11 +20,40 @@ enum Status {
 }
 
 model User {
-  user_id    BigInt   @id @unique @default(autoincrement())
+  user_id    String   @id @unique @default(uuid())
   name       String
-  email      String   @db.VarChar
+  email      String   @unique @db.VarChar
   password   String
   role       Role     @default(employee)
   status     Status   @default(offline)
+
+  tasksCreated  Task[]  @relation("TaskCreator")
+  tasksAssigned Task[]  @relation("TaskAssignee")
+
   created_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model Room {
+  room_id   String  @id @unique @default(uuid())
+  room_name String  
+  room_password String
+  max_capacity  Int @default(10)
+
+  tasks   Task[]
+}
+
+model Task {
+  task_id   String  @id @unique @default(uuid())
+
+  // Link to Room
+  room_id   String
+  room      Room    @relation( fields: [room_id], references: [room_id])
+  
+  // Assigned to User
+  assigned_to   String
+  assignee  User  @relation( "TaskAssignee" , fields: [assigned_to], references: [user_id])
+
+  // Created By User
+  created_by  String
+  creator User  @relation("TaskCreator", fields: [created_by], references: [user_id])
 }
