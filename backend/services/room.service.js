@@ -52,7 +52,7 @@ const joinRoom = async({id, password}) => {
 
         const payload = {id, name: room.room_name}
 
-        const token = jwt.sign(payload, process.env.SECRET, {expiresIn: "1D"})
+        const token = jwt.sign(payload, config.SECRET, {expiresIn: "1D"})
 
         return token
     }

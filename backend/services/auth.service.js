@@ -34,7 +34,7 @@ const loginService = async({email, password}) => {
 
         const payload = {id: user.user_id, email: user.email}
 
-        const token = jwt.sign(payload, process.env.SECRET, {expiresIn: "1d"})
+        const token = jwt.sign(payload, config.SECRET, {expiresIn: "1d"})
 
         return token
     }

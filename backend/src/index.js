@@ -1,4 +1,5 @@
 const app = require("./app")
+const config = require('../utils/config')
 const http = require('http')
 const { Server } = require('socket.io')
 
@@ -13,6 +14,6 @@ app.get("/", (req, res) => {
     res.send("<h1>Hello</h1>")
 })
 
-server.listen(3001, () => {
+server.listen(config.PORT, () => {
     console.log("server running on port 3001")
 })
