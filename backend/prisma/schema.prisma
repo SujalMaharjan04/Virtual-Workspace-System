@@ -34,7 +34,7 @@ model User {
 }
 
 model Room {
-  room_id   String  @id @unique @default(uuid())
+  room_id   String  @id 
   room_name String  
   room_password String
   max_capacity  Int @default(10)
