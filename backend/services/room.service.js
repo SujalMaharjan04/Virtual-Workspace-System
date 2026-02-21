@@ -1,4 +1,4 @@
-require('dotenv').config()
+const config = require("../utils/config")
 const bcrypt = require('bcrypt')
 const prisma = require("../src/db")
 const jwt = require('jsonwebtoken')
@@ -50,7 +50,7 @@ const joinRoom = async({id, password}) => {
 
         if (!passwordCheck) throw new Error('Password incorrect')
 
-        const payload = {id, name: room.room_name}
+        const payload = {userId: id, roomId: room.room_id}
 
         const token = jwt.sign(payload, config.SECRET, {expiresIn: "1D"})
 
