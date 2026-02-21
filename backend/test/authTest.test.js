@@ -2,7 +2,7 @@ require('dotenv').config()
 const supertest = require('supertest')
 const prisma = require('../src/db')
 const assert = require('node:assert')
-const {beforeEach, after, describe, test, before} = require('node:test')
+const {beforeEach, after, describe, test} = require('node:test')
 const app = require('../src/app')
 const api = supertest(app)
 const helper = require('./test_helper')
@@ -45,14 +45,13 @@ describe("Test for auth controller", () => {
         }
 
         await api.post("/api/auth/signup").send(userSignUp).expect(201).expect("Content-type", /application\/json/)
-
+        
         const user = {
             email: "ram@gmail.com",
             password: "123456"
         }
 
         const response = await api.post("/api/auth/login").send(user).expect(201).expect("Content-type", /application\/json/)
-
         assert(response.body.token)
     })
 })
