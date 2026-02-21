@@ -1,4 +1,4 @@
-require('dotenv').config()
+const config = require("../utils/config")
 const { PrismaClient } = require("@prisma/client")
 const { PrismaPg } = require("@prisma/adapter-pg")
 
