@@ -1,17 +1,15 @@
 const app = require("./app")
 const config = require('../utils/config')
 const http = require('http')
-const { Server } = require('socket.io')
+
+const { initializeSocket } = require("../sockets/socket")
 
 const server = http.createServer(app)
-const io = new Server(server)
+initializeSocket(server)
 
-io.on("connection", (socket) => {
-    console.log("you have connected to websocket", socket.id)
-})
 
 app.get("/", (req, res) => {
-    res.send("<h1>Hello</h1>")
+    res.sendFile("/public/index.html")
 })
 
 server.listen(config.PORT, () => {
