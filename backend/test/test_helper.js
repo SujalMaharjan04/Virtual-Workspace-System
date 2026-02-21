@@ -5,4 +5,9 @@ const usersInDb = async() => {
     return user.map(u => u)
 }
 
-module.exports = {usersInDb}
+const roomInDb = async() => {
+    const room = await prisma.room.findMany({})
+    return room.map(r => r)
+}
+
+module.exports = {usersInDb, roomInDb}
