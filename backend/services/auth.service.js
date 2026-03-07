@@ -27,13 +27,13 @@ const loginService = async({email, password}) => {
     try {
         const user = await prisma.user.findUnique({where: {email}})
 
-        if (!user) return res.status(404).json({error: "Incorrect credentials"})
+        if (!user) throw new Error("Incorrect Credentials")
 
         const passwordCheck = await bcrypt.compare(password, user.password)
 
-        if (!passwordCheck) return res.status(401).json({error: "Incorrect Password"})
+        if (!passwordCheck) throw new Error("Incorrect Password")
 
-        const payload = {id: user.user_id, email: user.email}
+        const payload = {userId: user.user_id, email: user.email}
 
         const token = jwt.sign(payload, config.SECRET, {expiresIn: "1d"})
 
