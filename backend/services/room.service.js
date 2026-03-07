@@ -38,10 +38,10 @@ const createRoom = async({name, password}) => {
     }
 }
 
-const joinRoom = async({id, password}) => {
+const joinRoom = async({roomId, password, userId}) => {
     try {
         const room = await prisma.room.findUnique({
-            where: {room_id: id}
+            where: {room_id: roomId}
         })
 
         if (!room) throw new Error("No Room with that id found")
@@ -50,7 +50,7 @@ const joinRoom = async({id, password}) => {
 
         if (!passwordCheck) throw new Error('Password incorrect')
 
-        const payload = {userId: id, roomId: room.room_id}
+        const payload = {userId: userId, roomId: room.room_id}
 
         const token = jwt.sign(payload, config.SECRET, {expiresIn: "1D"})
 
