@@ -1,4 +1,6 @@
+
 const roomService = require("../services/room.service")
+
 
 
 const createRoom = async(req, res) => {
@@ -29,15 +31,16 @@ const createRoom = async(req, res) => {
 
 const joinRoom = async(req, res) => {
     try {
-        const {id, password} = req.body
-
-        if (!id || !password) {
+        const {roomId, password} = req.body
+        const {userId} = req.user
+        
+        if (!roomId || !password) {
             return res.status(400).json({error: "Id and Password should be given"})
         }
 
-        const room = await roomService.joinRoom({id, password})
+        const room = await roomService.joinRoom({roomId, password, userId})
 
-        res.status(200).json(room)
+        res.status(200).json({token: room})
 
     }
 
