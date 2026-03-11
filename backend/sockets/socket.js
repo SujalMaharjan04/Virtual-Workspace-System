@@ -19,7 +19,6 @@ const initializeServer = (server) => {
 
         try {
             const decoded = jwt.verify(token, config.SECRET)
-        
             if (!decoded.roomId) {
                 return next(new Error("Authentication Error: No Room ID"))
             }
@@ -31,6 +30,7 @@ const initializeServer = (server) => {
 
             socket.userId = decoded.userId
             socket.roomId = decoded.roomId
+            socket.userName = decoded.userName
             
             next()
         }
@@ -41,14 +41,24 @@ const initializeServer = (server) => {
     })
 
     io.on("connection", (socket) => {
-        console.log(`User ${socket.userId} has connected to room ${socket.roomId}`)
+        console.log(`User ${socket.userName} has connected to room ${socket.roomId}`)
         socket.join(socket.roomId)
 
         socket.to(socket.roomId).emit("user-joined", {
             userId: socket.userId,
-            message: "A new user has joined the room"
+            message: `${socket.userName} has joined the room`
+        })
+
+        socket.emit("joined-room", {roomId: socket.roomId, message: "Succesfully joined"})
+    })
+
+    io.on("disconnect", () => {
+        socket.to(socket.roomId).emit("user-left", {
+            userId: socket.userId,
+            message: `${socket.userName} has left the room`
         })
     })
+
     return io;
 }
 
