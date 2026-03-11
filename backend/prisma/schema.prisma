@@ -30,6 +30,8 @@ model User {
   tasksCreated  Task[]  @relation("TaskCreator")
   tasksAssigned Task[]  @relation("TaskAssignee")
 
+  room_members   room_members[]
+
   created_at DateTime @default(now()) @db.Timestamptz(6)
 }
 
@@ -40,6 +42,7 @@ model Room {
   max_capacity  Int @default(10)
 
   tasks   Task[]
+  room_members  room_members[]
 }
 
 model Task {
@@ -56,4 +59,21 @@ model Task {
   // Created By User
   created_by  String
   creator User  @relation("TaskCreator", fields: [created_by], references: [user_id])
+}
+
+model room_members {
+  
+  //Link to Room
+  room_id String
+  room    Room  @relation( fields: [room_id], references: [room_id])
+
+  //Assigned to User
+  user_id   String
+  user      User    @relation(fields: [user_id], references: [user_id])
+
+  joined_at   DateTime    @default(now())
+  is_active   Boolean     @default(true)
+
+  @@id([room_id, user_id])
+  @@unique([room_id, user_id])
 }
