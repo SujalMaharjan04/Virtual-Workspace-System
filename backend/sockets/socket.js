@@ -31,12 +31,13 @@ const initializeServer = (server) => {
 
             socket.userId = decoded.userId
             socket.roomId = decoded.roomId
-
+            
             next()
         }
         catch (error) {
             next(new Error("Invalid Token" + error.message))
         }
+
     })
 
     io.on("connection", (socket) => {
@@ -48,8 +49,14 @@ const initializeServer = (server) => {
             message: "A new user has joined the room"
         })
     })
+    return io;
+}
 
 
+const getIO = () => {
+    if (!io) throw new Error("Socket.io not initialized")
+
+    return io
 }
 
 module.exports = {initializeServer}
