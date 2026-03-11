@@ -32,8 +32,8 @@ const loginService = async({email, password}) => {
         const passwordCheck = await bcrypt.compare(password, user.password)
 
         if (!passwordCheck) throw new Error("Incorrect Password")
-
-        const payload = {userId: user.user_id, email: user.email}
+        
+        const payload = {userId: user.user_id, email: user.email, userName: user.name}
 
         const token = jwt.sign(payload, config.SECRET, {expiresIn: "1d"})
 
