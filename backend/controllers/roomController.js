@@ -32,13 +32,14 @@ const createRoom = async(req, res) => {
 const joinRoom = async(req, res) => {
     try {
         const {roomId, password} = req.body
-        const {userId} = req.user
+        const {userId, userName} = req.user
+        
         
         if (!roomId || !password) {
             return res.status(400).json({error: "Id and Password should be given"})
         }
 
-        const room = await roomService.joinRoom({roomId, password, userId})
+        const room = await roomService.joinRoom({roomId, password, userId, userName})
 
         res.status(200).json({token: room})
 
