@@ -72,7 +72,7 @@ model room_members {
   user      User    @relation(fields: [user_id], references: [user_id])
 
   joined_at   DateTime    @default(now())
-  is_active   Boolean     @default(true)
+  is_active   Boolean     @default(false)
 
   @@id([room_id, user_id])
   @@unique([room_id, user_id])
