@@ -1,5 +1,5 @@
-const roomController = require("../controllers/roomController")
-const { userExtractor } = require("../utils/middleware")
+const roomController = require("./roomController")
+const { userExtractor } = require("../../utils/middleware")
 const roomRouter = require("express").Router()
 
 //Route for creating a room
