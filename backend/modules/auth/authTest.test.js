@@ -3,12 +3,13 @@ const supertest = require('supertest')
 const prisma = require('../../src/db')
 const assert = require('node:assert')
 const {beforeEach, after, describe, test} = require('node:test')
-const app = require('../../src/app')
+const {app} = require('../../src/app')
 const api = supertest(app)
 const helper = require('../../test/test_helper')
 
 describe("Test for auth controller", () => {
     beforeEach(async() => {
+        await prisma.room_members.deleteMany({})
         await prisma.user.deleteMany({})
     })
 
@@ -18,6 +19,7 @@ describe("Test for auth controller", () => {
 
     test("signUp test", async() => {
         const usersAtStart = await helper.usersInDb()
+        
         const userInfo = {
             name: "Ram",
             email: "ram@gmail.com",
