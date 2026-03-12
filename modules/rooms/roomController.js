@@ -1,5 +1,5 @@
 
-const roomService = require("../services/room.service")
+const roomService = require("../../modules/rooms/room.service")
 
 
 

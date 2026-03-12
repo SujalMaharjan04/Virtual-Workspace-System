@@ -76,6 +76,15 @@ const initializeServer = (server) => {
 
         socket.emit("joined-room", {roomId: socket.roomId, message: "Succesfully joined"})
 
+        socket.on("message", (data) => {
+            socket.to(socket.roomId).emit("message", {
+                userId: socket.userId,
+                userName: socket.userName,
+                message: data.message,
+                timestamp: new Date()
+            })
+        })
+
         socket.on("disconnect", async() => {
             socket.to(socket.roomId).emit("user-left", {
                 userId: socket.userId,
@@ -113,4 +122,4 @@ const getIO = () => {
     return io
 }
 
-module.exports = {initializeServer}
+module.exports = {initializeServer, getIO}

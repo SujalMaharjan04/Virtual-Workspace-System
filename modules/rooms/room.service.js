@@ -1,6 +1,6 @@
-const config = require("../utils/config")
+const config = require("../../backend/utils/config")
 const bcrypt = require('bcrypt')
-const prisma = require("../src/db")
+const prisma = require("../../backend/src/db")
 const jwt = require('jsonwebtoken')
 
 const generateRoomId = () => {
