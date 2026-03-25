@@ -5,11 +5,30 @@ const registerRoomHandler = async(io, socket) => {
     const userId = socket.userId
     const roomId = socket.roomId
 
-    console.log(`User ${socket.userName} has connected to room ${socket.roomId}`)
-        socket.join(socket.roomId)
+    const room = await prisma.room.findUnique({
+        where: {room_id: roomId}
+    })
+
+    if (room.created_by === userId) {
+        await prisma.room.update({
+            where: {room_id: roomId},
+            data: {is_active: true}
+        })
+
+        socket.emit(ROOM_EVENTS.ADMIN_JOINED, {message: "Room is now active"})
+    } else {
+        if (!room.is_active) {
+            socket.emit(ROOM_EVENTS.INACTIVE, {message: "Room is not active yet, waiting for admin"})
+            socket.disconnect()
+            return 
+        }
+    }
+
+    console.log(`User ${socket.userName} has connected to room ${roomId}`)
+        socket.join(roomId)
 
         socket.to(socket.roomId).emit(ROOM_EVENTS.JOIN, {
-            userId: socket.userId,
+            userId,
             message: `${socket.userName} has joined the room`
         })
 
@@ -35,7 +54,7 @@ const registerRoomHandler = async(io, socket) => {
             console.log("update failed", err.message)
         }
 
-        socket.emit(ROOM_EVENTS.USER_JOINED, {roomId: socket.roomId, message: "Succesfully joined"})
+        socket.emit(ROOM_EVENTS.USER_JOINED, {roomId, message: "Succesfully joined"})
 
         // socket.on("message", (data) => {
         //     socket.to(socket.roomId).emit("message", {
@@ -47,8 +66,8 @@ const registerRoomHandler = async(io, socket) => {
         // })
 
         socket.on("disconnect", async() => {
-            socket.to(socket.roomId).emit(ROOM_EVENTS.USER_LEFT, {
-                userId: socket.userId,
+            socket.to(roomId).emit(ROOM_EVENTS.USER_LEFT, {
+                userId,
                 message: `${socket.userName} has left the room`
             })
 
@@ -56,14 +75,25 @@ const registerRoomHandler = async(io, socket) => {
                 await prisma.room_members.update({
                     where: {
                         room_id_user_id: {
-                            room_id: socket.roomId,
-                            user_id: socket.userId
+                            room_id: roomId,
+                            user_id: userId
                         }
                     },
                     data: {
                         is_active: false
                     }
                 })
+
+                const activeMember = await prisma.room_members.count({
+                    where: {room_id: roomId, is_active: true}
+                })
+
+                if (activeMember === 0) {
+                    await prisma.room.update({
+                        where: {room_id: roomId},
+                        data: {is_active: false}
+                    })
+                }
             }
             catch (err) {
                 console.log("update failed ", err.message)
