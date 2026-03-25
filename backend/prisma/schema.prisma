@@ -40,6 +40,7 @@ model Room {
   room_name String  
   room_password String
   max_capacity  Int @default(10)
+  is_active   Boolean     @default(true)
 
   tasks   Task[]
   room_members  room_members[]
