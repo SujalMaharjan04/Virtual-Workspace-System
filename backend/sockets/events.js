@@ -1,4 +1,6 @@
 const ROOM_EVENTS = {
+    ADMIN_JOINED: "room:admin_joined",
+    INACTIVE: "room:inactive",
     JOIN: "room:join",
     LEAVE: "room:leave",
     JOINED: "room:joined",
