@@ -31,7 +31,10 @@ model User {
   tasksAssigned Task[]  @relation("TaskAssignee")
 
   room_members   room_members[]
+  sent_message    messages[]    @relation("MessageSender")
+  received_message  messages[]  @relation("MessageReceiver")
 
+  createdRoom   Room[]    @relation("RoomAdmin")
   created_at DateTime @default(now()) @db.Timestamptz(6)
 }
 
@@ -41,9 +44,13 @@ model Room {
   room_password String
   max_capacity  Int @default(10)
   is_active   Boolean     @default(true)
+  
+  created_by  String
+  admin   User    @relation("RoomAdmin", fields: [created_by], references: [user_id])
 
   tasks   Task[]
   room_members  room_members[]
+  messages  messages[]
 }
 
 model Task {
@@ -77,4 +84,24 @@ model room_members {
 
   @@id([room_id, user_id])
   @@unique([room_id, user_id])
+}
+
+model messages {
+  message_id  String  @id  @default(uuid())
+  message String
+
+  //Sent By
+  sent_by   String
+  sender    User    @relation("MessageSender", fields: [sent_by], references: [user_id])
+
+  //Which room the message is sent
+  room_id   String
+  room    Room    @relation(fields: [room_id], references: [room_id], onDelete: Cascade)
+
+  //Sent to
+  sent_to   String?
+  receiver    User?    @relation("MessageReceiver", fields: [sent_to], references: [user_id])
+
+  //Date
+  sent_at   DateTime  @default(now())  
 }
