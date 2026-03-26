@@ -27,4 +27,28 @@ const userExtractor = (req, res, next) => {
     }
 }
 
-module.exports = {userExtractor}
+const roomExtractor = (req, res, next) => {
+    const roomAuth = req.get("room-authorization")
+    if (roomAuth && roomAuth.includes("Bearer")) {
+        req.roomToken = roomAuth.substring(7)
+    } else {
+        req.roomToken = null
+        next()
+    }
+
+    try {
+        const decodedRoom = jwt.verify(req.roomToken, config.SECRET)
+        if (!decodedRoom.roomId) {
+            return res.status(401).json({error: "Invalid Token"})
+        }
+
+        req.room = decodedRoom
+        next()
+    }
+
+    catch (error) {
+        return res.status(400).json(error.message)
+    }
+}
+
+module.exports = {userExtractor, roomExtractor}
