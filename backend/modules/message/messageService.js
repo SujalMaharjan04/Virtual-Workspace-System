@@ -23,6 +23,28 @@ const getMessage = async({roomId}) => {
     }
 }
 
+const getDM = async({roomId, userId}) => {
+    try {
+        const message = await prisma.messages.findMany({
+            where: {
+                room_id: roomId,
+                sent_to: userId
+            },
+            orderBy: {sent_at: "asc"},
+            include: {
+                sender: {
+                    select: {name: true, user_id: true}
+                }
+            }
+        })
+
+        return message
+    }
+    catch (err) {
+        throw err
+    }
+}
+
 const sendMessage = async({messages, roomId, userId}) => {
     try {
         const response = await prisma.messages.create({
@@ -41,7 +63,7 @@ const sendMessage = async({messages, roomId, userId}) => {
     }
 }
 
-const sendMessageDM = async({roomId, userId, sentToId, message}) => {
+const sendDM = async({roomId, userId, sentToId, message}) => {
     try {
         const response = await prisma.messages.create({
             data: {
@@ -62,4 +84,4 @@ const sendMessageDM = async({roomId, userId, sentToId, message}) => {
     }
 }
 
-module.exports = {getMessage, sendMessage, sendMessageDM}
+module.exports = {getMessage, sendMessage, sendDM, getDM}

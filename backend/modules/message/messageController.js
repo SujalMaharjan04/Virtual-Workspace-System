@@ -2,7 +2,6 @@ const messageService = require("./messageService")
 
 const getMessage = async(req, res) => {
     try {
-        // const {userId, userName} = req.user
         const {roomId} = req.room
 
         const messages = await messageService.getMessage({roomId})
@@ -15,11 +14,25 @@ const getMessage = async(req, res) => {
     
 }
 
+const getDM = async (req, res) => {
+    try {
+        const {roomId} =  req.room
+        const {userId} = req.user   //user id that is receiving the dm messages
+
+        const message = await messageService.getDM({roomId, userId})
+
+        return res.status(200).json(message)
+    }
+
+    catch (err) {
+        return res.status(500).json(err.message)
+    }
+}
 
 const sendMessage = async(req, res) => {
     try {
-        const {roomId} = req.room
-        const {userId} = req.user
+        const {roomId} = req.room //Getting the room by extracting the room token
+        const {userId} = req.user //Getting the user by extracting the login token
 
         if (!roomId) return res.status(403).json({error: "Room must be joined to message"})
 
@@ -39,16 +52,16 @@ const sendMessage = async(req, res) => {
     }
 }
 
-const sendMessageDM = async(req, res) => {
+const sendDM = async(req, res) => {
     try {
         const {roomId} = req.room
-        const {userId} = req.user
-        const {sentToId} = req.params
+        const {userId} = req.user //User Id that is sending the msg
+        const {sentToId} = req.params //User Id that is receiving the msg via params
         const {message} = req.body
 
         if (!roomId || !userId || message) return res.status(403).json({error: "Invalid message"})
 
-        const response = await messageService.sendMessageDM({roomId, userId, sentToId, message})
+        const response = await messageService.sendDM({roomId, userId, sentToId, message})
 
         return res.status(200).json(response)
     }
@@ -58,4 +71,4 @@ const sendMessageDM = async(req, res) => {
     }
 }
 
-module.exports = {getMessage, sendMessage, sendMessageDM}
+module.exports = {getMessage, sendMessage, sendDM}
