@@ -23,4 +23,43 @@ const getMessage = async({roomId}) => {
     }
 }
 
-module.exports = {getMessage}
+const sendMessage = async({messages, roomId, userId}) => {
+    try {
+        const response = await prisma.messages.create({
+            data: {
+                message: messages,
+                room_id: roomId,
+                sent_by: userId
+            }
+        })
+
+        if (!response) throw new Error("Something went wrong during chat")
+    }
+
+    catch (err) {
+        throw err
+    }
+}
+
+const sendMessageDM = async({roomId, userId, sentToId, message}) => {
+    try {
+        const response = await prisma.messages.create({
+            data: {
+                message,
+                room_id: roomId,
+                sent_by: userId,
+                sent_to: sentToId
+            }
+        })
+
+        if (!response) throw new Error("Something went wrong during dm")
+
+        return response
+    }
+
+    catch (err) {
+        throw err
+    }
+}
+
+module.exports = {getMessage, sendMessage, sendMessageDM}
