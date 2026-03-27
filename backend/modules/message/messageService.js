@@ -28,11 +28,19 @@ const getDM = async({roomId, userId}) => {
         const message = await prisma.messages.findMany({
             where: {
                 room_id: roomId,
-                sent_to: userId
+                OR: [
+                    {sent_to: userId},
+                    {sent_by: userId}
+                ],
+                NOT: {sent_to: null}
+            
             },
             orderBy: {sent_at: "asc"},
             include: {
                 sender: {
+                    select: {name: true, user_id: true}
+                },
+                receiver: {
                     select: {name: true, user_id: true}
                 }
             }
