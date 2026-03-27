@@ -71,4 +71,4 @@ const sendDM = async(req, res) => {
     }
 }
 
-module.exports = {getMessage, sendMessage, sendDM}
+module.exports = {getMessage, sendMessage, sendDM, getDM}

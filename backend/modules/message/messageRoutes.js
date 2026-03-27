@@ -13,6 +13,6 @@ messageRouter.get("/get-dm", roomExtractor, messageController.getDM)
 messageRouter.post("/send-message", roomExtractor, messageController.sendMessage)
 
 //Route for sending DM
-messageRouter.post("/send-dm", roomExtractor, messageController.sendDM)
+messageRouter.post("/send-dm:sentToId", roomExtractor, messageController.sendDM)
 
 module.exports = messageRouter
