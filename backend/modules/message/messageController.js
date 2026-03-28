@@ -17,9 +17,10 @@ const getMessage = async(req, res) => {
 const getDM = async (req, res) => {
     try {
         const {roomId} =  req.room
+        const {targetUserId} = req.params
         const {userId} = req.user   //user id that is receiving the dm messages
 
-        const message = await messageService.getDM({roomId, userId})
+        const message = await messageService.getDM({roomId, userId, targetUserId})
 
         return res.status(200).json(message)
     }
