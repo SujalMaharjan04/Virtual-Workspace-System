@@ -23,14 +23,14 @@ const getMessage = async({roomId}) => {
     }
 }
 
-const getDM = async({roomId, userId}) => {
+const getDM = async({roomId, userId, targetUserId}) => {
     try {
         const message = await prisma.messages.findMany({
             where: {
                 room_id: roomId,
                 OR: [
-                    {sent_to: userId},
-                    {sent_by: userId}
+                    {sent_to: userId, sent_by: targetUserId},
+                    {sent_to: targetUserId, sent_by: userId}
                 ],
                 NOT: {sent_to: null}
             
@@ -53,17 +53,19 @@ const getDM = async({roomId, userId}) => {
     }
 }
 
-const sendMessage = async({messages, roomId, userId}) => {
+const sendMessage = async({message, roomId, userId}) => {
     try {
         const response = await prisma.messages.create({
             data: {
-                message: messages,
+                message,
                 room_id: roomId,
                 sent_by: userId
             }
         })
 
         if (!response) throw new Error("Something went wrong during chat")
+        
+        return response
     }
 
     catch (err) {
