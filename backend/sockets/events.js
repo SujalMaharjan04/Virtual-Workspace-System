@@ -10,5 +10,11 @@ const ROOM_EVENTS = {
     ERROR: "room:error"
 }
 
+const MESSAGE_EVENTS = {
+    SEND_ALL: "message",
+    SEND_DM: "direct-message",
+    RECEIVE_DM: "receive-dm"
+}
 
-module.exports = {ROOM_EVENTS}
+
+module.exports = {ROOM_EVENTS, MESSAGE_EVENTS}
