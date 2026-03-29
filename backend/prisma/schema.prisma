@@ -34,6 +34,7 @@ model User {
   room_members   room_members[]
   sent_message    messages[]    @relation("MessageSender")
   received_message  messages[]  @relation("MessageReceiver")
+  avatars     avatar[]      @relation("Avatar")
 
   createdRoom   Room[]    @relation("RoomAdmin")
   created_at DateTime @default(now()) @db.Timestamptz(6)
@@ -52,6 +53,7 @@ model Room {
   tasks   Task[]
   room_members  room_members[]
   messages  messages[]
+  avatars   avatar[]
 }
 
 model Task {
@@ -114,4 +116,24 @@ model messages {
 
   //Date
   sent_at   DateTime  @default(now())  
+}
+
+model avatar {
+  avatar_id   String  @id @default(uuid())
+
+  //which user
+  created_by  String
+  user        User    @relation("Avatar", fields: [created_by], references: [user_id])
+
+  //which room
+  room_id   String
+  room      Room    @relation(fields: [room_id], references: [room_id])
+
+  //tracking position
+  x_axis      Float     @default(0)
+  y_axis      Float     @default(0)
+
+  //tracking lastUpdated
+  last_updated    DateTime    @updatedAt  //auto Updates on every change
+  @@unique([created_by, room_id]) //one avatar per room per user
 }
