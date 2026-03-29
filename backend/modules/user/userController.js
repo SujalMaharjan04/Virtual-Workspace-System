@@ -2,7 +2,7 @@ const userService = require('./userService')
 
 const getPublicKey = async(req, res) => {
     try {
-        const {userId} = req.params
+        const {userId} = req.params //userId of the targeted user whose public key is needed 
 
         const user = await userService.getPublicKey({userId})
 
