@@ -72,4 +72,19 @@ const joinRoom = async(req, res) => {
 //     }
 // }
 
-module.exports = {createRoom, joinRoom}
+
+const getRoomMember = async(req, res) => {
+    try {
+        const {roomId} = req.room
+
+        const members = await roomService.getRoomMember({roomId})
+
+        return res.status(200).json({members})
+    }
+
+    catch (err) {
+        return res.status(500).json({error: err.message})
+    }
+}
+
+module.exports = {createRoom, joinRoom, getRoomMember}

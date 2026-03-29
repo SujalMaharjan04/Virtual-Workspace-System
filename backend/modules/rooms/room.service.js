@@ -84,4 +84,22 @@ const joinRoom = async({roomId, password, userId, userName}) => {
 //     }
 // }
 
-module.exports = {createRoom, joinRoom}
+const getRoomMember = async({roomId}) => {
+    try {
+        const members = await prisma.room_members.findMany({
+            where: {room_id: roomId, is_active: true},
+            include: {
+                user: {
+                    select: {user_id: true, name: true}
+                }
+            }
+        })
+
+        return members
+    }
+    catch (err) {
+        throw err
+    }
+}
+
+module.exports = {createRoom, joinRoom, getRoomMember}
