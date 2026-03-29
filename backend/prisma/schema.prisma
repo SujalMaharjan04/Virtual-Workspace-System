@@ -26,6 +26,7 @@ model User {
   password   String
   role       Role     @default(employee)
   status     Status   @default(offline)
+  public_key  String?
 
   tasksCreated  Task[]  @relation("TaskCreator")
   tasksAssigned Task[]  @relation("TaskAssignee")
@@ -89,6 +90,15 @@ model room_members {
 model messages {
   message_id  String  @id  @default(uuid())
   message String
+
+  //Vector clock
+  vector_clock  Json
+
+  //Key used for encryption
+  encypted_key    String?
+
+  //Initialization Vector for different encryption key for same msg
+  iv      String?
 
   //Sent By
   sent_by   String
