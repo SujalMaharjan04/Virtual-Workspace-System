@@ -10,9 +10,10 @@ const registerMessageHandler = async(io, socket) => {
     socket.on(MESSAGE_EVENTS.SEND_ALL, async(data) => {
         try {
             const message = await messageService.sendMessage({
-                messages: data.message,
+                message: data.message,
                 roomId,
-                userId
+                userId,
+                vectorClock: data.vectorClock
             })
 
             io.to(roomId).emit(MESSAGE_EVENTS.SEND_ALL, {
@@ -20,6 +21,7 @@ const registerMessageHandler = async(io, socket) => {
                 sent_by: userName,
                 userId,
                 sent_at: message.sent_at,
+                vectorClock:message.vector_clock,
                 message: message.message,
             })
         }
@@ -35,7 +37,9 @@ const registerMessageHandler = async(io, socket) => {
                 roomId,
                 userId,
                 sentToId: data.sentToId,
-                message: data.message
+                message: data.encryptedMessage,
+                encryptedKey: data.encryptedKey,
+                iv: data.iv
             })
 
             const sockets = await io.in(roomId).fetchSockets()
@@ -46,13 +50,16 @@ const registerMessageHandler = async(io, socket) => {
                 userName,
                 userId,
                 message: message.message,
+                encryptedKey: message.encrypted_key,
+                iv: message.iv,
                 sent_at: message.sent_at
             }
 
-            if (receiverSocket) {
-                io.to(receiverSocket.id).emit(MESSAGE_EVENTS.RECEIVE_DM, dmData)
+            if (!receiverSocket) {
+                socket.emit("error", {message: "User is not in the room"})
+                return
             }
-
+            io.to(receiverSocket.id).emit(MESSAGE_EVENTS.RECEIVE_DM, dmData)
             socket.emit(MESSAGE_EVENTS.RECEIVE_DM, dmData)
         }
         catch (err) {
