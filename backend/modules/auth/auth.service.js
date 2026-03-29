@@ -3,7 +3,7 @@ const prisma = require('../../src/db')
 const jwt = require('jsonwebtoken')
 const config = require("../../utils/config")
 
-const signUpService = async({name, email, password}) => {
+const signUpService = async({name, email, password, publicKey}) => {
     try {
         const hashedPassword = await bcrypt.hash(password, 10)
 
@@ -13,7 +13,12 @@ const signUpService = async({name, email, password}) => {
         }
 
         const user = await prisma.user.create({
-            data: {name, email, password: hashedPassword}
+            data: {
+                name, 
+                email, 
+                password: hashedPassword,
+                public_key: publicKey
+            }
         })
 
         return user

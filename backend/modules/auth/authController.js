@@ -2,7 +2,7 @@ const authService = require('./auth.service')
 
 const signUp = async(req, res) => {
     try {
-        const {name, email, password} = req.body
+        const {name, email, password, publicKey} = req.body
 
         if (!name || !email) {
             return res.status(400).json({message: "Name and email field can't be empty."})
@@ -12,7 +12,7 @@ const signUp = async(req, res) => {
             return res.status(400).json({message: "Password should be length of 6 or more"})
         }
 
-        const user = await authService.signUpService({name, email, password})
+        const user = await authService.signUpService({name, email, password, publicKey})
 
         res.status(201).json(user)
 
