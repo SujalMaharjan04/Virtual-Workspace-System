@@ -16,5 +16,11 @@ const MESSAGE_EVENTS = {
     RECEIVE_DM: "receive-dm"
 }
 
+const AVATAR_EVENTS = {
+    MOVE: "avatar:move",
+    DISPLAY: "avatar-moved",
+    POSITION: "avatar-position"
+}
 
-module.exports = {ROOM_EVENTS, MESSAGE_EVENTS}
+
+module.exports = {ROOM_EVENTS, MESSAGE_EVENTS, AVATAR_EVENTS}
