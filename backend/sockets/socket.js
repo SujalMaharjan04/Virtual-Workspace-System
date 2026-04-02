@@ -5,6 +5,7 @@ const prisma = require("../src/db")
 const socketMiddleware = require('./socket.middleware')
 const registerRoomHandler = require('./handlers/room.handler')
 const registerMessageHandler = require("./handlers/message.handler")
+const registerAvatarHandler = require('./handlers/avatar.handler')
 
 let io
 
@@ -21,6 +22,7 @@ const initializeServer = (server) => {
     io.on("connection", async (socket) => {
         registerRoomHandler(io, socket)
         registerMessageHandler(io, socket)
+        registerAvatarHandler(io, socket)
     })
 
     
