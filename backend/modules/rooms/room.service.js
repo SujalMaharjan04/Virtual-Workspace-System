@@ -34,6 +34,14 @@ const createRoom = async({name, password, userId}) => {
                 created_by: userId
             }
         })
+
+        await prisma.room_members.create({
+            data: {
+                room_id: room.room_id,
+                user_id: userId,
+                role: "admin"
+            }
+        })
         
         return room
     }
@@ -59,7 +67,19 @@ const joinRoom = async({roomId, password, userId, userName}) => {
 
         if (!passwordCheck) throw new Error('Password incorrect')
 
-        const payload = {userId: userId, roomId: room.room_id, userName}
+        const member = await prisma.room_members.upsert({
+            where: {
+                room_id_user_id: {room_id: roomId, user_id: userId},
+            },
+            update: {is_active: true},
+            create: {
+                room_id: roomId,
+                user_id: userId,
+                role: "employee"
+            }
+        })
+
+        const payload = {userId: userId, roomId: room.room_id, userName, roomRole: member.role}
 
         const token = jwt.sign(payload, config.SECRET, {expiresIn: "1D"})
 
