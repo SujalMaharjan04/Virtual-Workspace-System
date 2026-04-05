@@ -51,4 +51,17 @@ const roomExtractor = (req, res, next) => {
     }
 }
 
-module.exports = {userExtractor, roomExtractor}
+const taskPermission = async(req, res, next) => {
+    const {roomRole} = req.room
+    const {userId} = req.user
+
+    const {targetUser} = req.body
+
+    if (targetUser && targetUser !== userId && roomRole !== "admin") {
+        return res.status(403).json({error: "Only Room admin can assign tasks to others"})
+    }
+
+    next()
+}
+
+module.exports = {userExtractor, roomExtractor, taskPermission}
