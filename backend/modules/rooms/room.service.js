@@ -60,12 +60,15 @@ const joinRoom = async({roomId, password, userId, userName}) => {
         if (!room) throw new Error("No Room with that id found")
 
         const roomActive = room.is_active
+        const isAdmin = room.created_by === userId
 
-        if (!roomActive) throw new Error("Room is not Active")
+        if (!roomActive && !isAdmin) throw new Error("Room is not Active")
 
         const passwordCheck = await bcrypt.compare(password, room.room_password)
 
         if (!passwordCheck) throw new Error('Password incorrect')
+
+        
 
         const member = await prisma.room_members.upsert({
             where: {
@@ -75,7 +78,7 @@ const joinRoom = async({roomId, password, userId, userName}) => {
             create: {
                 room_id: roomId,
                 user_id: userId,
-                role: "employee"
+                role: isAdmin ? "admin" : "employee"
             }
         })
 
