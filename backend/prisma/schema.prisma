@@ -11,7 +11,7 @@ datasource db {
 
 enum Role {
   admin
-  employee
+  member
 }
 
 enum Status {
@@ -85,7 +85,7 @@ model room_members {
   user_id   String
   user      User    @relation(fields: [user_id], references: [user_id])
 
-  role       Role     @default(employee)
+  role       Role     @default(member)
 
   joined_at   DateTime    @default(now())
   is_active   Boolean     @default(false)
