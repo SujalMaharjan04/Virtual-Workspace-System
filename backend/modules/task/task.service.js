@@ -65,6 +65,10 @@ const checkTask = async({roomId, userId, taskId}) => {
 
         if (!task) throw new Error("Task not Found")
 
+        if (task.room_id !== roomId) throw new Error("Task doesnot belong to this room")
+        
+        if (task.assigned_to !== userId) throw new Error("You can only check your own tasks")
+
         const checked = await prisma.task.update({
             where: {
                 task_id: taskId,
