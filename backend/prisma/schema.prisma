@@ -24,7 +24,7 @@ model User {
   name       String
   email      String   @unique @db.VarChar
   password   String
-  role       Role     @default(employee)
+  
   status     Status   @default(offline)
   public_key  String?
 
@@ -58,6 +58,7 @@ model Room {
 
 model Task {
   task_id   String  @id @unique @default(uuid())
+  task      String
 
   // Link to Room
   room_id   String
@@ -70,6 +71,8 @@ model Task {
   // Created By User
   created_by  String
   creator User  @relation("TaskCreator", fields: [created_by], references: [user_id])
+
+  completed     Boolean   @default(false)
 }
 
 model room_members {
@@ -81,6 +84,8 @@ model room_members {
   //Assigned to User
   user_id   String
   user      User    @relation(fields: [user_id], references: [user_id])
+
+  role       Role     @default(employee)
 
   joined_at   DateTime    @default(now())
   is_active   Boolean     @default(false)
