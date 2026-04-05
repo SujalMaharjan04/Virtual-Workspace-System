@@ -22,5 +22,10 @@ const AVATAR_EVENTS = {
     POSITION: "avatar-position"
 }
 
+const TASK_EVENTS = {
+    TASK_CREATED: "task-created",
+    TASK_UPDATED: "task-updated",
+    TASK_DELETED: "task-deleted"
+}
 
-module.exports = {ROOM_EVENTS, MESSAGE_EVENTS, AVATAR_EVENTS}
+module.exports = {ROOM_EVENTS, MESSAGE_EVENTS, AVATAR_EVENTS, TASK_EVENTS}

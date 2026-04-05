@@ -6,6 +6,7 @@ const socketMiddleware = require('./socket.middleware')
 const registerRoomHandler = require('./handlers/room.handler')
 const registerMessageHandler = require("./handlers/message.handler")
 const registerAvatarHandler = require('./handlers/avatar.handler')
+const registerTaskHandler = require('./handlers/task.handler')
 
 let io
 
@@ -23,6 +24,7 @@ const initializeServer = (server) => {
         registerRoomHandler(io, socket)
         registerMessageHandler(io, socket)
         registerAvatarHandler(io, socket)
+        registerTaskHandler(io, socket)
     })
 
     
