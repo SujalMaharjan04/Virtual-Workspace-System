@@ -32,7 +32,7 @@ const getAvatar = async({roomId}) => {
         where: {
             room_id: roomId
         },
-        include: {select: {name: true, user_id: true}}
+        include: {user: {select: {name: true, user_id: true}}}
     })
 }
 
