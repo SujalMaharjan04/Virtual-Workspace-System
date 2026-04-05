@@ -6,6 +6,7 @@ const authRouter = require('../modules/auth/authRoutes')
 const roomRouter = require('../modules/rooms/roomRoutes')
 const messageRouter = require('../modules/message/messageRoutes')
 const userRouter = require('../modules/user/userRoutes')
+const taskRouter = require('../modules/task/taskRoutes')
 
 const app = express()
 const server = http.createServer(app)
@@ -17,5 +18,6 @@ app.use('/api/auth', authRouter)
 app.use("/api/room", roomRouter)
 app.use("/api/message", messageRouter)
 app.use("/api/user", userRouter)
+app.use("/api/task", taskRouter)
 
 module.exports = {app, server}
