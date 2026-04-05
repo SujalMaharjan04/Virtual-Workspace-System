@@ -59,13 +59,17 @@ const addTask = async({roomId, userId, targetUser, newTask}) => {
 
 const checkTask = async({roomId, userId, taskId}) => {
     try {
+        const task = await prisma.task.findUnique({
+            where: {task_id: taskId}
+        })
+
+        if (!task) throw new Error("Task not Found")
+
         const checked = await prisma.task.update({
             where: {
                 task_id: taskId,
-                room_id: roomId, 
-                assigned_to: userId
             },
-            data: {completed: !completed}
+            data: {completed: !task.completed}
         })
 
         return checked

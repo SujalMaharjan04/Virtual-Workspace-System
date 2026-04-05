@@ -7,23 +7,39 @@ const registerTaskHandler = async(io, socket) => {
     const userName = socket.userName
 
     socket.on(TASK_EVENTS.TASK_CREATED, async(data) => {
-        io.to(roomId).emit(TASK_EVENTS.TASK_CREATED, {
-            task: data.task,
-            assigned_to: data.targetUser || userId
-        })
+        try {
+            io.to(roomId).emit(TASK_EVENTS.TASK_CREATED, {
+                task: data.task,
+                assigned_to: data.targetUser || userId
+            })
+        }
+        catch (err) {
+            socket.emit("error", {message: err.message})
+        }
     })
 
     socket.on(TASK_EVENTS.TASK_UPDATED, async(data) => {
-        io.to(roomId).emit(TASK_EVENTS.TASK_UPDATED, {
-            taskId: data.taskId,
-            updates: data.updates
-        })
+        try {
+                io.to(roomId).emit(TASK_EVENTS.TASK_UPDATED, {
+                taskId: data.taskId,
+                updates: data.updates
+            })
+        }
+        catch (err) {
+            socket.emit("error", {message: err.message})
+        }
     })
 
     socket.on(TASK_EVENTS.TASK_DELETED, async(data) => {
-        io.to(roomId).emit(TASK_EVENTS.TASK_DELETED, {
-            message: "Deleted Successfully"
-        })
+        try {
+            io.to(roomId).emit(TASK_EVENTS.TASK_DELETED, {
+                taskId: data.taskId,
+                message: "Deleted Successfully"
+            })
+        }
+        catch (err) {
+            socket.emit("error", {message: err.message})
+        }
     })
 }
 
