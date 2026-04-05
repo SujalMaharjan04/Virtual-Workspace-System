@@ -1,6 +1,6 @@
 const AVATAR_EVENTS = require("../events")
 const prisma = require("../../src/db")
-const avatarService = require('../../modules/avatar/avatarService')
+const avatarService = require('../../modules/avatar/avatar.service')
 
 const registerAvatarHandler = async(io, socket) => {
     const userId = socket.userId

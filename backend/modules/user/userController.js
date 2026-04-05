@@ -1,4 +1,4 @@
-const userService = require('./userService')
+const userService = require('./user.service')
 
 const getPublicKey = async(req, res) => {
     try {
