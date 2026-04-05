@@ -1,17 +1,31 @@
 const prisma = require('../../src/db')
 
-const getTask = async({roomId, userId}) => {
+const getTask = async({roomId, userId, roomRole}) => {
     try {
-        const tasks = await prisma.task.findMany({
-            where: {
-                room_id: roomId,
-                assigned_to: userId 
-            },
-            include: {
-                assignee: {select: {name: true, user_id: true}},
-                creator: {select: {name: true, user_id: true}}
-            }
-        })
+        let tasks
+        if (roomRole === "admin") {
+            tasks = await prisma.task.findMany({
+                where: {room_id: roomId},
+                include: {
+                    assignee: {select: {name: true, user_id: true}},
+                    creator: {select: {name: true, user_id: true}}
+                }
+            })
+        } else {
+            tasks = await prisma.task.findMany({
+                where: {
+                    room_id: roomId,
+                    OR: [
+                        {assigned_to: userId},
+                        {created_by: userId}
+                    ]
+                }, 
+                include: {
+                    assignee: {select: {name: true, user_id: true}},
+                    creator: {select: {name: true, user_id: true}}
+                }
+            })
+        }
 
         return tasks
     }

@@ -2,10 +2,10 @@ const taskService = require('./task.service')
 
 const getTask = async(req, res) => {
     try {
-        const {roomId} = req.room
+        const {roomId, roomRole} = req.room
         const {userId} = req.user
 
-        const tasks = await taskService.getTask({roomId, userId})
+        const tasks = await taskService.getTask({roomId, userId, roomRole})
 
         return res.status(200).json(tasks)
     }
