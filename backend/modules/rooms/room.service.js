@@ -93,19 +93,30 @@ const joinRoom = async({roomId, password, userId, userName}) => {
     }
 }
 
-// const leaveRoom = async({roomId, userId, userName}) => {
-//     try {
-//         const room = await prisma.room.findUnique({
-//             where: {room_id: roomId}
-//         })
+const leaveRoom = async({roomId, userId}) => {
+    try {
+        const member = await prisma.room_members.update({
+            where: {
+                room_id_user_id: {room_id: roomId, user_id: userId}
+            },
+            data: {
+                is_active: false,
+            }
+        })
 
+        if (member.role === "admin") {
+            await prisma.room.update({
+                where: {room_id: roomId},
+                data: {is_active: false}
+            })
+        }
 
-//     }
+    }
 
-//     catch (err) {
-//         throw err
-//     }
-// }
+    catch (err) {
+        throw err
+    }
+}
 
 const getRoomMember = async({roomId}) => {
     try {
@@ -125,4 +136,4 @@ const getRoomMember = async({roomId}) => {
     }
 }
 
-module.exports = {createRoom, joinRoom, getRoomMember}
+module.exports = {createRoom, joinRoom, getRoomMember, leaveRoom}

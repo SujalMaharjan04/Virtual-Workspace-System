@@ -56,21 +56,21 @@ const joinRoom = async(req, res) => {
     }
 }
 
-// const leaveRoom = async(req, res) => {
-//     try {
-//         const {roomId} = req.body
-//         const {userId, userName} = req.user
-//         if (!roomId) return res.status(400).json({error: "No room found to leave"})
+const leaveRoom = async(req, res) => {
+    try {
+        const {roomId} = req.body
+        const {userId} = req.user
+        if (!roomId) return res.status(400).json({error: "No room found to leave"})
 
-//         const room = await roomService.leaveRoom({roomId, userId, userName})
+        const room = await roomService.leaveRoom({roomId, userId})
 
-//         res.status(200).json({message: "Room Left"})
-//     }
-//     catch (err) {
-//         console.log(err.message)
-//         res.status(500).json({error: err.message})
-//     }
-// }
+        res.status(200).json({message: "Room Left"})
+    }
+    catch (err) {
+        console.log(err.message)
+        res.status(500).json({error: err.message})
+    }
+}
 
 
 const getRoomMember = async(req, res) => {
@@ -87,4 +87,4 @@ const getRoomMember = async(req, res) => {
     }
 }
 
-module.exports = {createRoom, joinRoom, getRoomMember}
+module.exports = {createRoom, joinRoom, getRoomMember, leaveRoom}
