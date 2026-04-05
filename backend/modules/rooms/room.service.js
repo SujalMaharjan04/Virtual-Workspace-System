@@ -78,7 +78,7 @@ const joinRoom = async({roomId, password, userId, userName}) => {
             create: {
                 room_id: roomId,
                 user_id: userId,
-                role: isAdmin ? "admin" : "employee"
+                role: isAdmin ? "admin" : "member"
             }
         })
 
