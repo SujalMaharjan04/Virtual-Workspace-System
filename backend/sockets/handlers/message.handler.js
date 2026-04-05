@@ -1,6 +1,6 @@
 const MESSAGE_EVENTS = require('../events')
 const prisma = require('../../src/db')
-const messageService = require('../../modules/message/messageService')
+const messageService = require('../../modules/message/message.service')
 
 const registerMessageHandler = async(io, socket) => {
     const userId = socket.userId
