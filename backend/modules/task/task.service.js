@@ -61,4 +61,27 @@ const checkTask = async({roomId, userId, taskId}) => {
     }
 }
 
-module.exports = {getTask, addTask, checkTask}
+const deleteTask = async({userId, roomRole, taskId}) => {
+    try {
+        const task = await prisma.task.findUnique({
+            where: {task_id: taskId}
+        })
+
+        if (!task) throw new Error("Task not found")
+        
+        if (task.created_by !== userId && roomRole !== "admin") {
+            throw new Error("Only task creator or admin can delete the task")
+        }
+
+
+        await prisma.task.delete({
+            where: {task_id: taskId}
+        })
+    }
+
+    catch (err) {
+        throw err
+    }
+}
+
+module.exports = {getTask, addTask, checkTask, deleteTask}

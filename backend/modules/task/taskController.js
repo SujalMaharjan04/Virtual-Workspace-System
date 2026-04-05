@@ -47,4 +47,20 @@ const checkTask = async(req, res) => {
     }
 }
 
-module.exports = {getTask, addTask, checkTask}
+const deleteTask = async(req, res) => {
+    try {
+        const {userId} = req.user
+        const {roomRole} = req.room
+        const {taskId} = req.params
+
+        await taskService.deleteTask({userId, roomRole, taskId})
+
+        return res.status(200).json({message: "Task Deleted Successfully"})
+    }
+
+    catch (err) {
+        return res.status(500).json({error: err.message})
+    }
+}
+
+module.exports = {getTask, addTask, checkTask, deleteTask}
