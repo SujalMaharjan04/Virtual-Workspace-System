@@ -7,6 +7,7 @@ const registerRoomHandler = require('./handlers/room.handler')
 const registerMessageHandler = require("./handlers/message.handler")
 const registerAvatarHandler = require('./handlers/avatar.handler')
 const registerTaskHandler = require('./handlers/task.handler')
+const registerCallHandler = require('./handlers/call.handler')
 
 let io
 
@@ -25,6 +26,7 @@ const initializeServer = (server) => {
         registerMessageHandler(io, socket)
         registerAvatarHandler(io, socket)
         registerTaskHandler(io, socket)
+        registerCallHandler(io, socket)
     })
 
     
