@@ -28,4 +28,19 @@ const TASK_EVENTS = {
     TASK_DELETED: "task-deleted"
 }
 
-module.exports = {ROOM_EVENTS, MESSAGE_EVENTS, AVATAR_EVENTS, TASK_EVENTS}
+
+const CALL_EVENTS = {
+    CALL_OFFER: "call-offer",
+    CALL_ANSWER: "call-answer",
+    ICE_CANDIDATE: "ice-candidate",
+    CALL_ENDED: "call-ended",
+    JOIN_CALL: "call-join",
+    LEAVE_CALL: "call-leave",
+    USER_JOINED_CALL: "user-joined-call",
+    USER_LEFT_CALL: "user-left-call",
+    EXISTING_MEMBER: "existing-member"
+    
+}
+
+
+module.exports = {ROOM_EVENTS, MESSAGE_EVENTS, AVATAR_EVENTS, TASK_EVENTS, CALL_EVENTS}
