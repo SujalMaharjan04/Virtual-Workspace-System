@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 const path = require('path')
 const {initializeServer} = require('../sockets/socket')
 const http = require('http')
@@ -12,6 +13,10 @@ const callRouter = require('../modules/call/callRoutes')
 const app = express()
 const server = http.createServer(app)
 app.use(express.json())
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}))
 app.use(express.static(path.resolve('./public')))
 
 initializeServer(server)
