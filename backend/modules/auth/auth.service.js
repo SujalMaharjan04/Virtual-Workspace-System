@@ -5,6 +5,7 @@ const config = require("../../utils/config")
 
 const signUpService = async({name, email, password, publicKey}) => {
     try {
+        
         const hashedPassword = await bcrypt.hash(password, 10)
 
         const existing = await prisma.user.findUnique({where: {email}})
@@ -25,7 +26,7 @@ const signUpService = async({name, email, password, publicKey}) => {
 
         const token = jwt.sign(payload, config.SECRET, {expiresIn: "1d"})
 
-        return {token, user}
+        return {token, user: {name: user.name, email: user.name, public_key: user.public_key, id: user.user_id}}
 
     } catch (error) {
         throw error
@@ -46,7 +47,7 @@ const loginService = async({email, password}) => {
 
         const token = jwt.sign(payload, config.SECRET, {expiresIn: "1d"})
 
-        return {token, user}
+        return {token, user: {name: user.name, email: user.name, public_key: user.public_key, id: user.user_id}}
     }
     catch (error) {
         throw error

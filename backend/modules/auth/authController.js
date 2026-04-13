@@ -2,6 +2,7 @@ const authService = require('./auth.service')
 
 const signUp = async(req, res) => {
     try {
+        
         const {name, email, password, publicKey} = req.body
 
         if (!name || !email) {
@@ -11,7 +12,7 @@ const signUp = async(req, res) => {
         if (!password || password.length < 6) {
             return res.status(400).json({message: "Password should be length of 6 or more"})
         }
-
+        
         const {token, user} = await authService.signUpService({name, email, password, publicKey})
 
         res.status(201).json({token, user})
