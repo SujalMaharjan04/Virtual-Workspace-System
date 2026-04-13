@@ -12,9 +12,9 @@ const signUp = async(req, res) => {
             return res.status(400).json({message: "Password should be length of 6 or more"})
         }
 
-        const user = await authService.signUpService({name, email, password, publicKey})
+        const {token, user} = await authService.signUpService({name, email, password, publicKey})
 
-        res.status(201).json(user)
+        res.status(201).json({token, user})
 
 
     } catch (error) {
@@ -35,9 +35,9 @@ const login = async(req, res) => {
             return res.status(400).json({message: "Password is required and should be of length 6 or greater"})
         }
 
-        const userLogged = await authService.loginService({email, password})
+        const {token, user} = await authService.loginService({email, password})
 
-        res.status(201).json({token: userLogged})
+        res.status(201).json({token, user})
     } 
     catch (error) {
         console.log("Error in Login:" + error.message)
