@@ -49,7 +49,7 @@ const LogIn = ({onSwitch}) => {
 
         setError(newError)
 
-        if (Object.keys(error).length === 0) {
+        if (Object.keys(newError).length === 0) {
             const response = await authService.login(form)
             
             if (response.success) {
