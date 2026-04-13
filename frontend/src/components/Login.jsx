@@ -1,8 +1,13 @@
 import { useState } from "react"
+import authService from "../services/authService"
+import useAuthStore from "../store/authStore"
 
 
 
 const LogIn = ({onSwitch}) => {
+    const setUser = useAuthStore(state => state.setUser)
+    const setToken = useAuthStore(state => state.setToken)
+
     const [form, setForm] = useState({
         "email": "",
         "password": ""
@@ -29,7 +34,7 @@ const LogIn = ({onSwitch}) => {
         }
     } 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault()
         
         const newError = {}
@@ -45,8 +50,20 @@ const LogIn = ({onSwitch}) => {
         setError(newError)
 
         if (Object.keys(error).length === 0) {
-            console.log("Login Submitted")
+            const response = await authService.login(form)
+            
+            if (response.success) {
+                setUser(response.data.user)
+                setToken(response.data.token)
+            } else {
+                console.log(response.data)
+            }
         }
+
+        setForm({
+            "email": "",
+            "password": ""
+        })
     }
 
     return (

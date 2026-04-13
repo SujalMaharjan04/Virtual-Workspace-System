@@ -2,8 +2,12 @@
 import { useState } from 'react';
 import authService from '../services/authService'
 import { generateKeyPair } from '../utils/crypto';
+import useAuthStore from '../store/authStore'
 
 const SignUp = ({onSwitch}) => {
+
+    const setUser = useAuthStore((state) => state.setUser)
+    const setToken = useAuthStore((state) => state.setToken)
 
     const [form, setForm] = useState({
         "name": "",
@@ -61,14 +65,25 @@ const SignUp = ({onSwitch}) => {
             
             setForm((prev) => ({
                 ...prev,
-                publicKey: publicKey
+                publicKey
             }))
 
-            
             const response = await authService.signUp(form)
-
-            console.log(response)
+            
+            if (response.result) {
+                setUser(response.data.user)
+                setToken(response.data.token)
+            } else {
+                console.log(response.data)
+            }
         }
+
+        setForm({
+            "name": "",
+            "email": "",
+            "password": "",
+            "publicKey": ""
+        })
     }
 
     return (
