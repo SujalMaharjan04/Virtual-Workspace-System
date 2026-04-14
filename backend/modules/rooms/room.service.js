@@ -35,7 +35,7 @@ const createRoom = async({name, password, userId}) => {
             }
         })
 
-        await prisma.room_members.create({
+        const member = await prisma.room_members.create({
             data: {
                 room_id: room.room_id,
                 user_id: userId,
@@ -43,7 +43,10 @@ const createRoom = async({name, password, userId}) => {
             }
         })
         
-        return room
+        const payload = {userId: userId, roomId: room_id, userName, roomRole: member.role}
+        const token = jwt.sign(payload, config.SECRET, {expiresIn: "1D"})
+
+        return {token, room: {id: room.room_id, name: room.room_name, isActive: room.is_active, createdBy: room.created_by}}
     }
 
     catch (error) {
@@ -86,7 +89,7 @@ const joinRoom = async({roomId, password, userId, userName}) => {
 
         const token = jwt.sign(payload, config.SECRET, {expiresIn: "1D"})
 
-        return token
+        return {token, room: {id: room.room_id, name: room.room_name, isActive: room.is_active, createdBy: room.created_by}}
     }
     catch (error) {
         throw error
