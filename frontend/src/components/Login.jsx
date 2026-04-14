@@ -1,12 +1,14 @@
 import { useState } from "react"
 import authService from "../services/authService"
 import useAuthStore from "../store/authStore"
+import useNotificationStore from "../store/notificationStore"
 
 
 
 const LogIn = ({onSwitch}) => {
     const setUser = useAuthStore(state => state.setUser)
     const setToken = useAuthStore(state => state.setToken)
+    const setNotification = useNotificationStore(state => state.setNotification)
 
     const [form, setForm] = useState({
         "email": "",
@@ -55,8 +57,9 @@ const LogIn = ({onSwitch}) => {
             if (response.success) {
                 setUser(response.data.user)
                 setToken(response.data.token)
+                setNotification("Login Successful", "success")
             } else {
-                console.log(response.data)
+                setNotification("Login Failed", "error")
             }
         }
 

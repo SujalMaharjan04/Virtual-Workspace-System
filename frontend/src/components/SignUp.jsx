@@ -3,11 +3,13 @@ import { useState } from 'react';
 import authService from '../services/authService'
 import { generateKeyPair } from '../utils/crypto';
 import useAuthStore from '../store/authStore'
+import useNotificationStore from '../store/notificationStore';
 
 const SignUp = ({onSwitch}) => {
 
     const setUser = useAuthStore((state) => state.setUser)
     const setToken = useAuthStore((state) => state.setToken)
+    const setNotification = useNotificationStore(state => state.setNotification)
 
     const [form, setForm] = useState({
         "name": "",
@@ -73,8 +75,9 @@ const SignUp = ({onSwitch}) => {
             if (response.result) {
                 setUser(response.data.user)
                 setToken(response.data.token)
+                setNotification("SignUp Successfull", "sucess")
             } else {
-                console.log(response.data)
+                setNotification("SignUp Failed", "error")
             }
         }
 
@@ -87,7 +90,7 @@ const SignUp = ({onSwitch}) => {
     }
 
     return (
-        <div className = "bg-[#0F1117] text-[#F1F5F9] h-screen flex flex-col items-center justify-center">
+        <div className = "flex flex-col items-center justify-center min-h-screen w-full">
             <div>
                 <h1 className = "text-5xl  font-bold mb-6">Sign Up</h1>
             </div>
