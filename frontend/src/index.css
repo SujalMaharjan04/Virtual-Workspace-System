@@ -1,7 +1,11 @@
 @import "tailwindcss";
 
 
-
+@layer base {
+    html, body {
+        @apply bg-[#0F1117] text-[#F1F5F9] min-h-screen
+    }
+}
 
 
 .inputDivStyle {
@@ -20,6 +24,18 @@
 
 .error {
     @apply text-red-500 text-sm
+}
+
+.notification {
+    @apply w-[10%] h-12 fixed top-4 right-0 flex justify-center items-center font-bold rounded-2xl
+}
+
+.notification-success {
+    @apply bg-green-500
+}
+
+.notification-error {
+    @apply bg-red-500
 }
    
 
