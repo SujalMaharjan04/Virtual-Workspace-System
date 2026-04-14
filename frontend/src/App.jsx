@@ -1,18 +1,22 @@
 import AuthPage from "./pages/AuthPage"
-import {Routes, Route} from "react-router-dom"
+import {Routes, Route, useNavigate} from "react-router-dom"
 import ProtectedRoute from "./components/ProtectedRoute"
 import Notification from "./components/Notification"
+import useAuthStore from "./store/authStore"
 
 
 const App = () => {
-
+  const token = useAuthStore(state => state.token)
+  const navigate = useNavigate()
   return (
     <div>
       <Notification />
       <Routes>
-        <Route path = "/" element = {<AuthPage />} />
+        {token 
+            ? navigate('/')
+            : <Route path = "/auth" element = {<AuthPage />} />} 
         
-        <Route path = "/dashboard" element = {
+        <Route path = "/" element = {
           <ProtectedRoute>
             <h1>Hello</h1>
           </ProtectedRoute>

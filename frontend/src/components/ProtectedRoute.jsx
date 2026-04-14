@@ -6,7 +6,7 @@ const ProtectedRoute = ({ children }) => {
     const isAuthenticated = useAuthStore(state => state.isAuthenticated)
 
     if (!token || !isAuthenticated) {
-        return <Navigate to = "/" />
+        return <Navigate to = "/auth" />
     }
 
     return children
