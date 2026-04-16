@@ -17,6 +17,8 @@ const Navbar = () => {
         "password": ""
     })
 
+    const room = useRoomStore(state => state.room)
+    const rooms = useRoomStore(state => state.rooms)
     const setRoom = useRoomStore(state => state.setRoom)
     const setRoomToken = useRoomStore(state => state.setRoomToken)
     const addRooms = useRoomStore(state => state.addRooms)
@@ -54,7 +56,14 @@ const Navbar = () => {
 
         if (Object.keys(errors).length === 0) {
             const response = await roomService.joinRoom(join)
-            console.log(response)
+            setRoom(response.data.room)
+            setRoomToken(response.data.token)
+
+            const roomExist = rooms.some(r => r.id === room.id)
+            if (!roomExist) {
+                addRooms(room)
+            }
+            
         }
         
         setJoin({
