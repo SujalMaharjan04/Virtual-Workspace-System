@@ -6,15 +6,18 @@ const useRoomStore = create(
     persist(
         (set) => ({
             rooms: [],
+            room: null,
             token: null,
-
-            setRoomInfo: (room) => set((state) => ({rooms: [...state.rooms, room]})),
+            
+            addRooms: (room) => set((state)=> ({rooms: [...state.rooms, room]})),
+            setRoom: (room) => set({room}),
             setRoomToken: (token) =>  set({token, isActive:true})
         }),
         {
             name: "room-info",
             partialize: (state) => ({
                 token: state.token,
+                room: state.room
             })
         }
     )
