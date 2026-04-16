@@ -7,7 +7,7 @@ const generateRoomId = () => {
     return Math.floor(100000 + Math.random() * 900000).toString()
 }
 
-const createRoom = async({name, password, userId}) => {
+const createRoom = async({roomName, password, userId, userName}) => {
     try {
         const hashedPassword = await bcrypt.hash(password, 10)
 
@@ -29,7 +29,7 @@ const createRoom = async({name, password, userId}) => {
         const room = await prisma.room.create({
             data: {
                 room_id, 
-                room_name: name, 
+                room_name: roomName, 
                 room_password: hashedPassword,
                 created_by: userId
             }

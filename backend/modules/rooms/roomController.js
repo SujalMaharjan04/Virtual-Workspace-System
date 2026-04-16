@@ -5,10 +5,10 @@ const roomService = require("./room.service")
 
 const createRoom = async(req, res) => {
     try {
-        const {name, password} = req.body
-        const {userId} = req.user
+        const {roomName, password} = req.body
+        const {userId, userName} = req.user
 
-        if (!name || !password) {
+        if (!roomName || !password) {
             return res.status(400).json({error: "Name and Password should be given"})
         }
 
@@ -16,7 +16,7 @@ const createRoom = async(req, res) => {
             return res.status(403).json({error: "No user logged in"})
         }
 
-        const {token, room} = await roomService.createRoom({name, password, userId})
+        const {token, room} = await roomService.createRoom({roomName, password, userId, userName})
 
         res.status(201).json({
             message: "Room created",
@@ -55,6 +55,7 @@ const joinRoom = async(req, res) => {
 
 const leaveRoom = async(req, res) => {
     try {
+        console.log(req.user)
         const {roomId} = req.body
         const {userId} = req.user
         if (!roomId) return res.status(400).json({error: "No room found to leave"})
