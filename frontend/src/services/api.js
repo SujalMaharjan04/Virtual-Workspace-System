@@ -33,7 +33,7 @@ api.interceptors.request.use((config) => {
             console.log(error)
         }
     }
-
+    
     return config
 })
 

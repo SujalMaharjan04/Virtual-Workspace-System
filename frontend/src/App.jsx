@@ -41,9 +41,10 @@ const App = () => {
       setRooms(getRooms)
     }
 
+    if (!token) return
     fetchRooms()
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [token])
   
   return (
     <div>
