@@ -4,8 +4,9 @@ import useRoomStore from "../store/roomStore"
 import Navbar from "../components/Navbar"
 const DashBoard = () => {
     
-    const room = useRoomStore(state => state.room)
+    const rooms = useRoomStore(state => state.rooms)
     const token = useRoomStore(state => state.token)
+    
     return (
         <div className = "flex flex-col">
             
@@ -16,11 +17,11 @@ const DashBoard = () => {
                         <h2 className = "font-bold underline text-2xl">Rooms</h2>
                     </div>
 
-                    {room && token 
+                    {rooms && rooms.length > 0 
                         ? <div>
                             <ul>
-                                {room.map(r => (
-                                    <li><span><p className = {`${r.isActive ? "bg-green-500" : "bg-red-500"} rounded-full`}></p>{r.name}</span></li>
+                                {rooms.map(r => (
+                                    <li><span className = "flex gap-2"><p className = {`${r.isActive ? "bg-green-500" : "bg-red-500"} rounded-full w-6 h-6`}></p>{r.name}</span></li>
                                 ))}
                             </ul>
                         </div>
