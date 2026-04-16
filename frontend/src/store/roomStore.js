@@ -5,17 +5,16 @@ import { persist } from "zustand/middleware";
 const useRoomStore = create(
     persist(
         (set) => ({
-            room: null,
+            rooms: [],
             token: null,
 
-            setRoomInfo: (room) => set({room}),
+            setRoomInfo: (room) => set((state) => ({rooms: [...state.rooms, room]})),
             setRoomToken: (token) =>  set({token, isActive:true})
         }),
         {
             name: "room-info",
             partialize: (state) => ({
                 token: state.token,
-                room: state.room
             })
         }
     )
