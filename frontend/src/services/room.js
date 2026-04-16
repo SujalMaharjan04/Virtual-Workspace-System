@@ -1,5 +1,16 @@
 import api from './api'
 
+const getAllRooms = async() => {
+    try {
+        const response = await api.get("/room/getrooms")
+        return response.data
+    }
+
+    catch (error) {
+        const message = error.response?.data?.message || error.message
+        return message
+    }
+}
 
 const createRoom = async(formData) => {
     try {
@@ -27,4 +38,4 @@ const joinRoom = async(formData) => {
 }
 
 
-export default {createRoom, joinRoom}
+export default {getAllRooms, createRoom, joinRoom}
