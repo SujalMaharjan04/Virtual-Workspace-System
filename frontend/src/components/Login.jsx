@@ -70,13 +70,13 @@ const LogIn = ({onSwitch}) => {
     }
 
     return (
-        <div className = "bg-[#0F1117] text-[#F1F5F9] h-screen flex flex-col items-center justify-center">
+        <div className = "h-screen flex flex-col items-center justify-center">
             <div>
                 <h1 className = "text-5xl font-bold mb-6">Login</h1>
             </div>
 
             <div>
-                <form onSubmit = {handleSubmit} className = "flex flex-col justify-center items-center gap-10 text-2xl">
+                <form onSubmit = {handleSubmit} className = "form">
                     <div className = "inputDivStyle">
                         <label htmlFor = "email">Email</label>
                         <input onChange = {handleInput} type = "email" name = "email" className = "inputStyle" placeholder="Enter Your Email" value = {form.email} />
