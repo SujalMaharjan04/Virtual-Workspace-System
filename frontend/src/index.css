@@ -27,7 +27,7 @@
 }
 
 .notification {
-    @apply w-[10%] h-12 fixed top-4 right-0 flex justify-center items-center font-bold rounded-2xl
+    @apply w-[10%] h-12 fixed top-4 right-0 flex justify-center items-center font-bold rounded-2xl z-99
 }
 
 .notification-success {
