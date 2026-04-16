@@ -4,11 +4,11 @@ const config = require("./config")
 
 const userExtractor = (req, res, next) => {
     const authorization = req.get("authorization")
-
     if (authorization && authorization.includes("Bearer ")) {
         req.token = authorization.substring(7)
     } else {
         req.token = null
+        return res.status(403).json({error: "Token Not Found"})
         next()
     }
 
@@ -33,6 +33,7 @@ const roomExtractor = (req, res, next) => {
         req.roomToken = roomAuth.substring(7)
     } else {
         req.roomToken = null
+        return res.status(403).json({error: "Room Token Not Found"})
         next()
     }
 
