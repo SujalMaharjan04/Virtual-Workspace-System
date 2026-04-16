@@ -17,8 +17,9 @@ const Navbar = () => {
         "password": ""
     })
 
-    const setRoomInfo = useRoomStore(state => state.setRoomInfo)
+    const setRoom = useRoomStore(state => state.setRoom)
     const setRoomToken = useRoomStore(state => state.setRoomToken)
+    const addRooms = useRoomStore(state => state.addRooms)
 
 
     const handleJoin = (e) => {
@@ -78,8 +79,9 @@ const Navbar = () => {
 
         if (Object.keys(errors).length === 0) {
             const response = await roomService.createRoom(newRoom)
-            setRoomInfo(response.data.room)
+            setRoom(response.data.room)
             setRoomToken(response.data.token)
+            addRooms(response.data.room)
         }
 
         setNewRoom({
