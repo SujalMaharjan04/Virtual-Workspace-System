@@ -91,7 +91,6 @@ model room_members {
   is_active   Boolean     @default(false)
 
   @@id([room_id, user_id])
-  @@unique([room_id, user_id])
 }
 
 model messages {
