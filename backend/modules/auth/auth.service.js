@@ -26,7 +26,7 @@ const signUpService = async({name, email, password, publicKey}) => {
 
         const token = jwt.sign(payload, config.SECRET, {expiresIn: "1d"})
 
-        return {token, user: {name: user.name, email: user.name, public_key: user.public_key, id: user.user_id}}
+        return {token, user: {name: user.name, email: user.email, public_key: user.public_key, id: user.user_id}}
 
     } catch (error) {
         throw error
