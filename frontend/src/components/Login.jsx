@@ -80,11 +80,17 @@ const LogIn = ({onSwitch}) => {
                     <div className = "inputDivStyle">
                         <label htmlFor = "email">Email</label>
                         <input onChange = {handleInput} type = "email" name = "email" className = "inputStyle" placeholder="Enter Your Email" value = {form.email} />
+                        {error.email && (
+                            <p className = "error">{error.email}</p>
+                        )}
                     </div>
 
                     <div className = "inputDivStyle">
                         <label htmlFor = "password">Password</label>
                         <input onChange = {handleInput} type = "password" name = "password" className = "inputStyle" placeholder = "Enter Your Password" value = {form.password} />
+                        {error.password && (
+                            <p className = "error">{error.password}</p>
+                        )}
                     </div>
 
                     <div className = "w-full flex justify-center items-center">
