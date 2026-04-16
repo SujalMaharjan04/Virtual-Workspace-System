@@ -6,19 +6,20 @@ const api = axios.create({
 
 
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('logged')
+    const stored = localStorage.getItem('logged')
     const roomToken = localStorage.getItem('room-token')
 
-    if (token) {
+    if (stored) {
+        const parsed = JSON.parse(stored)
+        const state = parsed.state
+
         try {
-            const user = JSON.parse(token)
-            if (user.token) {
-                config.headers.Authorization = `Bearer ${user.token}`
+            if (state.token) {
+                config.headers.Authorization = `Bearer ${state.token}`
             }
         }
-
         catch (error) {
-            return error
+            console.log(error)
         }
     }
 
@@ -29,7 +30,7 @@ api.interceptors.request.use((config) => {
                 config.headers['room-authorization'] = `Bearer ${room.token}`
         }
         catch (error) {
-            return error
+            console.log(error)
         }
     }
 
