@@ -7,6 +7,7 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem('logged')
+    const roomToken = localStorage.getItem('room-token')
 
     if (token) {
         try {
@@ -16,6 +17,17 @@ api.interceptors.request.use((config) => {
             }
         }
 
+        catch (error) {
+            return error
+        }
+    }
+
+    if (roomToken) {
+        try {
+            const room = JSON.parse(roomToken)
+            if (room.token)
+                config.headers['room-authorization'] = `Bearer ${room.token}`
+        }
         catch (error) {
             return error
         }
