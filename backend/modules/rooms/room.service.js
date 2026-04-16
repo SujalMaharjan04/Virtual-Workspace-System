@@ -7,6 +7,36 @@ const generateRoomId = () => {
     return Math.floor(100000 + Math.random() * 900000).toString()
 }
 
+const getAllRooms = async({userId}) => {
+    try {
+        const allRooms = await prisma.user.findUnique({
+            where: {user_id: userId},
+            include: {
+                room_members: {
+                    include: {
+                        room: {
+                            select: {
+                                room_id: true,
+                                is_active: true,
+                                room_name: true,
+                                max_capacity: true,
+                                created_by: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+        const rooms = allRooms.room_members.map(r => r.room)
+
+        return rooms || []
+    }
+
+    catch (error) {
+        throw error
+    }
+}
+
 const createRoom = async({roomName, password, userId, userName}) => {
     try {
         const hashedPassword = await bcrypt.hash(password, 10)
@@ -139,4 +169,4 @@ const getRoomMember = async({roomId}) => {
     }
 }
 
-module.exports = {createRoom, joinRoom, getRoomMember, leaveRoom}
+module.exports = {getAllRooms, createRoom, joinRoom, getRoomMember, leaveRoom}

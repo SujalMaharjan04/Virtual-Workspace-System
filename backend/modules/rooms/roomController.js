@@ -1,8 +1,23 @@
 
 const roomService = require("./room.service")
 
+const getAllRooms  = async(req, res) => {
+    try {
+        const {userId} = req.user
 
+        if (!userId) {
+            return res.status(403).json({error: "No user logged in"})
+        }
 
+        const rooms = await roomService.getAllRooms({userId})
+
+        return res.status(200).json(rooms)
+    }
+    catch (error) {
+        console.log(error.message)
+        return res.status(500).json({error: error.message})
+    }
+}
 const createRoom = async(req, res) => {
     try {
         const {roomName, password} = req.body
@@ -85,4 +100,4 @@ const getRoomMember = async(req, res) => {
     }
 }
 
-module.exports = {createRoom, joinRoom, getRoomMember, leaveRoom}
+module.exports = {getAllRooms, createRoom, joinRoom, getRoomMember, leaveRoom}
