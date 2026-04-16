@@ -39,3 +39,11 @@
 }
    
 
+.form {
+    @apply flex flex-col justify-center items-center gap-10 text-2xl
+}
+
+.roomButton {
+    @apply bg-[#02798E] w-32 px-6 h-12 text-2xl rounded-2xl hover:cursor-pointer hover:bg-[#0098a9]
+}
+
