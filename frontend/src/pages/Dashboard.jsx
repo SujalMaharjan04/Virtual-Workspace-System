@@ -6,7 +6,7 @@ const DashBoard = () => {
     
     const rooms = useRoomStore(state => state.rooms)
     const token = useRoomStore(state => state.token)
-    
+
     return (
         <div className = "flex flex-col">
             
@@ -21,7 +21,7 @@ const DashBoard = () => {
                         ? <div>
                             <ul>
                                 {rooms.map(r => (
-                                    <li><span className = "flex gap-2"><p className = {`${r.isActive ? "bg-green-500" : "bg-red-500"} rounded-full w-6 h-6`}></p>{r.name}</span></li>
+                                    <li key = {r.room_id}><span className = "flex justify-center items-center gap-2"><p className = {`${r.is_active ? "bg-green-500" : "bg-red-500"} rounded-full w-3 h-3`}></p>{r.room_name}</span></li>
                                 ))}
                             </ul>
                         </div>
