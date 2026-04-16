@@ -1,5 +1,5 @@
 import { useState } from "react"
-import authService from "../services/authService"
+import authService from "../services/auth"
 import useAuthStore from "../store/authStore"
 import useNotificationStore from "../store/notificationStore"
 
