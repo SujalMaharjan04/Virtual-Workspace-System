@@ -1,5 +1,5 @@
 
-const RoomForm = ({topic, name1,  label1, input1, error1,  input2, error2, handleInput, handleSubmit}) => {
+const RoomForm = ({topic, name1,  label1, input1, error1,  input2, error2, handleInput, handleSubmit, disabledInput1 = false}) => {
     return (
         <div className = " flex flex-col items-center justify-center">
             <div>
@@ -10,7 +10,7 @@ const RoomForm = ({topic, name1,  label1, input1, error1,  input2, error2, handl
                 <form onSubmit = {handleSubmit} className = "form">
                     <div className = "inputDivStyle">
                         <label htmlFor = {label1}>{label1}</label>
-                        <input onChange = {handleInput} type = "text" name = {name1} className = "inputStyle" placeholder={`Enter ${label1}`} value = {input1} />
+                        <input onChange = {handleInput} type = "text" name = {name1} className = "inputStyle" placeholder={`Enter ${label1}`} value = {input1} disabled = {disabledInput1} />
                         {error1 && (
                             <p className = "error">{error1}</p>
                         )}
