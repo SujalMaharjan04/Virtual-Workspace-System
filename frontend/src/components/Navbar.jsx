@@ -1,10 +1,13 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
+import { useNavigate } from "react-router-dom"
 import Togglable from "./Togglable"
 import RoomForm from "./RoomForm"
 import roomService from '../services/room'
 import useRoomStore from "../store/roomStore"
 
 const Navbar = () => {
+    const joinToggleRef = useRef()
+    const newToggleRef = useRef()
     const [activeModal, setActiveModal] = useState(null)
     const [error, setErrors] = useState({})
     const [join, setJoin] = useState({
@@ -16,8 +19,7 @@ const Navbar = () => {
         "roomName": "",
         "password": ""
     })
-
-    const room = useRoomStore(state => state.room)
+    const navigate = useNavigate()
     const rooms = useRoomStore(state => state.rooms)
     const setRoom = useRoomStore(state => state.setRoom)
     const setRoomToken = useRoomStore(state => state.setRoomToken)
@@ -56,13 +58,18 @@ const Navbar = () => {
 
         if (Object.keys(errors).length === 0) {
             const response = await roomService.joinRoom(join)
+
+            if (!response.success) {
+                return 
+            }
             setRoom(response.data.room)
             setRoomToken(response.data.token)
-
-            const roomExist = rooms.some(r => r.id === room.id)
+            const roomExist = rooms.some(r => r.id === response.data.room.room.id)
             if (!roomExist) {
-                addRooms(room)
+                addRooms(response.data.room)
             }
+            joinToggleRef.current.close()
+            navigate(`/${response.data.room.room_id}`)
             
         }
         
@@ -88,9 +95,14 @@ const Navbar = () => {
 
         if (Object.keys(errors).length === 0) {
             const response = await roomService.createRoom(newRoom)
+            if (!response.success) {
+                return 
+            }
             setRoom(response.data.room)
             setRoomToken(response.data.token)
             addRooms(response.data.room)
+            newToggleRef.current.close()
+            navigate(`/${response.data.room.room_id}`)
         }
 
         setNewRoom({
@@ -106,10 +118,10 @@ const Navbar = () => {
                 <h1 className = "font-bold text-4xl">Virtual Workspace</h1>
             </div>
             <div className = " flex justify-end items-center text-[#F1F5F9] w-full gap-6">
-                <Togglable buttonClass = "roomButton" buttonLabel = "Join" isOpen = {activeModal === 'join'} onOpen = {() => setActiveModal("join")} onClose = {() => setActiveModal(null)}>
+                <Togglable ref = {joinToggleRef} buttonClass = "roomButton" buttonLabel = "Join" isOpen = {activeModal === 'join'} onOpen = {() => setActiveModal("join")} onClose = {() => setActiveModal(null)}>
                     <RoomForm topic = "Join A Room" name1 = "roomId" label1 = "Room Id" input1 = {join.roomId} error1 = {error.roomId} error2 = {error.password} input2 = {join.password} handleInput = {handleJoin} handleSubmit={handleJoinSubmit} />
                 </Togglable>
-                <Togglable buttonClass = "roomButton" buttonLabel = "New +" isOpen = {activeModal === 'new'} onOpen = {() => setActiveModal("new")} onClose = {() => setActiveModal(null)}>
+                <Togglable ref = {newToggleRef} buttonClass = "roomButton" buttonLabel = "New +" isOpen = {activeModal === 'new'} onOpen = {() => setActiveModal("new")} onClose = {() => setActiveModal(null)}>
                     <RoomForm topic = "Create A Room" name1 = "roomName" label1 = "Room Name" input1 = {newRoom.roomName} error1 = {error.roomName} error2 = {error.password} input2 = {newRoom.password} handleInput = {handleNew} handleSubmit = {handleNewSubmit} />
                 </Togglable>
             </div>

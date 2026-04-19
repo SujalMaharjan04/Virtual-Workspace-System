@@ -1,7 +1,13 @@
-
+import { forwardRef, useImperativeHandle } from "react"
 import {createPortal} from "react-dom"
 
-const Togglable = (props) => {
+const Togglable = forwardRef((props, ref) => {
+
+    useImperativeHandle(ref, () => ({
+        close() {
+            props.onClose()
+        }
+    }))
     return (
         <div className = "relative">
             <div>
@@ -23,7 +29,7 @@ const Togglable = (props) => {
             }
         </div>
     )
-}
+})
 
 
 export default Togglable

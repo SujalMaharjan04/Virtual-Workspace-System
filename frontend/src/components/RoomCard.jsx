@@ -1,14 +1,16 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
 import Togglable from "./Togglable"
 import roomService from "../services/room"
 import useRoomStore from "../store/roomStore"
 import RoomForm from "./RoomForm"
+import { useNavigate } from "react-router-dom"
 
 const RoomCard = ({id, name, maxCapacity}) => {
+    const toggleRef = useRef()
+    const navigate = useNavigate()
     const [activeModal, setActiveModal] = useState(null)
     const [error, setError] = useState({})
     const rooms = useRoomStore(state => state.rooms)
-    const room = useRoomStore(state => state.room)
     const setRoom = useRoomStore(state => state.setRoom)
     const setRoomToken = useRoomStore(state => state.setRoomToken)
     const addRooms = useRoomStore(state => state.addRooms)
@@ -39,13 +41,17 @@ const RoomCard = ({id, name, maxCapacity}) => {
 
         if (Object.keys(newErrors).length === 0) {
             const response = await roomService.joinRoom(join)
+            if (!response.success) {
+                return 
+            }
             setRoom(response.data.room)
             setRoomToken(response.data.token)
-
             const roomExist = rooms.some(r => r.id === response.data.room.id)
             if (!roomExist) {
-                addRooms(room)
+                addRooms(response.data.room)
             }
+            toggleRef.current.close()
+            navigate(`/${response.data.room.room_id}`)
         }
 
         
@@ -61,7 +67,7 @@ const RoomCard = ({id, name, maxCapacity}) => {
                 <h2 className = "font-semibold text-xl">Members: {maxCapacity}</h2>
             </div>
 
-            <Togglable buttonClass = "roomButton" buttonLabel = "Join" isOpen = {activeModal === 'join'} onOpen = {() => setActiveModal("join")} onClose = {() => setActiveModal(null)}>
+            <Togglable ref = {toggleRef} buttonClass = "roomButton" buttonLabel = "Join" isOpen = {activeModal === 'join'} onOpen = {() => setActiveModal("join")} onClose = {() => setActiveModal(null)}>
                 <RoomForm topic = "Join A Room" name1 = "roomId" label1 = "Room Id" input1 = {join.roomId} error1 = {error.roomId} error2 = {error.password} input2 = {join.password} handleInput = {handleJoin} handleSubmit={handleJoinSubmit} disabledInput1 = {true} />
             </Togglable>
         </div>
