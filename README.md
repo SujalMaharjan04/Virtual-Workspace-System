@@ -2,8 +2,8 @@
 A Web System incorporating Node.js, Express, PostgreSQL, React, PhaserJs and WebSockets to simulate office environment during remote work
 
 ## Status
-Backend: Completed!
-Frontend: In Progress
+- Backend: Completed!
+- Frontend: In Progress
 
 ## Tech Stack
 - Frontend: React, PhaserJs, Socket-io-client, Tailwind CSS
