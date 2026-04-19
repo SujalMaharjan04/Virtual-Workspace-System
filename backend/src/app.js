@@ -9,6 +9,7 @@ const messageRouter = require('../modules/message/messageRoutes')
 const userRouter = require('../modules/user/userRoutes')
 const taskRouter = require('../modules/task/taskRoutes')
 const callRouter = require('../modules/call/callRoutes')
+const avatarRouter = require('../modules/avatar/avatarRoutes')
 
 const app = express()
 const server = http.createServer(app)
@@ -26,5 +27,5 @@ app.use("/api/message", messageRouter)
 app.use("/api/user", userRouter)
 app.use("/api/task", taskRouter)
 app.use("/api/call", callRouter)
-
+app.use("/api/avatar", avatarRouter)
 module.exports = {app, server}
