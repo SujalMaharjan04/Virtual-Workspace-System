@@ -36,6 +36,41 @@ A Web System incorporating Node.js, Express, PostgreSQL, React, PhaserJs and Web
 | POST   | /api/room/join          | Users joins the room           |
 | GET    | /api/room/members       | Get all members of the room    |
 
+### Message
+| Method | Endpoint                     |        Description               |
+|--------|------------------------------|----------------------------------|
+| GET    | /api/message/get-message     | Get all message sent in the room |
+| GET    | /api/message/get-dm          | Get all DMs sent and received    |
+| POST   | /api/message/send-message    | Send message to everyone         |
+| POST   | /api/message/send-dm:sentToId| Send DM to user                  |
+
+
+### User
+| Method | EndPoint                    | Description                 |
+|--------|-----------------------------|-----------------------------|
+|  GET   | /api/user/:userId/publicKey | Get Public key from user db |
+
+
+### Tasks
+| Method  | EndPoint            | Description                                    |
+|---------|---------------------|------------------------------------------------|
+|  GET    | /api/task/all-task  | Get all tasks assigned to user                 |
+|  POST   | /api/task/add-task  | Add task to user either themselves or by admin |
+|  PUT    | /api/task/completed | Set the task status to completed               |
+|  DELETE | /api/task/remove    | Delete a task                                  |
+
+### Call
+| Method | EndPoint            | Description                             |
+|--------|---------------------|-----------------------------------------|
+|  GET   | /api/call/rtcconfig |  Get rtc config for call initialization |
+
+
+### Avatar
+| Method | Endpoint             | Description                                  |
+|--------|----------------------|----------------------------------------------|
+|  POST  |  /api/avatar/move    |  Update or create avatar movement data to db |
+|  GET   |  /api/avatar/display |  Return the avatar current position          |
+
 
 
 ## Installation
