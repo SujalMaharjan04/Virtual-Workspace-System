@@ -8,6 +8,8 @@ import useAuthStore from "./store/authStore"
 import DashBoard from "./pages/Dashboard"
 import useRoomStore from "./store/roomStore"
 import roomService from './services/room'
+import RoomJoined from "./pages/RoomJoined"
+import ProtectedRoom from "./components/ProtectedRoom"
 
 
 const App = () => {
@@ -56,6 +58,14 @@ const App = () => {
           <ProtectedRoute>
             <DashBoard />
           </ProtectedRoute>
+          } />
+
+          <Route path = "/:id" element = {
+            <ProtectedRoute>
+              <ProtectedRoom>
+                  <RoomJoined />  
+              </ProtectedRoom>              
+            </ProtectedRoute>
           } />
       </Routes>
     </div>
