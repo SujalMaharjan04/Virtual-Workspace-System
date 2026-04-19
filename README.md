@@ -13,12 +13,12 @@ A Web System incorporating Node.js, Express, PostgreSQL, React, PhaserJs and Web
 
 
 ## Features
--Real-time Messaging: Instant communication via Socket.io
--Secure Auth: JWT-based authentication
--API Security: Token based Access to API endpoints
--Avatar Movement: Avatar movement tracking and synchronization
--Secure Chat Feature: Chat Message Encryption using Encryption Algorithm
--Task Assignment: Assign Tasks to user in the room by admin and the user themselves
+- Real-time Messaging: Instant communication via Socket.io
+- Secure Auth: JWT-based authentication
+- API Security: Token based Access to API endpoints
+- Avatar Movement: Avatar movement tracking and synchronization
+- Secure Chat Feature: Chat Message Encryption using Encryption Algorithm
+- Task Assignment: Assign Tasks to user in the room by admin and the user themselves
 
 ## API Endpoints
 
