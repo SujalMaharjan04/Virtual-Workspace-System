@@ -1,4 +1,4 @@
-const avatarService = require('./avatarService')
+const avatarService = require('./avatar.service')
 
 const upsertAvatar = async(req, res) => {
     try {
