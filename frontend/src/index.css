@@ -18,7 +18,7 @@
 }
 
 .submitBtn {
-    @apply bg-[#6C63FF] w-[50%] h-12 rounded-2xl hover:cursor-pointer;
+    @apply bg-[#6C63FF] w-[50%] h-12 rounded-2xl hover:cursor-pointer hover:bg-[#5f58e5];
 }
 
 
