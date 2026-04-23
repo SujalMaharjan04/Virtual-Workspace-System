@@ -12,7 +12,7 @@ const useRoomStore = create(
             setRooms: (rooms) => set({rooms}),
             addRooms: (room) => set((state)=> ({rooms: [...state.rooms, room]})),
             setRoom: (room) => set({room}),
-            setRoomToken: (token) =>  set({token, isActive:true})
+            setRoomToken: (token) =>  set({token})
         }),
         {
             name: "room-info",
