@@ -38,5 +38,17 @@ const joinRoom = async(formData) => {
     }
 }
 
+const leaveRoom = async() => {
+    try {
+        const response = await api.post("/room/leave")
 
-export default {getAllRooms, createRoom, joinRoom}
+        return {success: true, data: response.data}
+    }
+    catch (error) {
+        const message = error.response?.data?.message || error.message
+        return {success: false, data:message}
+    }
+}
+
+
+export default {getAllRooms, createRoom, joinRoom, leaveRoom}
