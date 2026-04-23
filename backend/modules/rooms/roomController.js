@@ -70,8 +70,7 @@ const joinRoom = async(req, res) => {
 
 const leaveRoom = async(req, res) => {
     try {
-        console.log(req.user)
-        const {roomId} = req.body
+        const {roomId} = req.room
         const {userId} = req.user
         if (!roomId) return res.status(400).json({error: "No room found to leave"})
 

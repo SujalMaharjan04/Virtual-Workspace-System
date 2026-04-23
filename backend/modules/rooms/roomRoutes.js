@@ -13,4 +13,7 @@ roomRouter.post("/join", userExtractor, roomController.joinRoom)
 //Route for getting the members of the room
 roomRouter.get("/members", userExtractor, roomExtractor, roomController.getRoomMember)
 
+//Route for leaving the room
+roomRouter.get("/leave", userExtractor, roomExtractor, roomController.leaveRoom)
+
 module.exports = roomRouter
