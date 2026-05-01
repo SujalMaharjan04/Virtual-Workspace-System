@@ -70,13 +70,20 @@ const createRoom = async({roomName, password, userId, userName}) => {
                 room_id: room.room_id,
                 user_id: userId,
                 role: "admin"
+            },
+            include: {
+                user: {
+                    select: {
+                        name: true
+                    }
+                }
             }
         })
         
         const payload = {userId: userId, roomId: room_id, userName, roomRole: member.role}
         const token = jwt.sign(payload, config.SECRET, {expiresIn: "1D"})
 
-        return {token, room: {room_id: room.room_id, room_name: room.room_name, is_active: room.is_active, created_by: room.created_by, max_capacity: room.max_capacity}}
+        return {token, room: {room_id: room.room_id, room_name: room.room_name, is_active: room.is_active, created_by: room.created_by, max_capacity: room.max_capacity}, member}
     }
 
     catch (error) {
@@ -112,6 +119,13 @@ const joinRoom = async({roomId, password, userId, userName}) => {
                 room_id: roomId,
                 user_id: userId,
                 role: isAdmin ? "admin" : "member"
+            },
+            include: {
+                user: {
+                    select: {
+                        name: true
+                    }
+                }
             }
         })
 
@@ -119,7 +133,7 @@ const joinRoom = async({roomId, password, userId, userName}) => {
 
         const token = jwt.sign(payload, config.SECRET, {expiresIn: "1D"})
 
-        return {token, room: {room_id: room.room_id, room_name: room.room_name, is_active: room.is_active, created_by: room.created_by, max_capacity: room.max_capacity}}
+        return {token, room: {room_id: room.room_id, room_name: room.room_name, is_active: room.is_active, created_by: room.created_by, max_capacity: room.max_capacity}, member}
     }
     catch (error) {
         throw error
