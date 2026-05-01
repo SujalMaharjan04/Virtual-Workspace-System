@@ -14,6 +14,8 @@ const RoomCard = ({id, name, maxCapacity}) => {
     const setRoom = useRoomStore(state => state.setRoom)
     const setRoomToken = useRoomStore(state => state.setRoomToken)
     const addRooms = useRoomStore(state => state.addRooms)
+    const addRoomMembers = useRoomStore(state => state.addRoomMembers)
+    const roomMembers = useRoomStore(state => state.roomMembers)
     const [join, setJoin] = useState({
         "roomId": id,
         "password": ""
@@ -46,10 +48,15 @@ const RoomCard = ({id, name, maxCapacity}) => {
             }
             setRoom(response.data.room)
             setRoomToken(response.data.token)
-            const roomExist = rooms.some(r => r.id === response.data.room.id)
+            const roomExist = rooms.some(r => r.room_id === response.data.room.room_id)
+            const memberExist = roomMembers.some(r => r.user_id === response.data.member.user_id)
             if (!roomExist) {
                 addRooms(response.data.room)
             }
+            if (!memberExist) {
+                addRoomMembers(response.data.member)
+            }
+            
             toggleRef.current.close()
             navigate(`/${response.data.room.room_id}`)
         }
