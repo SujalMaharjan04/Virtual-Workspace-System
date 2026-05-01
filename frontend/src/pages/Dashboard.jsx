@@ -40,7 +40,7 @@ const DashBoard = () => {
                     </div>
 
                     {rooms && rooms.length > 0
-                    ? <div className = "flex justify-around items-center w-full">
+                    ? <div className = "flex justify-around items-center w-full gap-6">
                         {rooms.map(r => (
                             <RoomCard name = {r.room_name} key = {r.id} maxCapacity = {r.max_capacity} id = {r.room_id} />
                         ))}
