@@ -8,11 +8,14 @@ const useRoomStore = create(
             rooms: [],
             room: null,
             token: null,
+            roomMembers: [],
             
             setRooms: (rooms) => set({rooms}),
             addRooms: (room) => set((state)=> ({rooms: [...state.rooms, room]})),
             setRoom: (room) => set({room}),
-            setRoomToken: (token) =>  set({token})
+            setRoomToken: (token) =>  set({token}),
+            setRoomMembers: (members) => set({roomMembers: members}),
+            addRoomMembers: (members) => set((state) => ({roomMembers: [...state.roomMembers, members]})),
         }),
         {
             name: "room-info",
