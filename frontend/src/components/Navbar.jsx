@@ -24,6 +24,8 @@ const Navbar = () => {
     const setRoom = useRoomStore(state => state.setRoom)
     const setRoomToken = useRoomStore(state => state.setRoomToken)
     const addRooms = useRoomStore(state => state.addRooms)
+    const roomMembers = useRoomStore(state => state.roomMembers)
+    const addRoomMembers = useRoomStore(state => state.addRoomMembers)
 
 
     const handleJoin = (e) => {
@@ -64,10 +66,17 @@ const Navbar = () => {
             }
             setRoom(response.data.room)
             setRoomToken(response.data.token)
-            const roomExist = rooms.some(r => r.id === response.data.room.room.id)
+            const roomExist = rooms.some(r => r.room_id === response.data.room.room_id)
+            const memberExist = roomMembers.some(r => r.id === response.data.member.user_id)
+
             if (!roomExist) {
                 addRooms(response.data.room)
             }
+            console.log(memberExist)
+            if (!memberExist) {
+                addRoomMembers(response.data.member)
+            }
+
             joinToggleRef.current.close()
             navigate(`/${response.data.room.room_id}`)
             
