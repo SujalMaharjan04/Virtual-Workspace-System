@@ -1,7 +1,7 @@
 
 const RoomForm = ({topic, name1,  label1, input1, error1,  input2, error2, handleInput, handleSubmit, disabledInput1 = false}) => {
     return (
-        <div className = " flex flex-col items-center justify-center">
+        <div className = " flex flex-col items-center justify-center h-full">
             <div>
                 <h1 className = "text-5xl font-bold mb-6">{topic}</h1>
             </div>
