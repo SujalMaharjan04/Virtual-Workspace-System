@@ -3,7 +3,7 @@ import useRoomStore from "../store/roomStore"
 
 const MemberList = () => {
     const roomMembers = useRoomStore(state => state.roomMembers)
-    console.log(roomMembers)
+    
     return (
         <div className = "flex flex-col h-full">
             <div className = "flex flex-col items-center gap-4 flex-1 overflow-y-auto py-6 w-full">
