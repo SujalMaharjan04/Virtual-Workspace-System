@@ -10,4 +10,8 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ],
+  define: {
+    "typeof CANVAS_RENDERER": "true",
+    "typeof WEBGL_RENDERER": "true"
+  }
 })
