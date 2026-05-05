@@ -1,9 +1,9 @@
 
 import { useState } from 'react';
-import authService from '../services/auth'
-import { generateKeyPair } from '../utils/crypto';
-import useAuthStore from '../store/authStore'
-import useNotificationStore from '../store/notificationStore';
+import authService from '../../services/auth'
+import { generateKeyPair } from '../../utils/crypto';
+import useAuthStore from '../../store/authStore'
+import useNotificationStore from '../../store/notificationStore';
 
 const SignUp = ({onSwitch}) => {
 

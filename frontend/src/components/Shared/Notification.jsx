@@ -1,4 +1,4 @@
-import useNotificationStore from "../store/notificationStore"
+import useNotificationStore from "../../store/notificationStore"
 import { useEffect } from "react"
 
 

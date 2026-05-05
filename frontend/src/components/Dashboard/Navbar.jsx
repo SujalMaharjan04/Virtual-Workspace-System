@@ -1,9 +1,9 @@
 import { useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
-import Togglable from "./Togglable"
-import RoomForm from "./RoomForm"
-import roomService from '../services/room'
-import useRoomStore from "../store/roomStore"
+import Togglable from "../Shared/Togglable"
+import RoomForm from "../Room/RoomForm"
+import roomService from '../../services/room'
+import useRoomStore from "../../store/roomStore"
 
 const Navbar = () => {
     const joinToggleRef = useRef()

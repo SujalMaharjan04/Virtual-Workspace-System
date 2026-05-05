@@ -3,7 +3,7 @@ import {Routes, Route, Navigate, useNavigate} from "react-router-dom"
 import { useEffect } from "react"
 import {jwtDecode} from 'jwt-decode'
 import ProtectedRoute from "./components/ProtectedRoute"
-import Notification from "./components/Notification"
+import Notification from "./components/Shared/Notification"
 import useAuthStore from "./store/authStore"
 import DashBoard from "./pages/Dashboard"
 import useRoomStore from "./store/roomStore"
@@ -31,9 +31,6 @@ const App = () => {
     catch {
       logout()
     }
-
-
-    
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token])
 

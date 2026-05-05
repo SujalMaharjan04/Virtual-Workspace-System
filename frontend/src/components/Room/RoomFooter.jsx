@@ -1,6 +1,6 @@
-import roomService from "../services/room"
-import useNotificationStore from "../store/notificationStore"
-import useRoomStore from "../store/roomStore"
+import roomService from "../../services/room"
+import useNotificationStore from "../../store/notificationStore"
+import useRoomStore from "../../store/roomStore"
 
 const RoomFooter = () => {
     const setNotification = useNotificationStore(state => state.setNotification)

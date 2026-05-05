@@ -1,5 +1,5 @@
-import RoomFooter from "../components/RoomFooter"
-import RoomNavbar from "../components/RoomNavbar"
+import RoomFooter from "../components/Room/RoomFooter"
+import RoomNavbar from "../components/Room/RoomNavbar"
 
 const RoomJoined = () => {
     return (

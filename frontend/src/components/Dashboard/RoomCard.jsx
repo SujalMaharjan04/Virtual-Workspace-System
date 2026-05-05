@@ -1,8 +1,8 @@
 import { useState, useRef } from "react"
-import Togglable from "./Togglable"
-import roomService from "../services/room"
-import useRoomStore from "../store/roomStore"
-import RoomForm from "./RoomForm"
+import Togglable from "../Shared/Togglable"
+import roomService from "../../services/room"
+import useRoomStore from "../../store/roomStore"
+import RoomForm from "../Room/RoomForm"
 import { useNavigate } from "react-router-dom"
 
 const RoomCard = ({id, name, maxCapacity}) => {

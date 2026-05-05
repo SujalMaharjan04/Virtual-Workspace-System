@@ -1,4 +1,4 @@
-import useRoomStore from "../store/roomStore"
+import useRoomStore from "../../store/roomStore"
 
 
 const MemberList = () => {

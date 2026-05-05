@@ -1,8 +1,8 @@
 import useAuthStore from "../store/authStore"
 import useRoomStore from "../store/roomStore"
-import RoomCard from "../components/RoomCard"
+import RoomCard from "../components/Dashboard/RoomCard"
 
-import Navbar from "../components/Navbar"
+import Navbar from "../components/Dashboard/Navbar"
 const DashBoard = () => {
     const user = useAuthStore(state => state.user)
     const rooms = useRoomStore(state => state.rooms)

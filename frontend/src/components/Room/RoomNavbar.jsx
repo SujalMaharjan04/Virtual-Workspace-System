@@ -1,7 +1,7 @@
 import { useState } from "react"
-import useRoomStore from "../store/roomStore"
+import useRoomStore from "../../store/roomStore"
 import MemberList from "./MemberList"
-import Togglable from "./Togglable"
+import Togglable from "../Shared/Togglable"
 
 const RoomNavbar = () => {
     const room = useRoomStore(state => state.room)
