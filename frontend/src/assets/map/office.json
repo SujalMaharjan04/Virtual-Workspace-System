@@ -1855,12 +1855,58 @@
          "tilewidth":32
         }, 
         {
+         "columns":24,
          "firstgid":3193,
-         "source":"VOF-1.tsx"
+         "image":"..\/Downloads\/Modern_Interiors_Free_v2.2\/Modern tiles_Free\/Interiors_free\/48x48\/Interiors_free_48x48.png",
+         "imageheight":4272,
+         "imagewidth":768,
+         "margin":0,
+         "name":"VOF-1",
+         "spacing":0,
+         "tilecount":3192,
+         "tileheight":32,
+         "tiles":[
+                {
+                 "id":436,
+                 "objectgroup":
+                    {
+                     "draworder":"index",
+                     "id":2,
+                     "name":"",
+                     "objects":[
+                            {
+                             "height":236,
+                             "id":1,
+                             "name":"",
+                             "opacity":1,
+                             "rotation":0,
+                             "type":"",
+                             "visible":true,
+                             "width":277,
+                             "x":-124,
+                             "y":-141
+                            }],
+                     "opacity":1,
+                     "type":"objectgroup",
+                     "visible":true,
+                     "x":0,
+                     "y":0
+                    }
+                }],
+         "tilewidth":32
         }, 
         {
+         "columns":18,
          "firstgid":6385,
-         "source":"Interiors_free_48x48.tsx"
+         "image":"..\/Downloads\/Modern_Interiors_Free_v2.2\/Modern tiles_Free\/Interiors_free\/48x48\/Interiors_free_48x48.png",
+         "imageheight":4272,
+         "imagewidth":768,
+         "margin":3,
+         "name":"Interiors_free_48x48",
+         "spacing":10,
+         "tilecount":1818,
+         "tileheight":32,
+         "tilewidth":32
         }],
  "tilewidth":32,
  "type":"map",
