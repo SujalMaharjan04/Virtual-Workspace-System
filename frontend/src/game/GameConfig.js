@@ -1,4 +1,7 @@
 import Phaser from "phaser"
+import PreloadScene from "./scene/PreloadScene"
+import RoomScene from "./scene/RoomScene"
+
 
 const GameConfig = {
     type: Phaser.AUTO,
@@ -12,7 +15,7 @@ const GameConfig = {
             debug: false
         }
     },
-    scene: []
+    scene: [PreloadScene, RoomScene]
 }
 
 export default GameConfig
