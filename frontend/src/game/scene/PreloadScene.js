@@ -1,7 +1,9 @@
 import Phaser from "phaser";
 import Office from "../../assets/map/office.json"
-import OfficeTiles from "../../assets/map/office.png"
-import InteriorTiles from "../../assets/map/Interiors_free_48x48.png"
+import officePNG from "../../assets/map/office.png"
+import office_tiles from "../../assets/map/office_tiles.png"
+import avatar1 from "../../assets/sprites/avatar1.png"
+import avatar2 from "../../assets/sprites/avatar2.png"
 
 
 
@@ -19,13 +21,17 @@ export default class PreloadScene extends Phaser.Scene {
         this.load.tilemapTiledJSON("office", Office)
 
         //Load tileset Image
-        this.load.image("office_tiles", OfficeTiles)
-        this.load.image("interior_tiles", InteriorTiles)
+        this.load.image("officePNG", officePNG)
+        this.load.image("office_tiles", office_tiles)
 
         //Load Avatar spritesheet
-        const avatars = ["avatar1", "avatar2"]
-        avatars.forEach(id => {
-            this.load.spritesheet(id, `/assets/sprites/${id}.png`, {
+        const avatars = [
+            {key: "avatar1", path: avatar1},
+            {key: "avatar2", path: avatar2}
+        ]
+        
+        avatars.forEach(({key, path}) => {
+            this.load.spritesheet(key, path, {
                 frameWidth: 64,
                 frameHeight: 64
             })
