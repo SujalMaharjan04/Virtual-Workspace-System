@@ -3,6 +3,8 @@ import Phaser from "phaser"
 import GameConfig from "../../game/GameConfig"
 
 
+let gameInstance = null
+
 const GameCanvas = () => {
     const gameRef = useRef(null)
 
@@ -13,13 +15,15 @@ const GameCanvas = () => {
         if (gameRef.current.dataset.initialized) return
         gameRef.current.dataset.initialized = "true"
 
-        const game = new Phaser.Game({
-            ...GameConfig,
-            parent: gameRef.current
-        })
+        if (!gameInstance) {
+            gameInstance = new Phaser.Game({
+                ...GameConfig,
+                parent: gameRef.current
+            })
+        }
 
         return () => {
-            game.destroy(true)
+            
         }
     }, [])
 
