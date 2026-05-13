@@ -36,13 +36,13 @@ export default class RoomScene extends Phaser.Scene {
     createMap() {
         const map = this.make.tilemap({key: "office"})
 
-        const tileset = map.addTilesetImage("VOF-1", "office_tiles", 32, 32)
+        const tileset = map.addTilesetImage("office_tiles", "office_tiles", 48, 48)
 
         //Layers
         this.bottomLayer = map.createLayer("Bottom Layer", tileset, 0, 0)
         this.topLayer = map.createLayer("Top Layer", tileset, 0, 0)
-        this.topLayer2 = map.createLayer("top layer 2", tileset, 0, 0)
-        this.topLayer3 = map.createLayer("top layer 3", tileset, 0, 0)
+        this.topLayer2 = map.createLayer("Top Layer 2", tileset, 0, 0)
+        this.topLayer3 = map.createLayer("Top Layer 3", tileset, 0, 0)
 
         this.createObjectCollider(map)
 
@@ -66,10 +66,8 @@ export default class RoomScene extends Phaser.Scene {
             "FlowerPot2",
             "Barrier1",
             "Barrier2",
-            "Boundary",
-            "Door",
-            "Door2",
-            "NoticeBoard"
+            "NoticeBoard",
+            "OuterBarrier"
         ]
 
         this.colliders = [] //store all border
@@ -88,6 +86,17 @@ export default class RoomScene extends Phaser.Scene {
                     )
                     body.setVisible(false)
                     body.body.setSize(bounds.width, bounds.height)
+                    body.refreshBody()
+                    this.colliders.push(body)
+                } else if (obj.width && obj.height) {
+                    const body = this.physics.add.staticImage(
+                        obj.x + obj.width / 2,
+                        obj.y + obj.height / 2,
+                        null
+                    )
+
+                    body.setVisible(false)
+                    body.body.setSize(obj.width, obj.height)
                     body.refreshBody()
                     this.colliders.push(body)
                 }
@@ -114,14 +123,14 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     createLocalPlayer() {
-        const avatarId = localStorage.getItem("avartarId") || "avatar1"
-        const userName = localStorage.getItem("logged").state.user.name || "You"
+        const avatarId = localStorage.getItem("avatarId") || "avatar1"
+        const userName = JSON.parse(localStorage.getItem("logged")).state.user.name || "You"
 
         const spawnLayer = this.map.getObjectLayer("Spawn")
-        const spawnObject = spawnLayer?.objects.find(obj => obj.properties?.find(p => p.name === "Spawn" && p.value === true))
+        const spawnObject = spawnLayer?.objects.find(obj => obj.properties?.find(p => p.name === "PlayerSpawn" && p.value === true))
 
-        const spawnX = spawnObject ? spawnObject.x + spawnObject.width / 2 : 610
-        const spawnY = spawnObject ? spawnObject.y + spawnObject.height / 2 : 864
+        const spawnX = spawnObject ? spawnObject.x + spawnObject.width / 2 : 900
+        const spawnY = spawnObject ? spawnObject.y + spawnObject.height / 2 : 1300
         
 
         this.localPlayer = this.physics.add.sprite(spawnX, spawnY, avatarId)
@@ -149,7 +158,7 @@ export default class RoomScene extends Phaser.Scene {
         ]
         avatars.forEach(avatarId => {
             directions.forEach(({key, row}) => {
-                const walkKey = `${avatarId} - walk -${key}`
+                const walkKey = `${avatarId}-walk-${key}`
                 if (!this.anims.exists(walkKey)) {
                     this.anims.create({
                         key: walkKey,
@@ -175,7 +184,7 @@ export default class RoomScene extends Phaser.Scene {
         })
     }
 
-    setUpCamera() {
+    setupCamera() {
         this.cameras.main.setZoom(1.5)
         this.cameras.main.startFollow(
             this.localPlayer,
@@ -246,7 +255,7 @@ export default class RoomScene extends Phaser.Scene {
         }
     }
 
-    emitPosition({x, y, direction}) {
+    emitPosition(x, y, direction) {
         console.log("Position", {x, y, direction})
     }
 
