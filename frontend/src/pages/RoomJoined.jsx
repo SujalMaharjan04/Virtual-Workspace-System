@@ -26,9 +26,9 @@ const RoomJoined = () => {
         }
     })
     return (
-        <div className = "flex flex-col min-h-screen">
+        <div className = "flex flex-col h-screen overflow-hidden">
             <RoomNavbar />
-            <main className = "flex-1 mt-15">
+            <main className = "flex flex-1 w-full overflow-hidden">
                 <GameCanvas />
             </main>
             <RoomFooter />

@@ -28,9 +28,10 @@ const GameCanvas = () => {
     }, [])
 
     return (
-        <div className = "relative w-screen h-screen">
-            <div ref = {gameRef} className = "absolute inset-0" />
-        </div>
+        // // <div className = "relative w-full h-full">
+        //     <div ref = {gameRef} className = "absolute inset-0" />
+        //  </div>
+        <div ref = {gameRef} className = "w-full h-full block" />
     )
 
 }
