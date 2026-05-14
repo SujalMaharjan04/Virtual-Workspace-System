@@ -74,11 +74,17 @@ export default class RoomScene extends Phaser.Scene {
 
         collisionLayer.forEach(layerName => {
             const objectLayer = map.getObjectLayer(layerName)
-            if (!objectLayer) return
+            if (!objectLayer) {
+                console.log(`${layerName} not found`)
+                return 
+            }
+
+            console.log(`${layerName} found. ${objectLayer.objects.length}`)
 
             objectLayer.objects.forEach(obj => {
                 if (obj.polygon) {
                     const bounds = this.getPolygonBounds(obj.polygon)
+                    console.log(`${layerName}: ${JSON.stringify(bounds)}`)
                     const body = this.physics.add.staticImage(
                         obj.x + bounds.x + bounds.width / 2,
                         obj.y + bounds.y + bounds.height / 2,
@@ -89,14 +95,19 @@ export default class RoomScene extends Phaser.Scene {
                     body.refreshBody()
                     this.colliders.push(body)
                 } else if (obj.width && obj.height) {
+                    const isRotated = obj.rotation === 90 || obj.rotation === 270
+
+                    const effectiveWidth = isRotated ? obj.height : obj.width
+                    const effectiveHeight = isRotated ? obj.width : obj.height
+                    console.log(`${layerName}: ${effectiveWidth} ${effectiveHeight}`)
                     const body = this.physics.add.staticImage(
-                        obj.x + obj.width / 2,
-                        obj.y + obj.height / 2,
+                        obj.x + effectiveWidth / 2,
+                        obj.y + effectiveHeight / 2,
                         null
                     )
 
                     body.setVisible(false)
-                    body.body.setSize(obj.width, obj.height)
+                    body.body.setSize(effectiveWidth, effectiveHeight)
                     body.refreshBody()
                     this.colliders.push(body)
                 }
@@ -151,10 +162,10 @@ export default class RoomScene extends Phaser.Scene {
     createAnimation() {
         const avatars = ["avatar1", "avatar2", "avatar3"]
         const directions = [
-            {key: "down", row: 0},
-            {key: "left", row: 1},
-            {key: "right", row: 2},
-            {key: "up", row: 3}
+            {key: "down", row: 9},
+            {key: "left", row: 10},
+            {key: "right", row: 11},
+            {key: "up", row: 12}
         ]
         avatars.forEach(avatarId => {
             directions.forEach(({key, row}) => {
@@ -185,13 +196,32 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     setupCamera() {
-        this.cameras.main.setZoom(1.5)
+        const mapWidth = this.map.widthInPixels
+        const mapHeight = this.map.heightInPixels
+
+        //Calculate the zoom to fit the full map
+        const zoomX = this.cameras.main.width / mapWidth
+        const zoomY = this.cameras.main.height / mapHeight
+
+        //Using the smaller value so that the whole map fits
+        const zoom = Math.max(zoomX, zoomY)
+        
+        this.cameras.main.setZoom(zoom)
+        this.cameras.main.setBounds(0, 0, mapWidth, mapHeight)
         this.cameras.main.startFollow(
             this.localPlayer,
             true,  //round pixels - prevent blurry rendering
             0.1,   //lerp x - smoothness (0.1 = smooth, 1 = instant)
             0.1    //lerp y
         )
+
+        //Recalculate zoom when window resize
+        this.scale.on("resize", (gameSize) => {
+            const newZoomX = gameSize.width / mapWidth
+            const newZoomY = gameSize.height / mapHeight
+
+            this.cameras.main.setZoom(Math.min(newZoomX, newZoomY))
+        })
     }
 
     setupInput() {
