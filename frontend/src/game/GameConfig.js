@@ -15,6 +15,10 @@ const GameConfig = {
             debug: false
         }
     },
+    scale: {
+        mode: Phaser.Scale.RESIZE,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+    },
     scene: [PreloadScene, RoomScene]
 }
 
