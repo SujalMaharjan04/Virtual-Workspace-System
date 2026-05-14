@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import Office from "../../assets/map/office.json"
-import officePNG from "../../assets/map/office.png"
+
 import office_tiles from "../../assets/map/office_tiles.png"
 import avatar1 from "../../assets/sprites/avatar1.png"
 import avatar2 from "../../assets/sprites/avatar2.png"
@@ -21,7 +21,6 @@ export default class PreloadScene extends Phaser.Scene {
         this.load.tilemapTiledJSON("office", Office)
 
         //Load tileset Image
-        this.load.image("officePNG", officePNG)
         this.load.image("office_tiles", office_tiles)
 
         //Load Avatar spritesheet
