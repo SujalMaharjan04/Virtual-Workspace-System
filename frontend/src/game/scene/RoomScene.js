@@ -4,14 +4,14 @@ export default class RoomScene extends Phaser.Scene {
     constructor() {
         super({key: "RoomScene"})
 
-        this.localPlayer = null
-        this.playerLabel = null
-        this.cursors = null
-        this.wasd = null
-        this.lastDirection = "down"
+        this.localPlayer = null //user Player
+        this.playerLabel = null // user name
+        this.cursors = null //arrow key
+        this.wasd = null //wasd keys
+        this.lastDirection = "down" //last direction
         this.lastEmitTime = 0
 
-        this.otherPlayer = {}
+        this.otherPlayer = {} 
 
         this.floorLayer = null
         this.objectLayer = null
@@ -36,21 +36,21 @@ export default class RoomScene extends Phaser.Scene {
     createMap() {
         const map = this.make.tilemap({key: "office"})
 
-        const tileset = map.addTilesetImage("office_tiles", "office_tiles", 48, 48)
+        const tileset = map.addTilesetImage("office_tiles", "office_tiles", 48, 48) //48 by 48 pixel tileset
 
         //Layers
-        this.bottomLayer = map.createLayer("Bottom Layer", tileset, 0, 0)
+        this.bottomLayer = map.createLayer("Bottom Layer", tileset, 0, 0) //parameters are layername, tileset used and x and y offset
         this.topLayer = map.createLayer("Top Layer", tileset, 0, 0)
         this.topLayer2 = map.createLayer("Top Layer 2", tileset, 0, 0)
         this.topLayer3 = map.createLayer("Top Layer 3", tileset, 0, 0)
-
+        //the offset is 0 so that the tiles are aligned properly
         this.createObjectCollider(map)
 
         //set world bounds to map size
         this.physics.world.setBounds(
-            0, 0,
-            map.widthInPixels,
-            map.heightInPixels
+            0, 0, //x, y
+            map.widthInPixels, //width
+            map.heightInPixels //height
         )
 
         this.map = map
@@ -86,19 +86,20 @@ export default class RoomScene extends Phaser.Scene {
                     const bounds = this.getPolygonBounds(obj.polygon)
                     console.log(`${layerName}: ${JSON.stringify(bounds)}`)
                     const body = this.physics.add.staticImage(
-                        obj.x + bounds.x + bounds.width / 2,
+                        obj.x + bounds.x + bounds.width / 2, //here divide by 2 to find the center of the collison body
                         obj.y + bounds.y + bounds.height / 2,
-                        null
+                        null // here key is null since i only need collision detection no visual 
                     )
-                    body.setVisible(false)
+                    
+                    body.setVisible(false) //setting the collision body visibility to falsae
                     body.body.setSize(bounds.width, bounds.height)
                     body.refreshBody()
                     this.colliders.push(body)
                 } else if (obj.width && obj.height) {
-                    const isRotated = obj.rotation === 90 || obj.rotation === 270
+                    const isRotated = obj.rotation === 90 || obj.rotation === 270 //checking for any rotation occur or not during tile creation
 
-                    const effectiveWidth = isRotated ? obj.height : obj.width
-                    const effectiveHeight = isRotated ? obj.width : obj.height
+                    const effectiveWidth = isRotated ? obj.height : obj.width //if rotation change width with height
+                    const effectiveHeight = isRotated ? obj.width : obj.height //if rotated change height with widht
                     console.log(`${layerName}: ${effectiveWidth} ${effectiveHeight}`)
                     const body = this.physics.add.staticImage(
                         obj.x + effectiveWidth / 2,
@@ -119,12 +120,12 @@ export default class RoomScene extends Phaser.Scene {
 
     //Helper - Get Bounding box of the polygon
     getPolygonBounds(polygon) {
-        const xs = polygon.map(p => p.x)
-        const ys = polygon.map(p => p.y)
-        const minX = Math.min(...xs)
-        const minY = Math.min(...ys)
-        const maxX = Math.max(...xs)
-        const maxY = Math.max(...ys)
+        const xs = polygon.map(p => p.x) //x-coor
+        const ys = polygon.map(p => p.y) //y-coor
+        const minX = Math.min(...xs) //min x
+        const minY = Math.min(...ys) //min y
+        const maxX = Math.max(...xs) //max x
+        const maxY = Math.max(...ys) //max y
         return {
             x: minX,
             y: minY,
@@ -140,8 +141,8 @@ export default class RoomScene extends Phaser.Scene {
         const spawnLayer = this.map.getObjectLayer("Spawn")
         const spawnObject = spawnLayer?.objects.find(obj => obj.properties?.find(p => p.name === "PlayerSpawn" && p.value === true))
 
-        const spawnX = spawnObject ? spawnObject.x + spawnObject.width / 2 : 900
-        const spawnY = spawnObject ? spawnObject.y + spawnObject.height / 2 : 1300
+        const spawnX = spawnObject ? spawnObject.x + spawnObject.width / 2 : 900 //if no spawn object place the x coor to 900 px
+        const spawnY = spawnObject ? spawnObject.y + spawnObject.height / 2 : 1300 //if no spawn object place the y-coor to 1300px
         
 
         this.localPlayer = this.physics.add.sprite(spawnX, spawnY, avatarId)

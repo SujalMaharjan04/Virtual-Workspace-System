@@ -49,23 +49,23 @@ export default class PreloadScene extends Phaser.Scene {
         const centerY = height / 2
 
         //Backgound bar 
-        const bgBar = this.add.rectangle(centerX, centerY, 400, 16, 0x252840)
+        const bgBar = this.add.rectangle(centerX, centerY, 400, 16, 0x252840) //the parameters are x, y, width, height and color - indigo
 
         //Progress Bar
         const progressBar = this.add.rectangle(
             centerX - 200, //Start from left edge
             centerY,
             0, //start at 0 width
-            12,
-            0x6C63FF
-        ).setOrigin(0, 0.5)
+            12, // height
+            0x6C63FF //purple violet color
+        ).setOrigin(0, 0.5) // Anchors the progressBar, parameters x (0-left edge, 1-right edge, 0.5-default) and y (0-top, 1-bottom)
 
         //Loadng text
         const loadingText = this.add.text(centerX, centerY - 30, "Loading....", {
             fontSize: "18px",
             color: "#F1F5F9",
             fontFamily: "Arial",
-        }).setOrigin(0.5)
+        }).setOrigin(0.5) //parameters - x, y, text, style
 
         //Percentage Text
         const percentageText = this.add.text(centerX, centerY + 30, "0%", {
@@ -75,8 +75,8 @@ export default class PreloadScene extends Phaser.Scene {
         }).setOrigin(0.5)
 
         //Update bar as each asset loads
-        this.load.on("progress", (value) => {
-            progressBar.width = 400 * value
+        this.load.on("progress", (value) => { // value is between 0 and 1 that Phaser provides 0 for no assets loaded 1 for assets loaded and 0.5 for half assets loaded
+            progressBar.width = 400 * value // progressBar has width 400
             percentageText.setText(`${Math.round(value * 100)}%`)
         })
 
@@ -86,7 +86,7 @@ export default class PreloadScene extends Phaser.Scene {
             progressBar.destroy()
             loadingText.destroy()
             percentageText.destroy()
-        })
+        }) //After the loading of the assets are complete all loading bar is destroyed
     }
 }
 
