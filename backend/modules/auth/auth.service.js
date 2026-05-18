@@ -41,7 +41,7 @@ const loginService = async({email, password}) => {
 
         const passwordCheck = await bcrypt.compare(password, user.password)
 
-        if (!passwordCheck) throw new Error("Incorrect Password")
+        if (!passwordCheck) throw new Error("Incorrect Credentials")
         
         const payload = {userId: user.user_id, email: user.email, userName: user.name}
 
