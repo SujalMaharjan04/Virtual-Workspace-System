@@ -81,7 +81,7 @@ const createRoom = async({roomName, password, userId, userName}) => {
         })
         
         const payload = {userId: userId, roomId: room_id, userName, roomRole: member.role}
-        const token = jwt.sign(payload, config.SECRET, {expiresIn: "1D"})
+        const token = jwt.sign(payload, config.SECRET, {expiresIn: "1d"})
 
         return {token, room: {room_id: room.room_id, room_name: room.room_name, is_active: room.is_active, created_by: room.created_by, max_capacity: room.max_capacity}, member}
     }
@@ -131,7 +131,7 @@ const joinRoom = async({roomId, password, userId, userName}) => {
 
         const payload = {userId: userId, roomId: room.room_id, userName, roomRole: member.role}
 
-        const token = jwt.sign(payload, config.SECRET, {expiresIn: "1D"})
+        const token = jwt.sign(payload, config.SECRET, {expiresIn: "1d"})
 
         return {token, room: {room_id: room.room_id, room_name: room.room_name, is_active: room.is_active, created_by: room.created_by, max_capacity: room.max_capacity}, member}
     }
