@@ -60,7 +60,7 @@ const sendDM = async(req, res) => {
         const {sentToId} = req.params //User Id that is receiving the msg via params
         const {message} = req.body
 
-        if (!roomId || !userId || message) return res.status(403).json({error: "Invalid message"})
+        if (!roomId || !userId || !message) return res.status(403).json({error: "Invalid message"})
 
         const response = await messageService.sendDM({roomId, userId, sentToId, message})
 
