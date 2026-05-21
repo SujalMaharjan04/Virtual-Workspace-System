@@ -1,11 +1,44 @@
+import { useEffect } from "react"
 import useAuthStore from "../store/authStore"
 import useRoomStore from "../store/roomStore"
 import RoomCard from "../components/Dashboard/RoomCard"
+import roomService from "../services/room"
+import { jwtDecode } from "jwt-decode"
 
 import Navbar from "../components/Dashboard/Navbar"
 const DashBoard = () => {
     const user = useAuthStore(state => state.user)
+    const token = useAuthStore(state => state.token)
     const rooms = useRoomStore(state => state.rooms)
+    const roomToken = useRoomStore(state => state.token)
+    const setRooms = useRoomStore(state => state.setRooms)
+    const leave = useRoomStore(state => state.leave)
+
+    useEffect(() => {
+        const fetchRooms = async() => {
+        const getRooms = await roomService.getAllRooms()
+        setRooms(getRooms)
+        }
+
+        if (!token) return
+        fetchRooms()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [token])
+
+
+    useEffect(() => {
+        try {
+            if (roomToken) {
+                const {exp} = jwtDecode(roomToken)
+                if (Date.now() >= exp * 1000) {
+                    leave()
+                }
+            } 
+        }
+        catch {
+            leave()
+        }
+    })
     
     return (
         <div className = "flex flex-col">
