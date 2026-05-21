@@ -17,8 +17,8 @@ const useRoomStore = create(
             setRoomMembers: (members) => set({roomMembers: members}),
             addRoomMembers: (members) => set((state) => ({roomMembers: [...state.roomMembers, members]})),
             leave: () => {
-                localStorage.removeItem("room-info")
                 set({room:null, token: null})
+                localStorage.removeItem("room-info") 
             }
         }),
         {
