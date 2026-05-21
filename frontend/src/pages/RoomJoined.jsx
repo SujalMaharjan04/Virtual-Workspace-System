@@ -1,35 +1,28 @@
-import { useEffect } from "react"
+import { useState, useEffect } from "react"
 import GameCanvas from "../components/Game/GameCanvas"
 import RoomFooter from "../components/Room/RoomFooter"
 import RoomNavbar from "../components/Room/RoomNavbar"
 import useRoomStore from "../store/roomStore"
-import { jwtDecode } from "jwt-decode" 
 import { useNavigate } from "react-router-dom"
+import AvatarSelection from "../components/Avatar/AvatarSelection"
 
 const RoomJoined = () => {
     const navigate = useNavigate()
     const roomToken = useRoomStore(state => state.token)
     const leave = useRoomStore(state => state.leave)
+    const [avatarSelect, setAvatarSelect] = useState(false)
 
     useEffect(() => {
-        try {
-            if (roomToken) {
-                const {exp} = jwtDecode(roomToken)
-                if (Date.now() >= exp * 1000) {
-                    leave()
-                    navigate("/")
-                }
-            } 
-        }
-        catch {
-            leave()
-        }
-    })
+        const savedAvatar = localStorage.getItem("avatarId")
+        if (savedAvatar) setAvatarSelect(true)
+    }, [])
+
+
     return (
         <div className = "flex flex-col h-screen overflow-hidden">
             <RoomNavbar />
             <main className = "flex flex-1 w-full overflow-hidden">
-                <GameCanvas />
+                {avatarSelect ? <GameCanvas /> : <AvatarSelection onSelect = {() => setAvatarSelect(true)} />}
             </main>
             <RoomFooter />
         </div>
