@@ -1,11 +1,13 @@
 import roomService from "../../services/room"
 import useNotificationStore from "../../store/notificationStore"
 import useRoomStore from "../../store/roomStore"
+import useAvatarStore from "../../store/avatarStore"
 
 const RoomFooter = () => {
     const setNotification = useNotificationStore(state => state.setNotification)
-    const setRoom = useRoomStore(state => state.setRoom)
-    const setRoomToken = useRoomStore(state => state.setRoomToken)
+    const leaveRoom = useRoomStore(state => state.leave)
+    const removeAvatar = useAvatarStore(state => state.removeAvatar)
+
 
     const handleLeave = async() => {
         const response = await roomService.leaveRoom()
@@ -15,8 +17,8 @@ const RoomFooter = () => {
             return
         }
 
-        setRoom(null)
-        setRoomToken(null)
+        leaveRoom()
+        removeAvatar()
         setNotification("Room Left")
 
     }
