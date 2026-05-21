@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import useAvatarStore from "../../store/avatarStore";
 
 export default class RoomScene extends Phaser.Scene {
     constructor() {
@@ -126,6 +127,7 @@ export default class RoomScene extends Phaser.Scene {
         const minY = Math.min(...ys) //min y
         const maxX = Math.max(...xs) //max x
         const maxY = Math.max(...ys) //max y
+        console.log(`x: ${minX}0, y: ${minY}, width: ${maxX - minX}, height: ${maxY - minY}`)
         return {
             x: minX,
             y: minY,
@@ -135,7 +137,9 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     createLocalPlayer() {
-        const avatarId = localStorage.getItem("avatarId") || "avatar1"
+        const parsed = JSON.parse(localStorage.getItem("avatarId"))
+        const state = parsed.state
+        const avatarId = state.id
         const userName = JSON.parse(localStorage.getItem("logged")).state.user.name || "You"
 
         const spawnLayer = this.map.getObjectLayer("Spawn")
@@ -163,7 +167,7 @@ export default class RoomScene extends Phaser.Scene {
     createAnimation() {
         const avatars = ["avatar1", "avatar2", "avatar3"]
         const directions = [
-            {key: "down", row: 9},
+            {key: "down", row: 9}, //row no. of the avatar spritesheet 
             {key: "left", row: 10},
             {key: "right", row: 11},
             {key: "up", row: 12}
