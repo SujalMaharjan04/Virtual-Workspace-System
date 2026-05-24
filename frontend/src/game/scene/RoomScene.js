@@ -167,20 +167,20 @@ export default class RoomScene extends Phaser.Scene {
     createAnimation() {
         const avatars = ["avatar1", "avatar2", "avatar3"]
         const directions = [
-            {key: "down", row: 9}, //row no. of the avatar spritesheet 
-            {key: "left", row: 10},
-            {key: "right", row: 11},
-            {key: "up", row: 12}
+            {key: "down", frameNumber: 130}, //row no. of the avatar spritesheet 
+            {key: "left", frameNumber: 117},
+            {key: "right", frameNumber: 143},
+            {key: "up", frameNumber: 104}
         ]
         avatars.forEach(avatarId => {
-            directions.forEach(({key, row}) => {
+            directions.forEach(({key, frameNumber}) => {
                 const walkKey = `${avatarId}-walk-${key}`
                 if (!this.anims.exists(walkKey)) {
                     this.anims.create({
                         key: walkKey,
                         frames: this.anims.generateFrameNumbers(avatarId, {
-                            start: row * 9 + 1,
-                            end: row * 9 + 8
+                            start: frameNumber + 1,
+                            end: frameNumber + 8
                         }),
                         frameRate: 8,
                         repeat: -1,
@@ -191,7 +191,7 @@ export default class RoomScene extends Phaser.Scene {
                 if (!this.anims.exists(idleKey)) {
                     this.anims.create({
                         key: idleKey,
-                        frames: [{key: avatarId, frame: row * 9}],
+                        frames: [{key: avatarId, frame: frameNumber }],
                         frameRate: 1,
                         repeat: -1
                     })
