@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-import useAvatarStore from "../../store/avatarStore";
 
 export default class RoomScene extends Phaser.Scene {
     constructor() {
@@ -76,16 +75,13 @@ export default class RoomScene extends Phaser.Scene {
         collisionLayer.forEach(layerName => {
             const objectLayer = map.getObjectLayer(layerName)
             if (!objectLayer) {
-                console.log(`${layerName} not found`)
                 return 
             }
 
-            console.log(`${layerName} found. ${objectLayer.objects.length}`)
 
             objectLayer.objects.forEach(obj => {
                 if (obj.polygon) {
                     const bounds = this.getPolygonBounds(obj.polygon)
-                    console.log(`${layerName}: ${JSON.stringify(bounds)}`)
                     const body = this.physics.add.staticImage(
                         obj.x + bounds.x + bounds.width / 2, //here divide by 2 to find the center of the collison body
                         obj.y + bounds.y + bounds.height / 2,
@@ -101,7 +97,6 @@ export default class RoomScene extends Phaser.Scene {
 
                     const effectiveWidth = isRotated ? obj.height : obj.width //if rotation change width with height
                     const effectiveHeight = isRotated ? obj.width : obj.height //if rotated change height with widht
-                    console.log(`${layerName}: ${effectiveWidth} ${effectiveHeight}`)
                     const body = this.physics.add.staticImage(
                         obj.x + effectiveWidth / 2,
                         obj.y + effectiveHeight / 2,
@@ -127,7 +122,6 @@ export default class RoomScene extends Phaser.Scene {
         const minY = Math.min(...ys) //min y
         const maxX = Math.max(...xs) //max x
         const maxY = Math.max(...ys) //max y
-        console.log(`x: ${minX}0, y: ${minY}, width: ${maxX - minX}, height: ${maxY - minY}`)
         return {
             x: minX,
             y: minY,
