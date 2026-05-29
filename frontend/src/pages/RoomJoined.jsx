@@ -2,14 +2,11 @@ import { useState, useEffect } from "react"
 import GameCanvas from "../components/Game/GameCanvas"
 import RoomFooter from "../components/Room/RoomFooter"
 import RoomNavbar from "../components/Room/RoomNavbar"
-import useRoomStore from "../store/roomStore"
-import { useNavigate } from "react-router-dom"
 import AvatarSelection from "../components/Avatar/AvatarSelection"
+import useSocket from "../hooks/useSocket"
 
 const RoomJoined = () => {
-    const navigate = useNavigate()
-    const roomToken = useRoomStore(state => state.token)
-    const leave = useRoomStore(state => state.leave)
+    useSocket()
     const [avatarSelect, setAvatarSelect] = useState(false)
 
     useEffect(() => {
