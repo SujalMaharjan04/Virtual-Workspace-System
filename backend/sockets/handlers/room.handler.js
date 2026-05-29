@@ -14,7 +14,7 @@ const registerRoomHandler = async(io, socket) => {
             where: {room_id: roomId},
             data: {is_active: true}
         })
-
+        await new Promise(resolve => setTimeout(resolve, 20))
         socket.emit(ROOM_EVENTS.ADMIN_JOINED, {message: "Room is now active"})
     } else {
         if (!room.is_active) {
@@ -23,8 +23,6 @@ const registerRoomHandler = async(io, socket) => {
             return 
         }
     }
-
-    console.log(`User ${socket.userName} has connected to room ${roomId}`)
         socket.join(roomId)
 
         socket.to(socket.roomId).emit(ROOM_EVENTS.JOIN, {
