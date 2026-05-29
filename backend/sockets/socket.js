@@ -14,15 +14,20 @@ let io
 const initializeServer = (server) => {
     io = new Server(server, {
         cors: {
-            origin: "http://localhost:3001",
-            methods: ["GET", "POST"]
-        }
+            origin: "http://localhost:5173",
+            methods: ["GET", "POST"],
+            credentials: true
+        },
     })
 
     io.use(socketMiddleware)
 
     io.on("connection", async (socket) => {
-        registerRoomHandler(io, socket)
+        try {
+            await registerRoomHandler(io, socket)
+        } catch (err) {
+            console.error("Error in registerRoomHandler:", err)
+        }
         registerMessageHandler(io, socket)
         registerAvatarHandler(io, socket)
         registerTaskHandler(io, socket)
