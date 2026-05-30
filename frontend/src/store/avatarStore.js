@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 const useAvatarStore = create(
     persist(
@@ -8,11 +8,16 @@ const useAvatarStore = create(
             setAvatar: (avatarId) => set({id: avatarId}),
             removeAvatar: () => {
                 set({id: null})
-                localStorage.removeItem("avatarId")
+                // localStorage.removeItem("avatarId")
+                sessionStorage.removeItem("avatarId")
             }
         }),
+        // {
+        //     name: "avatarId",   
+        // }
         {
-            "name": "avatarId",   
+            name: "avatarId",
+            storage: createJSONStorage(() => sessionStorage),
         }
     )
 )

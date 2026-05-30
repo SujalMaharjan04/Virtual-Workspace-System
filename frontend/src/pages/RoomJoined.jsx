@@ -10,7 +10,7 @@ const RoomJoined = () => {
     const [avatarSelect, setAvatarSelect] = useState(false)
 
     useEffect(() => {
-        const savedAvatar = localStorage.getItem("avatarId")
+        const savedAvatar = sessionStorage.getItem("avatarId")
         if (savedAvatar) setAvatarSelect(true)
     }, [])
 

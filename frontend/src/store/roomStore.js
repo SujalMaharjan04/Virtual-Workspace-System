@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 
 const useRoomStore = create(
@@ -18,15 +18,25 @@ const useRoomStore = create(
             addRoomMembers: (members) => set((state) => ({roomMembers: [...state.roomMembers, members]})),
             leave: () => {
                 set({room:null, token: null})
-                localStorage.removeItem("room-info") 
+                // localStorage.removeItem("room-info") 
+                sessionStorage.removeItem("room-info")
             }
         }),
+        // {
+        //     name: "room-info",
+        //     partialize: (state) => ({
+        //         token: state.token,
+        //         room: state.room
+        //     })
+        // }
         {
             name: "room-info",
+            storage: createJSONStorage(() => sessionStorage),
             partialize: (state) => ({
                 token: state.token,
                 room: state.room
             })
+
         }
     )
 )
