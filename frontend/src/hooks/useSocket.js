@@ -1,17 +1,20 @@
 import { useEffect } from "react";
 import socket from "../socket";
-import registerRoomHandler from "../socket/handlers/roomHandlers";
+import RegisterRoomHandler from "../socket/handlers/roomHandlers";
 
 
 const useSocket = () => {
     useEffect(() => {
-        const token = JSON.parse(localStorage.getItem("room-info")).state.token
+        const token = JSON.parse(sessionStorage.getItem("room-info")).state.token
         if (!token) return
 
         socket.auth = {token}
 
+        let cleanUpRoomHandler = null
+
         const handleConnect = () => {
-            registerRoomHandler()
+            if (cleanUpRoomHandler) cleanUpRoomHandler()
+            cleanUpRoomHandler = RegisterRoomHandler()
         }
 
         const handleConnectError = (error) => {
@@ -26,6 +29,7 @@ const useSocket = () => {
         return () => {
             socket.off("connect", handleConnect)
             socket.off("connect_error", handleConnectError)
+            if (cleanUpRoomHandler) cleanUpRoomHandler()
             socket.disconnect()
         }
     }, [])
