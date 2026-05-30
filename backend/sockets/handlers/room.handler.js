@@ -9,27 +9,27 @@ const registerRoomHandler = async(io, socket) => {
         where: {room_id: roomId}
     })
 
+    
     if (room.created_by === userId) {
         await prisma.room.update({
             where: {room_id: roomId},
             data: {is_active: true}
         })
-        await new Promise(resolve => setTimeout(resolve, 20))
-        socket.emit(ROOM_EVENTS.ADMIN_JOINED, {message: "Room is now active"})
+        socket.join(roomId)
+        io.to(roomId).emit(ROOM_EVENTS.ADMIN_JOINED, {message: "Room is now active"})
     } else {
         if (!room.is_active) {
             socket.emit(ROOM_EVENTS.INACTIVE, {message: "Room is not active yet, waiting for admin"})
             socket.disconnect()
             return 
         }
-    }
         socket.join(roomId)
-
-        socket.to(socket.roomId).emit(ROOM_EVENTS.JOIN, {
+        socket.to(roomId).emit(ROOM_EVENTS.JOIN, {
             userId,
             message: `${socket.userName} has joined the room`
         })
-
+    }
+        
         try {
             await prisma.room_members.upsert({
                 where: {
