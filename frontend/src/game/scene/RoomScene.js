@@ -131,10 +131,10 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     createLocalPlayer() {
-        const parsed = JSON.parse(localStorage.getItem("avatarId"))
+        const parsed = JSON.parse(sessionStorage.getItem("avatarId"))
         const state = parsed.state
         const avatarId = state.id
-        const userName = JSON.parse(localStorage.getItem("logged")).state.user.name || "You"
+        const userName = JSON.parse(sessionStorage.getItem("logged")).state.user.name || "You"
 
         const spawnLayer = this.map.getObjectLayer("Spawn")
         const spawnObject = spawnLayer?.objects.find(obj => obj.properties?.find(p => p.name === "PlayerSpawn" && p.value === true))
