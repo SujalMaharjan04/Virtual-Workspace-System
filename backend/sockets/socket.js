@@ -28,10 +28,10 @@ const initializeServer = (server) => {
         } catch (err) {
             console.error("Error in registerRoomHandler:", err)
         }
-        registerMessageHandler(io, socket)
-        registerAvatarHandler(io, socket)
-        registerTaskHandler(io, socket)
-        registerCallHandler(io, socket)
+        await registerMessageHandler(io, socket)
+        await registerAvatarHandler(io, socket)
+        await registerTaskHandler(io, socket)
+        await registerCallHandler(io, socket)
     })
 
     
