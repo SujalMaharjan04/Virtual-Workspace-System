@@ -1,4 +1,4 @@
-const CALL_EVENTS = require("../events")
+const {CALL_EVENTS }= require("../events")
 
 
 const registerCallHandler = async(io, socket) => {
@@ -15,8 +15,8 @@ const registerCallHandler = async(io, socket) => {
             //send existing member to new user
             socket.to(roomId).emit(CALL_EVENTS.EXISTING_MEMBER, {
                 member: otherSockets.map(m => ({
-                    userId: s.userId,
-                    userName: s.userName
+                    userId: m.userId,
+                    userName: m.userName
                 }))
             })
 

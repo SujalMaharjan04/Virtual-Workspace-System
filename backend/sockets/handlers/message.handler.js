@@ -1,4 +1,4 @@
-const MESSAGE_EVENTS = require('../events')
+const {MESSAGE_EVENTS} = require('../events')
 const prisma = require('../../src/db')
 const messageService = require('../../modules/message/message.service')
 

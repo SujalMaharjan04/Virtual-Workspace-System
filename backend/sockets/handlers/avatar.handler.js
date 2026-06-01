@@ -1,4 +1,4 @@
-const AVATAR_EVENTS = require("../events")
+const {AVATAR_EVENTS} = require("../events")
 const avatarService = require('../../modules/avatar/avatar.service')
 
 const registerAvatarHandler = async(io, socket) => {

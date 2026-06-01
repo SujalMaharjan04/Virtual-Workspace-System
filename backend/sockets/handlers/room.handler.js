@@ -1,4 +1,4 @@
-const ROOM_EVENTS = require("../events")
+const {ROOM_EVENTS} = require("../events")
 const prisma = require("../../src/db")
 
 const registerRoomHandler = async(io, socket) => {
@@ -9,7 +9,6 @@ const registerRoomHandler = async(io, socket) => {
         where: {room_id: roomId}
     })
 
-    
     if (room.created_by === userId) {
         await prisma.room.update({
             where: {room_id: roomId},
@@ -64,6 +63,7 @@ const registerRoomHandler = async(io, socket) => {
         // })
 
         socket.on("disconnect", async() => {
+            console.log(`${socket.userName} has disconnected ${socket.id}`)
             socket.to(roomId).emit(ROOM_EVENTS.USER_LEFT, {
                 userId,
                 message: `${socket.userName} has left the room`
