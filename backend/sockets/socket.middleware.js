@@ -3,7 +3,6 @@ const config = require("../utils/config")
 
 const socketMiddleware = (socket, next) => {
     const token = socket.handshake.auth.token
-
     if (!token) return next(new Error("Authentication Error: No Token"))
 
     try {
@@ -24,7 +23,7 @@ const socketMiddleware = (socket, next) => {
         next()
     }
     catch (error) {
-        next(new Error("Invalid Token" + error.message))
+        next(new Error("Invalid Token"))
     }
     
 }

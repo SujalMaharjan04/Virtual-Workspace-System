@@ -22,7 +22,7 @@ const initializeServer = (server) => {
 
     io.use(socketMiddleware)
 
-    io.on("connection", async (socket) => {
+    io.on("connection", async (socket) => {        
         try {
             await registerRoomHandler(io, socket)
         } catch (err) {
@@ -31,7 +31,7 @@ const initializeServer = (server) => {
         await registerMessageHandler(io, socket)
         await registerAvatarHandler(io, socket)
         await registerTaskHandler(io, socket)
-        await registerCallHandler(io, socket)
+        await registerCallHandler(io, socket)   
     })
 
     
