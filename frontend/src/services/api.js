@@ -6,8 +6,10 @@ const api = axios.create({
 
 
 api.interceptors.request.use((config) => {
-    const stored = localStorage.getItem('logged')
-    const roomToken = localStorage.getItem('room-info')
+    // const stored = localStorage.getItem('logged')
+    // const roomToken = localStorage.getItem('room-info')
+    const stored = sessionStorage.getItem("logged")
+    const roomToken = sessionStorage.getItem("room-info")
 
     if (stored) {
         const parsed = JSON.parse(stored)
