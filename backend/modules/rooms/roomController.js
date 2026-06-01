@@ -14,7 +14,6 @@ const getAllRooms  = async(req, res) => {
         return res.status(200).json(rooms)
     }
     catch (error) {
-        console.log(error.message)
         return res.status(500).json({error: error.message})
     }
 }
