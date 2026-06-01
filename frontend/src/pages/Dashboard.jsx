@@ -14,17 +14,6 @@ const DashBoard = () => {
     const setRooms = useRoomStore(state => state.setRooms)
     const leave = useRoomStore(state => state.leave)
 
-    useEffect(() => {
-        const fetchRooms = async() => {
-        const getRooms = await roomService.getAllRooms()
-        setRooms(getRooms)
-        }
-
-        if (!token) return
-        fetchRooms()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [token])
-
 
     useEffect(() => {
         try {
@@ -38,7 +27,20 @@ const DashBoard = () => {
         catch {
             leave()
         }
-    })
+    }, [roomToken, leave])
+
+    useEffect(() => {
+        const fetchRooms = async() => {
+        const getRooms = await roomService.getAllRooms()
+        setRooms(getRooms)
+        }
+
+        if (!token) return
+        fetchRooms()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [token])
+
+
     
     return (
         <div className = "flex flex-col">
