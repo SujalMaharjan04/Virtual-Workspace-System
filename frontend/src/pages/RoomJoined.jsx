@@ -4,13 +4,14 @@ import RoomFooter from "../components/Room/RoomFooter"
 import RoomNavbar from "../components/Room/RoomNavbar"
 import AvatarSelection from "../components/Avatar/AvatarSelection"
 import useSocket from "../hooks/useSocket"
+import useAuthStore from "../store/authStore"
 
 const RoomJoined = () => {
     useSocket()
     const [avatarSelect, setAvatarSelect] = useState(false)
 
     useEffect(() => {
-        const savedAvatar = sessionStorage.getItem("avatarId")
+        const savedAvatar = useAuthStore.getState().user.avatarId
         if (savedAvatar) setAvatarSelect(true)
     }, [])
 
