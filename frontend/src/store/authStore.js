@@ -9,6 +9,11 @@ const useAuthStore = create(
 
             setUser: (user) => set({user}),
             setToken: (token) => set({token}),
+
+            //Save avatarId into the user Object
+            setAvatarId: (avatarId) => set((state) => ({
+                user: {...state.user, avatarId}
+            })),
             logout: () => {
                 // localStorage.removeItem('logged')
                 sessionStorage.removeItem("logged")
