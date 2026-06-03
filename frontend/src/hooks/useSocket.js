@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { createSocket } from "../socket";
 import registerRoomHandler from "../socket/handlers/roomHandlers";
+import useRoomStore from "../store/roomStore";
 
 let socket
 
 const useSocket = () => {
     useEffect(() => {
-        const token = JSON.parse(sessionStorage.getItem("room-info")).state.token
+        const token = useRoomStore.getState().token
         if (!token) return
 
         socket = createSocket(token)

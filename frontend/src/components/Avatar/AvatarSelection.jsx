@@ -1,7 +1,7 @@
 import { useState } from "react"
 import avatar1 from "../../assets/sprites/avatar1.png"
 import avatar2 from "../../assets/sprites/avatar2.png"
-import useAvatarStore from "../../store/avatarStore"
+import useAuthStore from "../../store/authStore"
 
 const AVATARTS = [
     {id: "avatar1", path: avatar1, name: "Character 1"},
@@ -9,7 +9,7 @@ const AVATARTS = [
 ]
 
 const AvatarSelection = ({onSelect}) => {
-    const setAvatar = useAvatarStore(state => state.setAvatar)
+    const setAvatarId = useAuthStore.getState().setAvatarId
     const [selected, setSelected] = useState(null)
     // const navigate = useNavigate()
     
@@ -19,7 +19,7 @@ const AvatarSelection = ({onSelect}) => {
 
     const handleComfirm = () => {
         if (!selected) return 
-        setAvatar(selected)
+        setAvatarId(selected)
         onSelect?.()
     }
     return(

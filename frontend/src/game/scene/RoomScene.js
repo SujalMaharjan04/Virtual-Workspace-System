@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import useAuthStore from "../../store/authStore";
 
 export default class RoomScene extends Phaser.Scene {
     constructor() {
@@ -131,10 +132,9 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     createLocalPlayer() {
-        const parsed = JSON.parse(sessionStorage.getItem("avatarId"))
-        const state = parsed.state
-        const avatarId = state.id
-        const userName = JSON.parse(sessionStorage.getItem("logged")).state.user.name || "You"
+        const {user} = useAuthStore.getState() 
+        const avatarId = user.avatarId
+        const userName = user.userName || "You"
 
         const spawnLayer = this.map.getObjectLayer("Spawn")
         const spawnObject = spawnLayer?.objects.find(obj => obj.properties?.find(p => p.name === "PlayerSpawn" && p.value === true))
