@@ -8,11 +8,11 @@ const socketMiddleware = (socket, next) => {
     try {
         const decoded = jwt.verify(token, config.SECRET)
         if (!decoded.roomId) {
-            return next(new Error("Authentication Error: No Room ID"))
+            return next(new Error(ROOM_TOKEN_MISSING))
         }
 
         if (!decoded.userId) {
-            return next(new Error("Authentication Error: No User Id"))
+            return next(new Error(AUTH_TOKEN_MISSING))
         }
 
 
@@ -23,7 +23,7 @@ const socketMiddleware = (socket, next) => {
         next()
     }
     catch (error) {
-        next(new Error("Invalid Token"))
+        next(new Error("AUTH_TOKEN_EXPIRED"))
     }
     
 }

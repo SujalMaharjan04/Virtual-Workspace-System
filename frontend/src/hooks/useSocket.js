@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { createSocket } from "../socket";
 import registerRoomHandler from "../socket/handlers/roomHandlers";
 import useRoomStore from "../store/roomStore";
+import { handleAuthError, handleRoomError } from "../utils/tokenError";
 
 let socket
 
@@ -21,6 +22,11 @@ const useSocket = () => {
 
         const handleConnectError = (error) => {
             console.log("Socket connection error:", error)
+            if (error.message === "ROOM_TOKEN_MISSING") {
+                handleRoomError()
+            } else if (error.message === "AUTH_TOKEN_MISSING") {
+                handleAuthError()
+            }
         }
 
         socket.on("connect", handleConnect)
