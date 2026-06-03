@@ -1,25 +1,96 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
 
 const useAvatarStore = create(
-    persist(
         (set) => ({
-            id: null,
-            setAvatar: (avatarId) => set({id: avatarId}),
-            removeAvatar: () => {
-                set({id: null})
-                // localStorage.removeItem("avatarId")
-                sessionStorage.removeItem("avatarId")
-            }
-        }),
-        // {
-        //     name: "avatarId",   
-        // }
-        {
-            name: "avatarId",
-            storage: createJSONStorage(() => sessionStorage),
-        }
-    )
+            // Local Player Position
+            localPlayer: {
+                x: 0,
+                y: 0,
+                direction: "down",
+                avatarId: null,
+                userName: null
+            },
+            //Other Player - {userId: {x, y, direction, avatarId, userName}}
+            otherPlayer: {},
+
+            //Set Local Player Initially
+            setLocalPlayer: (data) => set({localPlayer: data}),
+
+            //Update Local Player Position
+            updateLocalPlayer: ({x, y, direction}) => set((state) => ({
+                ...state.localPlayer,
+                x, y, 
+                direction
+            })),
+
+            // Other Player Actions
+
+            //Called when other players joins the room
+            addPlayer: ({userId, userName, x, y, direction = "down", avatarId}) => {
+                set((state) => ({
+                    otherPlayer: {
+                        ...state.otherPlayer,
+                        [userId]: {
+                            userName, 
+                            avatarId,
+                            x, y, 
+                            direction,
+                            targetX: x,
+                            targetY: y
+                        }
+                    }
+                }))
+            },
+
+            //Called when the socket receives avatar:moved event
+            updatePlayerPosition: ({userId, x, y, direction, avatarId}) => {
+                set((state) => {
+                    if (!state.otherPlayer[userId]) return state
+
+                    return {
+                        otherPlayer: {
+                            ...state.otherPlayer,
+                            [userId]: {
+                                ...state.otherPlayer[userId],
+                                targetX: x,
+                                targetY: y,
+                                direction,
+                                avatarId: avatarId || state.otherPlayer[userId].avatarId
+                            }
+                        }
+                    }
+                })
+            },
+
+            //Called when the socket receives full room info on join
+            setAllPlayer: (avatars) => {
+                const playerMap = {}
+                avatars.forEach(avatar => {
+                    playerMap[avatar.userId] = {
+                        ...avatar,
+                        targetX: avatar.x,
+                        targetY: avatar.y
+                    }
+                })
+
+                set({otherPlayer: playerMap})
+            },
+
+            //Called when a user disconnects
+            removePlayer: (userId) => {
+                set((state) => {
+                    const updated = {...state.otherPlayer}
+                    delete updated.otherPlayer[userId]
+                    return {otherPlayer: updated}
+                })
+            },
+
+            //Clear all Players when leaving room
+            clearPlayer: () => set({otherPlayer: {}}),
+
+
+
+        })
 )
 
 export default useAvatarStore
