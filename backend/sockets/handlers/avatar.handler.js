@@ -7,8 +7,11 @@ const registerAvatarHandler = async(io, socket) => {
     const userName = socket.userName
 
     const avatars = await avatarService.getAvatar({roomId})
+    //Emits the avatar positions to other sockets
     socket.emit(AVATAR_EVENTS.POSITION, avatars)
 
+
+    //On Avatar movement, update the db
     socket.on(AVATAR_EVENTS.MOVE, async(data) => {
         try {
             const avatar = await avatarService.upsertAvatar({userId, roomId,  x:data.x, y:data.y})

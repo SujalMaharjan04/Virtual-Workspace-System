@@ -9,6 +9,7 @@ const registerRoomHandler = async(io, socket) => {
         where: {room_id: roomId}
     })
 
+    //When the admin joins the room 
     if (room.created_by === userId) {
         await prisma.room.update({
             where: {room_id: roomId},
@@ -17,7 +18,8 @@ const registerRoomHandler = async(io, socket) => {
         socket.join(roomId)
         io.to(roomId).emit(ROOM_EVENTS.ADMIN_JOINED, {message: "Room is now active"})
     } else {
-        if (!room.is_active) {
+        //When others join the room
+        if (!room.is_active) { // If room not active
             socket.emit(ROOM_EVENTS.INACTIVE, {message: "Room is not active yet, waiting for admin"})
             socket.disconnect()
             return 
@@ -62,6 +64,7 @@ const registerRoomHandler = async(io, socket) => {
         //     })
         // })
 
+        //When the user leaves the room
         socket.on("disconnect", async() => {
             console.log(`${socket.userName} has disconnected ${socket.id}`)
             socket.to(roomId).emit(ROOM_EVENTS.USER_LEFT, {
