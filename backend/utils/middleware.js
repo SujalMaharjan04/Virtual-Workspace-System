@@ -13,7 +13,7 @@ const userExtractor = (req, res, next) => {
             message: "No Token",
             type: "AUTH_TOKEN_MISSING"
         })
-        next()
+        
     }
 
     try {
@@ -48,7 +48,7 @@ const roomExtractor = (req, res, next) => {
             message: "Room Token Not Found",
             type: "ROOM_TOKEN_MISSING"
         })
-        next()
+        
     }
 
     try {
