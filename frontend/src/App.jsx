@@ -15,21 +15,21 @@ const App = () => {
   const logout = useAuthStore(state => state.logout)
   const navigate = useNavigate()
 
-  useEffect(() => {
-    try {
-        if (token) {
-          const {exp} = jwtDecode(token)
-        if (Date.now() >= exp * 1000) {
-          logout()
-          navigate("/auth")
-        }
-      }
-    }
-    catch {
-      logout()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token])
+  // useEffect(() => {
+  //   try {
+  //       if (token) {
+  //         const {exp} = jwtDecode(token)
+  //       if (Date.now() >= exp * 1000) {
+  //         logout()
+  //         navigate("/auth")
+  //       }
+  //     }
+  //   }
+  //   catch {
+  //     logout()
+  //   }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [token])
 
 
   

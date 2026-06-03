@@ -15,19 +15,19 @@ const DashBoard = () => {
     const leave = useRoomStore(state => state.leave)
 
 
-    useEffect(() => {
-        try {
-            if (roomToken) {
-                const {exp} = jwtDecode(roomToken)
-                if (Date.now() >= exp * 1000) {
-                    leave()
-                }
-            } 
-        }
-        catch {
-            leave()
-        }
-    }, [roomToken, leave])
+    // useEffect(() => {
+    //     try {
+    //         if (roomToken) {
+    //             const {exp} = jwtDecode(roomToken)
+    //             if (Date.now() >= exp * 1000) {
+    //                 leave()
+    //             }
+    //         } 
+    //     }
+    //     catch {
+    //         leave()
+    //     }
+    // }, [roomToken, leave])
 
     useEffect(() => {
         const fetchRooms = async() => {
