@@ -22,16 +22,18 @@ const initializeServer = (server) => {
 
     io.use(socketMiddleware)
 
-    io.on("connection", async (socket) => {        
+    io.on("connection",  (socket) => {  
+        console.log("Socket.id", socket.id)      
         try {
-            await registerRoomHandler(io, socket)
+            registerRoomHandler(io, socket)
+            registerAvatarHandler(io, socket)
         } catch (err) {
             console.error("Error in registerRoomHandler:", err)
         }
-        await registerMessageHandler(io, socket)
-        await registerAvatarHandler(io, socket)
-        await registerTaskHandler(io, socket)
-        await registerCallHandler(io, socket)   
+        registerMessageHandler(io, socket)
+        
+        registerTaskHandler(io, socket)
+        registerCallHandler(io, socket)   
     })
 
     
