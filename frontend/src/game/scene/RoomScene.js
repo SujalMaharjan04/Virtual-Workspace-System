@@ -1,5 +1,11 @@
 import Phaser from "phaser";
 import useAuthStore from "../../store/authStore";
+import useAvatarStore from "../../store/avatarStore";
+import useRoomStore from "../../store/roomStore"
+import { getSocket } from "../../socket";
+import { AVATAR_EVENTS } from "../../socket/events";
+
+
 
 export default class RoomScene extends Phaser.Scene {
     constructor() {
@@ -12,14 +18,14 @@ export default class RoomScene extends Phaser.Scene {
         this.lastDirection = "down" //last direction
         this.lastEmitTime = 0
 
-        this.otherPlayer = {} 
-
+        this.otherPlayer = {}
         this.floorLayer = null
         this.objectLayer = null
         this.aboveLayer = null
     }
 
     create() {
+        this.socket = getSocket()
         this.createMap()
         this.createLocalPlayer()
         this.createAnimation()
@@ -133,8 +139,11 @@ export default class RoomScene extends Phaser.Scene {
 
     createLocalPlayer() {
         const {user} = useAuthStore.getState() 
+        const userId = user.id
         const avatarId = user.avatarId
         const userName = user.userName || "You"
+        const {room} = useRoomStore.getState()
+        const roomId = room.room_id
 
         const spawnLayer = this.map.getObjectLayer("Spawn")
         const spawnObject = spawnLayer?.objects.find(obj => obj.properties?.find(p => p.name === "PlayerSpawn" && p.value === true))
@@ -142,7 +151,13 @@ export default class RoomScene extends Phaser.Scene {
         const spawnX = spawnObject ? spawnObject.x + spawnObject.width / 2 : 900 //if no spawn object place the x coor to 900 px
         const spawnY = spawnObject ? spawnObject.y + spawnObject.height / 2 : 1300 //if no spawn object place the y-coor to 1300px
         
-
+        useAvatarStore.getState().setLocalPlayer({x: spawnX, y: spawnY, avatarId: avatarId, userName})
+        console.log(this.socket.id)
+        
+        setTimeout(() => {
+            console.log("Emitting", AVATAR_EVENTS.CREATED)
+            this.socket.emit(AVATAR_EVENTS.CREATED, {x: spawnX, y: spawnY, avatarId, userId, roomId})
+        }, 200)
         this.localPlayer = this.physics.add.sprite(spawnX, spawnY, avatarId)
         this.localPlayer.setCollideWorldBounds(true)
         this.localPlayer.setDepth(5)
@@ -298,13 +313,25 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     updateOtherPlayer() {
-        Object.values(this.otherPlayer).forEach(({sprite, label, targetX, targetY}) => {
-            if (targetX === undefined) return
+        this.otherPlayer = useAvatarStore.getState().otherPlayer
+        Object.values(this.otherPlayer).forEach(({userId, x, y, targetX, targetY, avatarId, userName}) => {
+            if (!this.otherPlayer[userId]) {
+                this.spawnOtherPlayer({userId, x, y, avatarId, userName})
+            }
 
-            sprite.x = Phaser.Math.Linear(sprite.x, targetX, 0.2)
-            sprite.y = Phaser.Math.Linear(sprite.y, targetY, 0.2)
+            const player = this.otherPlayer[userId]
+            if (!player) return
 
-            label.setPosition(sprite.x, sprite.y - 30)
+            player.sprite.x = Phaser.Math.Linear(player.sprite.x, targetX ?? x, 0.2)
+            player.sprite.y = Phaser.Math.Linear(player.sprite.y, targetY ?? y, 0.2)
+
+            player.label.setPosition(player.sprite.x, player.sprite.y - 30)
+        })
+
+        Object.keys(this.otherPlayer).forEach(userId => {
+            if (!this.otherPlayer[userId]) {
+                this.removeOtherPlayer(userId)
+            }
         })
     }
 
