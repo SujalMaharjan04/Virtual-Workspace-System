@@ -3,6 +3,7 @@ import { createSocket } from "../socket";
 import registerRoomHandler from "../socket/handlers/roomHandlers";
 import useRoomStore from "../store/roomStore";
 import { handleAuthError, handleRoomError } from "../utils/tokenError";
+import registerAvatarHandler from "../socket/handlers/avatarHandlers";
 
 let socket
 
@@ -16,8 +17,8 @@ const useSocket = () => {
         let cleanUpRoomHandler = null
 
         const handleConnect = () => {
-            if (cleanUpRoomHandler) cleanUpRoomHandler()
-            cleanUpRoomHandler = registerRoomHandler()
+            registerRoomHandler()
+            registerAvatarHandler()
         }
 
         const handleConnectError = (error) => {
