@@ -19,7 +19,8 @@ const MESSAGE_EVENTS = {
 const AVATAR_EVENTS = {
     MOVE: "avatar:move",
     DISPLAY: "avatar-moved",
-    POSITION: "avatar-position"
+    POSITION: "avatar-position",
+    CREATED: "avatar-created"
 }
 
 const TASK_EVENTS = {
