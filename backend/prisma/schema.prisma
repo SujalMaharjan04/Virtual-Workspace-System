@@ -123,7 +123,7 @@ model messages {
 }
 
 model avatar {
-  avatar_id   String  @id @default(uuid())
+  avatar_id   String  
 
   //which user
   created_by  String
@@ -136,6 +136,7 @@ model avatar {
   //tracking position
   x_axis      Float     @default(0)
   y_axis      Float     @default(0)
+  direction   String    @default("down")
 
   //tracking lastUpdated
   last_updated    DateTime    @updatedAt  //auto Updates on every change
