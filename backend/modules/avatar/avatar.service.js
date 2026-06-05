@@ -21,7 +21,8 @@ const upsertAvatar = async({userId, roomId, x, y, direction = "down", avatarId})
                 x_axis: x,
                 y_axis: y,
                 avatar_id: avatarId
-            }
+            },
+            include: {user: {select: {name: true, user_id: true}}}
         })
     }
 
@@ -54,4 +55,15 @@ const getSelfAvatar = async({userId, roomId}) => {
     })
 }
 
-module.exports = {upsertAvatar, getAvatar, getSelfAvatar}
+const deleteAvatar = async({userId, roomId}) => {
+    return await prisma.avatar.delete({
+        where: {
+            created_by_room_id: {
+                created_by: userId,
+                room_id: roomId
+            }
+        }
+    })
+} 
+
+module.exports = {upsertAvatar, getAvatar, getSelfAvatar, deleteAvatar}
