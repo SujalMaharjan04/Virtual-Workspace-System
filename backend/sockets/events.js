@@ -20,7 +20,8 @@ const AVATAR_EVENTS = {
     MOVE: "avatar:move",
     DISPLAY: "avatar-moved",
     POSITION: "avatar-position",
-    CREATED: "avatar-created"
+    JOIN: "avatar-joined",
+    SELF: "avatar-self"
 }
 
 const TASK_EVENTS = {
