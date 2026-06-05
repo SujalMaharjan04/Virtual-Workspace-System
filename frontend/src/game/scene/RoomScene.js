@@ -10,8 +10,9 @@ import { AVATAR_EVENTS } from "../../socket/events";
 export default class RoomScene extends Phaser.Scene {
     constructor() {
         super({key: "RoomScene"})
-
-        this.localPlayer = null //user Player
+        this.localPlayer = null //user Player sprite data
+        this.unsubscribeToLocalPlayer = null
+        this.isReady = false
         this.playerLabel = null // user name
         this.cursors = null //arrow key
         this.wasd = null //wasd keys
@@ -27,13 +28,15 @@ export default class RoomScene extends Phaser.Scene {
     create() {
         this.socket = getSocket()
         this.createMap()
+        this.subscribeToLocalPlayer()
         this.createLocalPlayer()
         this.createAnimation()
-        this.setupCamera()
         this.setupInput()
+        this.events.on('shutdown', this.shutdown, this)
     }
 
     update() {
+        if (!this.isReady) return
         this.handleMovement()
         this.updateLabelPosition()
         this.updateOtherPlayer()
@@ -137,40 +140,57 @@ export default class RoomScene extends Phaser.Scene {
         }
     }
 
+    subscribeToLocalPlayer() {
+        this.unsubscribeToLocalPlayer = useAvatarStore.subscribe(
+            state => state.localPlayer,
+            localPlayer => {
+                if (!this.localPlayer && localPlayer.avatarId) {
+                    this.createLocalPlayerSprite(localPlayer)
+                }
+            }
+        )
+    }
+
     createLocalPlayer() {
         const {user} = useAuthStore.getState() 
         const userId = user.id
         const avatarId = user.avatarId
-        const userName = user.userName || "You"
         const {room} = useRoomStore.getState()
         const roomId = room.room_id
 
-        const spawnLayer = this.map.getObjectLayer("Spawn")
-        const spawnObject = spawnLayer?.objects.find(obj => obj.properties?.find(p => p.name === "PlayerSpawn" && p.value === true))
+        // const spawnLayer = this.map.getObjectLayer("Spawn")
+        // const spawnObject = spawnLayer?.objects.find(obj => obj.properties?.find(p => p.name === "PlayerSpawn" && p.value === true))
 
-        const spawnX = spawnObject ? spawnObject.x + spawnObject.width / 2 : 900 //if no spawn object place the x coor to 900 px
-        const spawnY = spawnObject ? spawnObject.y + spawnObject.height / 2 : 1300 //if no spawn object place the y-coor to 1300px
+        // const spawnX = spawnObject ? spawnObject.x + spawnObject.width / 2 : 900 //if no spawn object place the x coor to 900 px
+        // const spawnY = spawnObject ? spawnObject.y + spawnObject.height / 2 : 1300 //if no spawn object place the y-coor to 1300px
         
-        useAvatarStore.getState().setLocalPlayer({x: spawnX, y: spawnY, avatarId: avatarId, userName})
-        console.log(this.socket.id)
+        // useAvatarStore.getState().setLocalPlayer({x: spawnX, y: spawnY, avatarId: avatarId, userName})
+        // console.log(this.socket.id)
         
-        setTimeout(() => {
-            console.log("Emitting", AVATAR_EVENTS.CREATED)
-            this.socket.emit(AVATAR_EVENTS.CREATED, {x: spawnX, y: spawnY, avatarId, userId, roomId})
-        }, 200)
-        this.localPlayer = this.physics.add.sprite(spawnX, spawnY, avatarId)
+        // setTimeout(() => {
+        //     console.log("Emitting", AVATAR_EVENTS.CREATED)
+        //     this.socket.emit(AVATAR_EVENTS.CREATED, {x: spawnX, y: spawnY, avatarId, userId, roomId})
+        // }, 200)
+
+        useAvatarStore.getState().joinRoom({userId, roomId, avatarId}) 
+    }
+
+    createLocalPlayerSprite(playerData) {
+        this.localPlayer = this.physics.add.sprite(playerData.x, playerData.y, playerData.avatarId)
+        this.setupCamera()
         this.localPlayer.setCollideWorldBounds(true)
         this.localPlayer.setDepth(5)
-        this.localPlayer.avatarId = avatarId
+        this.localPlayer.avatarId = playerData.avatarId
 
         this.physics.add.collider(this.localPlayer, this.colliders)
 
-        this.playerLabel = this.add.text(spawnX, spawnY - 30, userName, {
+        this.playerLabel = this.add.text(playerData.x, playerData.y - 30, playerData.userName, {
             fontSize: "10px",
             color: "#F1F5F9",
             backgroundColor: "#000088",
             padding: {x: 4, y: 2},
         }).setOrigin(0.5).setDepth(6)
+        this.isReady = true
     }
 
     createAnimation() {
@@ -250,8 +270,11 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     handleMovement() {
+        const {localPlayer } = useAvatarStore.getState()
         const player = this.localPlayer
         const avatarId = player.avatarId
+        const userId = localPlayer.userId
+        const roomId = localPlayer.roomId
         const speed = 120
         let moved = false
         let direction = this.lastDirection
@@ -294,13 +317,13 @@ export default class RoomScene extends Phaser.Scene {
             const now = Date.now()
             if (now - this.lastEmitTime > 50) {
                 this.lastEmitTime = now
-                this.emitPosition(player.x, player.y, direction)
+                this.emitPosition({x: player.x, y:player.y, direction, avatarId, userId, roomId})
             }
         }
     }
 
-    emitPosition(x, y, direction) {
-        console.log("Position", {x, y, direction})
+    emitPosition({x, y, direction, userId, avatarId, roomId}) {
+        useAvatarStore.getState().moveAvatar({userId, roomId, avatarId, x, y, direction})
     }
 
     updateLabelPosition() {
@@ -391,5 +414,11 @@ export default class RoomScene extends Phaser.Scene {
                 console.log(`Near Player ${userId}, distance: ${distance}`)
             }
         })
+    }
+
+    shutdown() {
+        if (this.unsubscribeToLocalPlayer) {
+            this.unsubscribeToLocalPlayer()
+        }
     }
 }
