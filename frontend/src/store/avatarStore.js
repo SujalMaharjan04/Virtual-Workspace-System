@@ -100,6 +100,9 @@ const useAvatarStore = create(
                 set({otherPlayer: playerMap})
             },
 
+            removeUser: () => {
+                set({localPlayer: null})
+            },
             //Called when a user disconnects
             removePlayer: (userId) => {
                 set((state) => {
