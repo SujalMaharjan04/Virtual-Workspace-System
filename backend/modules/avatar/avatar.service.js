@@ -42,4 +42,16 @@ const getAvatar = async({userId, roomId}) => {
     })
 }
 
-module.exports = {upsertAvatar, getAvatar}
+const getSelfAvatar = async({userId, roomId}) => {
+    return await prisma.avatar.findUnique({
+        where: {
+            created_by_room_id: {
+                room_id: roomId,
+                created_by: userId
+            }
+        },
+        include: {user: {select: {name: true, user_id: true}}}
+    })
+}
+
+module.exports = {upsertAvatar, getAvatar, getSelfAvatar}
