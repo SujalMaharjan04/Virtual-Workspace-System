@@ -126,7 +126,7 @@ model avatar {
   avatar_id   String  
 
   //which user
-  created_by  String
+  created_by  String  @id
   user        User    @relation("Avatar", fields: [created_by], references: [user_id])
 
   //which room
