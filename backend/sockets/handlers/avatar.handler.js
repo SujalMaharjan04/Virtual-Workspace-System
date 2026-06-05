@@ -41,7 +41,6 @@ const registerAvatarHandler = (io, socket) => {
                 console.log("error")
                 return
             }
-            console.log("EMITTING DISPLAY")
             socket.to(roomId).emit(AVATAR_EVENTS.DISPLAY, {
                 userId: avatar.created_by, 
                 userName: avatar.user?.name ?? socket.userName,
