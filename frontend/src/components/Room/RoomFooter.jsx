@@ -6,7 +6,7 @@ import useAvatarStore from "../../store/avatarStore"
 const RoomFooter = () => {
     const setNotification = useNotificationStore(state => state.setNotification)
     const leaveRoom = useRoomStore(state => state.leave)
-    const removeAvatar = useAvatarStore(state => state.removeAvatar)
+    const removeUser = useAvatarStore(state => state.removeUser)
 
 
     const handleLeave = async() => {
@@ -18,7 +18,7 @@ const RoomFooter = () => {
         }
 
         leaveRoom()
-        removeAvatar()
+        removeUser()
         setNotification("Room Left")
 
     }
