@@ -8,6 +8,7 @@ const registerMessageHandler = require("./handlers/message.handler")
 const registerAvatarHandler = require('./handlers/avatar.handler')
 const registerTaskHandler = require('./handlers/task.handler')
 const registerCallHandler = require('./handlers/call.handler')
+const registerDisconnectHandler = require('./handlers/disconnect.handler')
 
 let io
 
@@ -34,9 +35,12 @@ const initializeServer = (server) => {
         
         registerTaskHandler(io, socket)
         registerCallHandler(io, socket)   
-    })
 
-    
+        //When the user leaves the room
+        socket.on("disconnect", async() => {
+            registerDisconnectHandler(io, socket)
+        })
+    }) 
 
     return io;
 }
