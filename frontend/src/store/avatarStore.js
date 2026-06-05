@@ -1,7 +1,8 @@
 import { create } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 
 const useAvatarStore = create(
-        (set) => ({
+        subscribeWithSelector((set, get) => ({
             // Local Player Position
             localPlayer: {
                 x: 0,
@@ -12,16 +13,39 @@ const useAvatarStore = create(
             },
             //Other Player - {userId: {x, y, direction, avatarId, userName}}
             otherPlayer: {},
+            emitJoined: null,
+            emitMoved: null,
+
+            registerEmitJoined: (fn) => set({emitJoined: fn}),
+            registerEmitMoved: (fn) => set({emitMoved: fn}),
+
+            joinRoom: ({userId, avatarId, roomId}) => {
+                const {emitJoined} = get()
+                if (emitJoined) {
+                    emitJoined({userId, avatarId, roomId})
+                }
+            },
+
+            moveAvatar: ({userId, roomId, avatarId, x, y, direction}) => {
+                const {emitMoved} = get()
+                if (emitMoved) {
+                    emitMoved({userId, roomId, avatarId, x, y, direction})
+                }
+            },
 
             //Set Local Player Initially
-            setLocalPlayer: (data) => set({localPlayer: data}),
+            setLocalPlayer: (data) => {
+                set({localPlayer: data})
+            },
 
             //Update Local Player Position
-            updateLocalPlayer: ({x, y, direction}) => set((state) => ({
-                ...state.localPlayer,
-                x, y, 
-                direction
-            })),
+            updateLocalPlayer: ({x, y, direction}) => {
+                set((state) => ({
+                    ...state.localPlayer,
+                    x, y, 
+                    direction
+                }))
+            },
 
             // Other Player Actions
 
@@ -90,7 +114,7 @@ const useAvatarStore = create(
 
 
 
-        })
+        }))
 )
 
 export default useAvatarStore
