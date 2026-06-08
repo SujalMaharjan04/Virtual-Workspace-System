@@ -25,30 +25,37 @@ const registerAvatarHandler = (io, socket) => {
         let avatar = await avatarService.getSelfAvatar({userId: data.userId, roomId: data.roomId})
         if (!avatar) {
             const spawn = await getSpawnPoint()
-            console.log(spawn)
             avatar = await avatarService.upsertAvatar({userId: data.userId, roomId: data.roomId, x: spawn.x, y: spawn.y, avatarId: data.avatarId})
-            console.log(avatar)
         }
 
         socket.emit(AVATAR_EVENTS.SELF, avatar)
+        socket.to(roomId).emit(AVATAR_EVENTS.DISPLAY, {
+            userId: avatar.created_by, 
+            userName: socket.userName,
+            x: avatar.x_axis,
+            y: avatar.y_axis,
+            direction: avatar.direction,
+            avatarId: avatar.avatar_id
+        })
     })
 
     //On Avatar movement, update the db
     socket.on(AVATAR_EVENTS.MOVE, async(data) => {
         try {
+            socket.to(roomId).emit(AVATAR_EVENTS.DISPLAY, {
+                userId: data.userId, 
+                userName: socket.userName,
+                x: data.x,
+                y: data.y,
+                direction: data.direction,
+                avatarId: data.avatar_id
+            })
+
             const avatar = await avatarService.upsertAvatar({userId: data.userId, roomId:data.roomId, x: data.x, y: data.y, avatarId: data.avatarId, direction:data.direction})
             if (!avatar) {
                 console.log("error")
                 return
             }
-            socket.to(roomId).emit(AVATAR_EVENTS.DISPLAY, {
-                userId: avatar.created_by, 
-                userName: avatar.user?.name ?? socket.userName,
-                x: avatar.x_axis,
-                y: avatar.y_axis,
-                direction: avatar.direction,
-                avatarId: avatar.avatar_id
-            })
         }
 
         catch (err) {
