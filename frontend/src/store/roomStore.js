@@ -4,11 +4,14 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 const useRoomStore = create(
     persist(
-        (set) => ({
+        (set, get) => ({
             rooms: [],
             room: null,
             token: null,
             roomMembers: [],
+            emitLeave: null,
+
+            registerEmitLeave: (fn) => set({emitLeave: fn}),
             
             setRooms: (rooms) => set({rooms}),
             addRooms: (room) => set((state)=> ({rooms: [...state.rooms, room]})),
@@ -16,10 +19,15 @@ const useRoomStore = create(
             setRoomToken: (token) =>  set({token}),
             setRoomMembers: (members) => set({roomMembers: members}),
             addRoomMembers: (members) => set((state) => ({roomMembers: [...state.roomMembers, members]})),
-            leave: () => {
+            leave: ({userId, roomId}) => {
                 set({room:null, token: null})
+                const {emitLeave} = get()
+
+                if (emitLeave) {
+                    emitLeave({userId, roomId})
+                }
                 // localStorage.removeItem("room-info") 
-                sessionStorage.removeItem("room-info")
+                // sessionStorage.removeItem("room-info")
             }
         }),
         // {
