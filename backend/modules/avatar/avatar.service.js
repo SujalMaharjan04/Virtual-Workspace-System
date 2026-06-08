@@ -56,12 +56,10 @@ const getSelfAvatar = async({userId, roomId}) => {
 }
 
 const deleteAvatar = async({userId, roomId}) => {
-    return await prisma.avatar.delete({
+    return await prisma.avatar.deleteMany({
         where: {
-            created_by_room_id: {
-                created_by: userId,
-                room_id: roomId
-            }
+            created_by: userId,
+            room_id: roomId
         }
     })
 } 
