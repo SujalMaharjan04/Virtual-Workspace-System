@@ -4,6 +4,7 @@ import useAvatarStore from "../../store/avatarStore";
 import useRoomStore from "../../store/roomStore"
 import { getSocket } from "../../socket";
 import { AVATAR_EVENTS } from "../../socket/events";
+import { setActiveScene } from "./SceneRegistry";
 
 
 
@@ -19,6 +20,8 @@ export default class RoomScene extends Phaser.Scene {
         this.lastDirection = "down" //last direction
         this.lastEmitTime = 0
 
+        this.unsubscribeToOtherPlayer = null
+        this.otherPlayerSprite = {}
         this.otherPlayer = {}
         this.floorLayer = null
         this.objectLayer = null
@@ -27,8 +30,10 @@ export default class RoomScene extends Phaser.Scene {
 
     create() {
         this.socket = getSocket()
+        setActiveScene(this)
         this.createMap()
         this.subscribeToLocalPlayer()
+        this.subscribeToOtherPlayer()
         this.createLocalPlayer()
         this.createAnimation()
         this.setupInput()
@@ -335,14 +340,28 @@ export default class RoomScene extends Phaser.Scene {
         }
     }
 
+    subscribeToOtherPlayer() {
+        this.unsubscribeToOtherPlayer = useAvatarStore.subscribe(
+            state => state.otherPlayer,
+            (otherPlayer) => {
+                Object.entries(otherPlayer).forEach(([userId, data]) => {
+                    if (this.otherPlayerSprite[userId]) {
+                        this.moveOtherPlayer({userId, x: data.x, y: data.y, direction: data.direction, avatarId: data.avatarId})
+                    }
+                })
+            }
+        )
+    }
+
     updateOtherPlayer() {
         this.otherPlayer = useAvatarStore.getState().otherPlayer
-        Object.values(this.otherPlayer).forEach(({userId, x, y, targetX, targetY, avatarId, userName}) => {
-            if (!this.otherPlayer[userId]) {
+        Object.entries(this.otherPlayer).forEach(([userId, {x, y, targetX, targetY, avatarId, userName}]) => {
+            if (!this.otherPlayerSprite[userId]) {
                 this.spawnOtherPlayer({userId, x, y, avatarId, userName})
             }
 
-            const player = this.otherPlayer[userId]
+            const player = this.otherPlayerSprite[userId]
+            // console.log(this.otherPlayerSprite)
             if (!player) return
 
             player.sprite.x = Phaser.Math.Linear(player.sprite.x, targetX ?? x, 0.2)
@@ -359,8 +378,7 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     spawnOtherPlayer({userId, x, y, avatarId, userName}) {
-        if (this.otherPlayer[userId]) return 
-
+        if (this.otherPlayerSprite[userId]) return 
         const sprite = this.physics.add.sprite(x, y, avatarId)
         sprite.setDepth(5)
         sprite.avatarId = avatarId
@@ -372,12 +390,13 @@ export default class RoomScene extends Phaser.Scene {
             padding: {x: 4, y: 2}
         }).setOrigin(0.5).setDepth(6)
 
-        this.otherPlayer[userId] = {sprite, label, targetX: x, targetY: y}
+        this.otherPlayerSprite[userId] = {sprite, label, targetX: x, targetY: y}
     }
 
     //This function is called by socket handler
     moveOtherPlayer({userId, x, y, direction, avatarId}) {
-        const player = this.otherPlayer[userId]
+        
+        const player = this.otherPlayerSprite[userId]
         if (!player) return
 
         player.targetX = x
@@ -390,12 +409,12 @@ export default class RoomScene extends Phaser.Scene {
 
     //This function is called during socket disconnect
     removeOtherPlayer(userId) {
-        const player = this.otherPlayer[userId]
+        const player = this.otherPlayerSprite[userId]
         if (!player) return
 
         player.sprite.destroy()
         player.label.destroy()
-        delete this.otherPlayer[userId]
+        delete this.otherPlayerSprite[userId]
     }
 
     checkProximity() {
@@ -420,5 +439,6 @@ export default class RoomScene extends Phaser.Scene {
         if (this.unsubscribeToLocalPlayer) {
             this.unsubscribeToLocalPlayer()
         }
+        setActiveScene(null)
     }
 }
