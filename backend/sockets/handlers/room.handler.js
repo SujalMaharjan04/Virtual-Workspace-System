@@ -1,9 +1,11 @@
 const {ROOM_EVENTS} = require("../events")
 const prisma = require("../../src/db")
+const avatarService = require('../../modules/avatar/avatar.service')
 
 const registerRoomHandler = async(io, socket) => {
     const userId = socket.userId
     const roomId = socket.roomId
+    const userName = socket.userName
 
     const room = await prisma.room.findUnique({
         where: {room_id: roomId}
@@ -64,42 +66,20 @@ const registerRoomHandler = async(io, socket) => {
         //     })
         // })
 
-        //When the user leaves the room
-        socket.on("disconnect", async() => {
-            console.log(`${socket.userName} has disconnected ${socket.id}`)
+    //When the user leaves the room
+    socket.on(ROOM_EVENTS.LEAVE, async({userId, roomId}) => {
+        try {
             socket.to(roomId).emit(ROOM_EVENTS.USER_LEFT, {
-                userId,
-                message: `${socket.userName} has left the room`
+                userId, userName
             })
 
-            try {
-                await prisma.room_members.update({
-                    where: {
-                        room_id_user_id: {
-                            room_id: roomId,
-                            user_id: userId
-                        }
-                    },
-                    data: {
-                        is_active: false
-                    }
-                })
+            await avatarService.deleteAvatar({userId, roomId})
+        }
+        catch (err) {
+            console.log(err)
+        }
+    })
 
-                const activeMember = await prisma.room_members.count({
-                    where: {room_id: roomId, is_active: true}
-                })
-
-                if (activeMember === 0) {
-                    await prisma.room.update({
-                        where: {room_id: roomId},
-                        data: {is_active: false}
-                    })
-                }
-            }
-            catch (err) {
-                console.log("update failed ", err.message)
-            }
-        })
 }
 
 module.exports = registerRoomHandler
