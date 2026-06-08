@@ -41,9 +41,11 @@ const useAvatarStore = create(
             //Update Local Player Position
             updateLocalPlayer: ({x, y, direction}) => {
                 set((state) => ({
-                    ...state.localPlayer,
-                    x, y, 
-                    direction
+                    localPlayer: {
+                        ...state.localPlayer,
+                        x, y, 
+                        direction
+                    }
                 }))
             },
 
@@ -107,7 +109,7 @@ const useAvatarStore = create(
             removePlayer: (userId) => {
                 set((state) => {
                     const updated = {...state.otherPlayer}
-                    delete updated.otherPlayer[userId]
+                    delete updated[userId]
                     return {otherPlayer: updated}
                 })
             },
