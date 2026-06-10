@@ -1,4 +1,4 @@
-import roomService from "../../services/room"
+// import roomService from "../../services/room"
 import useNotificationStore from "../../store/notificationStore"
 import useRoomStore from "../../store/roomStore"
 import useAuthStore from "../../store/authStore"
@@ -12,12 +12,12 @@ const RoomFooter = () => {
     const roomId = room.room_id
 
     const handleLeave = async() => {
-        const response = await roomService.leaveRoom()
-
-        if (!response.success) {
-            setNotification(response.data)
-            return
-        }
+        console.log("Leave button clicked")
+        // const response = await roomService.leaveRoom()
+        // if (!response.success) {
+        //     setNotification(response.data)
+        //     return
+        // }
 
         leave({userId, roomId})
         setNotification("Room Left")
