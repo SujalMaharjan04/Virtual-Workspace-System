@@ -5,21 +5,21 @@ const VectorClock = {
             ...new Set([...Object.keys(clockA), ...Object.keys(clockB)]) // Making a unique list of all keys for vectorClock of users
         ]
 
-        let aGreater = false
-        let bGreater = false
+        let aBeforeB = false
+        let bBeforeA = false
 
         allKeys.forEach(key => {
             const a = clockA[key] || 0
             const b = clockB[key] || 0
-            if (a > b) aGreater = true
-            if (b > a) bGreater = true
+            if (a > b) aBeforeB  = true
+            if (b > a) bBeforeA  = true
         }) // for each key, checking the count to see which is greater
 
-        if (aGreater && !bGreater) return "A_AFTER_B" // since A has greater count than B so A should appear after B
-        if (bGreater && !aGreater) return "B_AFTER_A" // since B has greater count than A so B should appear after A
-        if (!aGreater && !bGreater) return "EQUAL" // If both clock count are not greater then equal
+        if (aBeforeB  && !bBeforeA ) return "A_BEFORE_B" // checks for the flag on the basis of which returns if a before b
+        if (bBeforeA  && !aBeforeB ) return "B_BEFORE_A" 
+        if (!aBeforeB  && !bBeforeA ) return "EQUAL" // if clocks have both before false
 
-        return "CONCURRENT" // If both clock have greater then concurrent
+        return "CONCURRENT" // if the clocks have both before truw
     },
 
     //Check if A happened before B
