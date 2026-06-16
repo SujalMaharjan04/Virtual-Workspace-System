@@ -1,6 +1,7 @@
 import {useEffect, useRef} from "react"
 import Phaser from "phaser"
 import GameConfig from "../../game/GameConfig"
+import MessageSection from "./MessageSection"
 
 
 let gameInstance = null
@@ -31,7 +32,12 @@ const GameCanvas = () => {
         // // <div className = "relative w-full h-full">
         //     <div ref = {gameRef} className = "absolute inset-0" />
         //  </div>
-        <div ref = {gameRef} className = "w-full h-full block" />
+        <div className = "relative w-full h-full overflow-hidden">
+            <div ref = {gameRef} className = "absolute inset-0 w-full h-full" />
+            <div className = "absolute bottom-5 left-5 z-10 lg:w-[30%] lg:max-h-100 pointer-events-auto ">
+                <MessageSection />
+            </div>
+        </div>
     )
 
 }
