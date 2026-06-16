@@ -13,6 +13,7 @@ const ROOM_EVENTS = {
 const MESSAGE_EVENTS = {
     SEND_ALL: "message",
     SEND_DM: "direct-message",
+    RECEIVE_ALL: "receive-all",
     RECEIVE_DM: "receive-dm"
 }
 
