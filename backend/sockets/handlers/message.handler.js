@@ -9,20 +9,16 @@ const registerMessageHandler = async(io, socket) => {
 
     socket.on(MESSAGE_EVENTS.SEND_ALL, async(data) => {
         try {
-            const message = await messageService.sendMessage({
-                message: data.message,
-                roomId,
-                userId,
-                vectorClock: data.vectorClock
+
+            io.to(data.roomId).emit(MESSAGE_EVENTS.RECEIVE_ALL, {
+                content: data.message.content,
+                sender: data.message.userName,
+                receiver: data.message.receiver,
+                vectorClock:data.vectorClock,
             })
 
-            io.to(roomId).emit(MESSAGE_EVENTS.SEND_ALL, {
-                messageId: message.message_id,
-                sent_by: userName,
-                userId,
-                sent_at: message.sent_at,
-                vectorClock:message.vector_clock,
-                message: message.message,
+            const message = await messageService.sendMessage({
+               
             })
         }
         catch (err) {
