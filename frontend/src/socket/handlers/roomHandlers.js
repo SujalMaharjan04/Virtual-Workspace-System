@@ -15,6 +15,7 @@ const registerRoomHandler = () => {
 
     //When other user joins the room
     const onUserJoined = (data) => {
+        useRoomStore.getState().setRoomMember(data.userId, data.userName)
         useNotificationStore.getState().setNotification(data.message, "success")
     }
 

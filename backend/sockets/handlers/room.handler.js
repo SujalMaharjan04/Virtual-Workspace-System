@@ -55,7 +55,7 @@ const registerRoomHandler = async(io, socket) => {
             console.log("update failed", err.message)
         }
 
-        socket.emit(ROOM_EVENTS.USER_JOINED, {roomId, message: "Succesfully joined"})
+        socket.emit(ROOM_EVENTS.USER_JOINED, {roomId, userId, userName, message: "Succesfully joined"})
 
         // socket.on("message", (data) => {
         //     socket.to(socket.roomId).emit("message", {
