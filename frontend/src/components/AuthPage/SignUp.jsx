@@ -71,7 +71,7 @@ const SignUp = ({onSwitch}) => {
 
             const response = await authService.signUp(payload)
             
-            if (response.result) {
+            if (response.success) {
                 setUser(response.data.user)
                 setToken(response.data.token)
                 setNotification("SignUp Successfull", "success")
