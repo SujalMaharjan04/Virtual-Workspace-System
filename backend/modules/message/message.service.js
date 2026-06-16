@@ -53,11 +53,11 @@ const getDM = async({roomId, userId, targetUserId}) => {
     }
 }
 
-const sendMessage = async({message, roomId, userId, vectorClock}) => {
+const sendMessage = async({content, roomId, userId, vectorClock}) => {
     try {
         const response = await prisma.messages.create({
             data: {
-                message,
+                message: content,
                 room_id: roomId,
                 sent_by: userId,
                 vector_clock: vectorClock
