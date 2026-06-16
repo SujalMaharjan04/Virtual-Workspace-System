@@ -14,8 +14,7 @@ const SignUp = ({onSwitch}) => {
     const [form, setForm] = useState({
         "name": "",
         "email": "",
-        "password": "",
-        "publicKey": ""
+        "password": "", 
     })
     const [errors, setErrors] = useState({})
 
@@ -65,17 +64,17 @@ const SignUp = ({onSwitch}) => {
 
             if (!publicKey) return 
             
-            setForm((prev) => ({
-                ...prev,
+            const payload = {
+                ...form,
                 publicKey
-            }))
+            }
 
-            const response = await authService.signUp(form)
+            const response = await authService.signUp(payload)
             
             if (response.result) {
                 setUser(response.data.user)
                 setToken(response.data.token)
-                setNotification("SignUp Successfull", "sucess")
+                setNotification("SignUp Successfull", "success")
             } else {
                 setNotification("SignUp Failed", "error")
             }
