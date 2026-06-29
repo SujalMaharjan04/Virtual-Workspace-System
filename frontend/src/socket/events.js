@@ -7,7 +7,11 @@ const ROOM_EVENTS = {
     USER_JOINED: "room:user_joined",
     USER_LEFT: "room:user_left",
     MEMBERS: "room:members",
-    ERROR: "room:error"
+    ERROR: "room:error",
+    SHARE_PUBLIC_KEY: "room:share_pk",
+    ADMIN_ENCRYPT_KEY: "admin_encrypt_key",
+    SHARE_ENCRYPT_KEY: "share_encrypt_key",
+    RECEIVE_AES_KEY: "receive_aes_key"
 }
 
 const MESSAGE_EVENTS = {
