@@ -265,16 +265,24 @@ export default class RoomScene extends Phaser.Scene {
 
     setupInput() {
         this.cursors = this.input.keyboard.createCursorKeys()
-
+        
         this.wasd = this.input.keyboard.addKeys({
             up: Phaser.Input.Keyboard.KeyCodes.W,
             down: Phaser.Input.Keyboard.KeyCodes.S,
             left: Phaser.Input.Keyboard.KeyCodes.A,
             right: Phaser.Input.Keyboard.KeyCodes.D
         })
+        
+        this.input.keyboard.disableGlobalCapture()
     }
 
     handleMovement() {
+
+        if (document.activeElement?.tagName === "Input") {
+            this.localPlayer?.setVelocity(0)
+            return
+        }
+
         const {localPlayer } = useAvatarStore.getState()
         const player = this.localPlayer
         const avatarId = player.avatarId
