@@ -8,8 +8,11 @@ const useRoomStore = create(
             rooms: [],
             room: null,
             token: null,
-            // roomMembers: {},
+            roomMembers: [],
             emitLeave: null,
+            aesKey: null,
+
+            setAESKey: (aesKey) => set({aesKey}),
 
             registerEmitLeave: (fn) => set({emitLeave: fn}),
             
@@ -17,13 +20,13 @@ const useRoomStore = create(
             addRooms: (room) => set((state)=> ({rooms: [...state.rooms, room]})),
             setRoom: (room) => set({room}),
             setRoomToken: (token) =>  set({token}),
-            // setRoomMembers: (members) => set((state) => ({roomMembers: {...state.roomMembers, members}})),
-            // addRoomMembers: ({userId, userName}) => set((state) => ({
-            //     roomMembers: {
-            //         ...state.roomMembers,
-            //         [userId]: userName
-            //     }
-            // })),
+            setRoomMembers: (members) => set((state) => ({roomMembers: {...state.roomMembers, members}})),
+            addRoomMembers: ({userId, userName}) => set((state) => ({
+                roomMembers: {
+                    ...state.roomMembers,
+                    [userId]: userName
+                }
+            })),
             leave: ({userId, roomId}) => {
                 set({room:null, token: null})
                 const {emitLeave} = get()
