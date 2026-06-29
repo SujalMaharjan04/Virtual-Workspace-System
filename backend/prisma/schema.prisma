@@ -46,6 +46,8 @@ model Room {
   room_password String
   max_capacity  Int @default(10)
   is_active   Boolean     @default(true)
+
+  admin_socket_id   String?
   
   created_by  String
   admin   User    @relation("RoomAdmin", fields: [created_by], references: [user_id])
