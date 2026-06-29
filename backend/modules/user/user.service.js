@@ -1,6 +1,6 @@
 const prisma = require('../../src/db')
 
-const getPublicKey = async({userId}) => {
+const getPublicKey = async(userId) => {
     try {
         const user = await prisma.user.findUnique({
             where: {user_id: userId},
