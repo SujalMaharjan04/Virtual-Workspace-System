@@ -39,6 +39,9 @@ const registerDisconnectHandler = async(io, socket) => {
     }
     catch (err) {
         console.log("update failed ", err.message)
+        if (err.code === "P2002") {
+            return
+        }
     }
 }
 
