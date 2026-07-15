@@ -9,17 +9,28 @@ const registerMessageHandler = async(io, socket) => {
 
     socket.on(MESSAGE_EVENTS.SEND_ALL, async(data) => {
         try {
+            const message = await messageService.sendMessage({
+               message: data.message.content,
+               iv: data.message.iv,
+               roomId: data.roomId,
+               userId: data.message.sender.id,
+               vectorClock: data.vectorClock
+            })
 
             io.to(data.roomId).emit(MESSAGE_EVENTS.RECEIVE_ALL, {
                 content: data.message.content,
-                sender: data.message.userName,
-                receiver: data.message.receiver,
+                iv: data.message.iv,
+                sender: {
+                    name: data.message.sender.name,
+                    id: data.message.sender.id
+                },
+                receiver: {
+                    name: data.message.receiver.name,
+                    id: data.message.receiver.id
+                },
                 vectorClock:data.vectorClock,
             })
 
-            const message = await messageService.sendMessage({
-               
-            })
         }
         catch (err) {
             console.log(err.message)
@@ -30,26 +41,31 @@ const registerMessageHandler = async(io, socket) => {
     socket.on(MESSAGE_EVENTS.SEND_DM, async(data) => {
         try {
             const message = await messageService.sendDM({
-                roomId,
-                userId,
-                sentToId: data.sentToId,
-                message: data.encryptedMessage,
-                encryptedKey: data.encryptedKey,
-                iv: data.iv
+                roomId: data.roomId,
+                sentToId: data.message.receiver.id,
+                sentBy: data.message.sender.id,
+                message: data.message.content,
+                iv: data.message.iv,
+                vectorClock: data.vectorClock
             })
-
-            const sockets = await io.in(roomId).fetchSockets()
-            const receiverSocket = sockets.find(s => s.userId === data.sentToId)
-
+            
             const dmData = {
-                messageId: message.message_id,
-                userName,
-                userId,
-                message: message.message,
-                encryptedKey: message.encrypted_key,
-                iv: message.iv,
-                sent_at: message.sent_at
+                content: data.message.content,
+                iv: data.message.iv,
+                sender: {
+                    name: data.message.sender.name,
+                    id: data.message.sender.id
+                },
+                receiver: {
+                    name: data.message.receiver.name,
+                    id: data.message.receiver.id
+                },
+                vectorClock: data.vectorClock
+
             }
+            const sockets = await io.in(roomId).fetchSockets()
+            const receiverSocket = sockets.find(s => s.userId === data.message.receiver.id)
+
 
             if (!receiverSocket) {
                 socket.emit("error", {message: "User is not in the room"})
@@ -61,6 +77,22 @@ const registerMessageHandler = async(io, socket) => {
         catch (err) {
             console.log(err.message)
             socket.emit("error", {message: err.message})
+        }
+    })
+
+    socket.on(MESSAGE_EVENTS.LOAD_HISTORY, async (data) => {
+        try {
+            const messages = await messageService.getAllMessages({
+                roomId: data.roomId,
+                userId: userId
+            })
+
+            socket.emit(
+                MESSAGE_EVENTS.RECEIVE_HISTORY,
+                messages
+            )
+        } catch (err) {
+            console.log(err)
         }
     })
 
