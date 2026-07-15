@@ -2,6 +2,7 @@ import { useState } from "react"
 import useRoomStore from "../../store/roomStore"
 import MemberList from "./MemberList"
 import Togglable from "../Shared/Togglable"
+import TaskList from "../Tasks/TaskList"
 
 const RoomNavbar = () => {
     const room = useRoomStore(state => state.room)
@@ -21,13 +22,13 @@ const RoomNavbar = () => {
 
                 <div className = "w-[15%]">
                     <Togglable buttonClass = "submitBtn" buttonLabel = "Member" isOpen = {activeModal === "Member"} onOpen = {() => setActiveModal("Member")} onClose = {() => setActiveModal(null)}>
-                        <MemberList />
+                        <MemberList button = "Kick" />
                     </Togglable>
                 </div>
 
                 <div className = "w-[15%]">
                     <Togglable buttonClass = "submitBtn" buttonLabel = "Tasks" isOpen = {activeModal === "Tasks"} onOpen = {() => setActiveModal("Tasks")} onClose = {() => setActiveModal(null)}>
-                        <MemberList />
+                        <TaskList />
                     </Togglable>
                 </div>
             </div>
