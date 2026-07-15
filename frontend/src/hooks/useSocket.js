@@ -5,6 +5,7 @@ import useRoomStore from "../store/roomStore";
 import { handleAuthError, handleRoomError } from "../utils/tokenError";
 import registerAvatarHandler from "../socket/handlers/avatarHandlers";
 import registerMessageHandler from "../socket/handlers/messageHandlers";
+import registerTaskHandler from "../socket/handlers/taskHandlers";
 
 let socket
 
@@ -21,6 +22,7 @@ const useSocket = () => {
             registerRoomHandler()
             registerAvatarHandler()
             registerMessageHandler()
+            registerTaskHandler()
         }
 
         const handleConnectError = (error) => {
