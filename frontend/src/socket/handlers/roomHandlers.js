@@ -1,5 +1,5 @@
 import { getSocket } from "../index"
-import {ROOM_EVENTS} from "../events"
+import {MESSAGE_EVENTS, ROOM_EVENTS} from "../events"
 import useNotificationStore from "../../store/notificationStore"
 import { getActiveScene } from "../../game/scene/SceneRegistry"
 import useAuthStore from "../../store/authStore"
@@ -85,6 +85,9 @@ const registerRoomHandler = () => {
 
         
         useRoomStore.getState().setAESKey(key)
+        const {room} = useRoomStore.getState()
+        const roomId = room.room_id
+        socket.emit(MESSAGE_EVENTS.LOAD_HISTORY, {roomId})
     })
 
     socket.on(ROOM_EVENTS.ADMIN_JOINED, onAdminJoined)
