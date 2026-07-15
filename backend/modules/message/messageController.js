@@ -4,7 +4,7 @@ const getMessage = async(req, res) => {
     try {
         const {roomId} = req.room
 
-        const messages = await messageService.getMessage({roomId})
+        const messages = await messageService.getAllMessages({roomId})
 
         return res.status(200).json(messages)
     }
