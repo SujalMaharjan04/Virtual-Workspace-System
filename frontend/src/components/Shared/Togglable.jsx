@@ -10,7 +10,7 @@ const Togglable = forwardRef((props, ref) => {
     }))
     return (
         <div className = "relative">
-            <div>
+            <div className={props.wrapperClass}>
                 <button className = {props.buttonClass} onClick = {props.onOpen}>
                     {props.buttonLabel}
                 </button>
