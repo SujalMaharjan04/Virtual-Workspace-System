@@ -18,7 +18,9 @@ const MESSAGE_EVENTS = {
     SEND_ALL: "message",
     SEND_DM: "direct-message",
     RECEIVE_ALL: "receive-all",
-    RECEIVE_DM: "receive-dm"
+    RECEIVE_DM: "receive-dm",
+    LOAD_HISTORY: "load-history",
+    RECEIVE_HISTORY: "receive-history"
 }
 
 const AVATAR_EVENTS = {
