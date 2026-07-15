@@ -26,21 +26,20 @@ const useMessageStore = create(
             const userId = useAuthStore.getState().user?.id
             if (!userId) return
 
-
             const current = get().vectorClock
             const updated = {
                 ...current,
                 [userId]: (current[userId] || 0) + 1
             }
-            
-            set({vectoreClock: updated})
+
+            set({vectorClock: updated})
             return updated
         },
 
         //Update the clock when receiving the message
         mergeClock: (incomingClock) => {
             const userId = useAuthStore.getState().user?.id
-            const current = get().vectorclock
+            const current = get().vectorClock
 
             //Taking the max value of each entry
             const merged = {...current}
@@ -57,7 +56,7 @@ const useMessageStore = create(
         setMessage: (roomId, messages) => {
             set((state) => ({
                 messages: {
-                    ...state.message,
+                    ...state.messages,
                     [roomId]: messages
                 }
             }))
@@ -72,10 +71,14 @@ const useMessageStore = create(
         },
 
         //This function firstly merges the vector clock of the sender with the user and then uses the inserInCasualOrder function to insert the msg at the correct index
-        addMessage: (roomId, message) => {
+        addMessage: ({roomId, message}) => {
             set((state) => {
                 const existing = get().messages[roomId] || []
-                get().mergeClock(message.vectorClock || {})
+                const userId = useAuthStore.getState().user?.id
+
+                if (message.userId !== userId) {
+                    get().mergeClock(message.vectorClock || {})
+                }
 
                 const inserted = insertInCasualOrder(existing, message)
 
