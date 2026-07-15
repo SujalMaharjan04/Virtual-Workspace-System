@@ -102,9 +102,6 @@ model messages {
   //Vector clock
   vector_clock  Json
 
-  //Key used for encryption
-  encypted_key    String?
-
   //Initialization Vector for different encryption key for same msg
   iv      String?
 
