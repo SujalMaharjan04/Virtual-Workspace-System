@@ -11,13 +11,13 @@ const VectorClock = {
         allKeys.forEach(key => {
             const a = clockA[key] || 0
             const b = clockB[key] || 0
-            if (a > b) aBeforeB  = true
-            if (b > a) bBeforeA  = true
+                if (a < b) aBeforeB = true
+            if (a > b) bBeforeA = true
         }) // for each key, checking the count to see which is greater
 
-        if (aBeforeB  && !bBeforeA ) return "A_BEFORE_B" // checks for the flag on the basis of which returns if a before b
-        if (bBeforeA  && !aBeforeB ) return "B_BEFORE_A" 
-        if (!aBeforeB  && !bBeforeA ) return "EQUAL" // if clocks have both before false
+        if (aBeforeB && !bBeforeA) return "A_BEFORE_B" // a happened before b when all entries are less than or equal and at least one is strictly less
+        if (bBeforeA && !aBeforeB) return "B_BEFORE_A"
+        if (!aBeforeB && !bBeforeA) return "EQUAL" // identical clocks
 
         return "CONCURRENT" // if the clocks have both before truw
     },
