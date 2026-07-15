@@ -3,6 +3,7 @@ import useMessageStore from "../../store/messageStore"
 import useRoomStore from "../../store/roomStore"
 import useAuthStore from "../../store/authStore"
 import useAvatarStore from "../../store/avatarStore"
+import { encryptMessage } from "../../utils/messageHelper"
 
 const MessageSection = () => {
     const [isMsgActive, setIsMsgActive] = useState(false)
@@ -17,13 +18,14 @@ const MessageSection = () => {
     }))
     const roomId = room.room_id
     const {user} = useAuthStore.getState()
+    const userId = user.id
     const userName = user.name
     const messages = useMessageStore(state => state.messages[roomId]) || []
     const sendMessage = useMessageStore(state => state.sendMessage)
     const inputRef = useRef(null)
     const receiverRef = useRef(null)
     const messageRef = useRef("")
-
+    const aesKey = useRoomStore(state => state.aesKey)
     
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -54,19 +56,12 @@ const MessageSection = () => {
     useEffect(() => {
         if (isMsgActive && inputRef.current) {
             inputRef.current.focus()
-        } 
-        
-        if (!isMsgActive && inputRef.current) {
-            inputRef.current.blur()
-        }
-
-        if (isReceiverActive && receiverRef.current) {
+        } else if (isReceiverActive && receiverRef.current) {
             receiverRef.current.focus()
-        }
-
-        if (!isReceiverActive) {
+        } else {
             document.activeElement?.blur()
         }
+
     }, [isMsgActive, isReceiverActive])
 
     const handleMessageChange = (e) => {
@@ -86,37 +81,64 @@ const MessageSection = () => {
         }
     }
 
-    const handleSend = () => {
+    const handleSend = async() => {
         if (!messageRef.current.trim()) return
 
         const vectorClock = useMessageStore.getState().tickClock()
-        const finalReceiver = receiver.trim() || "All"
+        let receiverValue = "All"
+
+        if (receiver.trim() !== "All") {
+
+            const selectedUser = receivers.find(
+                r => r.userName === receiver
+            )
+
+            if (!selectedUser) {
+                console.log("Receiver not found")
+                return
+            }
+
+            receiverValue = selectedUser.userId
+        }
+
+        const messageContent = await encryptMessage(aesKey, messageRef.current)
 
         const msgToSend = {
-            content: messageRef.current,
-            sender: userName,
-            receiver: finalReceiver,
+            content: messageContent.message,
+            iv: messageContent.iv,
+            sender: {
+                name: userName,
+                id: userId
+            },
+            receiver: {
+                name: receiver,
+                id: receiverValue
+            },
             time: Date.now()
         }
+        console.log("msgToSend", msgToSend)
+        setMessage("")
+        messageRef.current = ""
 
         sendMessage(roomId, msgToSend, vectorClock)
     }
 
     return (
         <div className = "bg-black opacity-65">
-            <div>
-                {/* {(isActive || messages.length > 0) && ( */}
-                    <div className = "flex flex-col gap-2 max-h-25 overflow-auto pb-2">
+            <div className = "gap-2">
+                {(isMsgActive && messages.length > 0) && (
+                    <div className = "flex flex-col gap-2 max-h-50 overflow-auto">
                         {messages.map(msg => (
-                            <div id = {msg.id} className = "inline-flex items-start">
-                                <span>{msg.userName}</span>
+                            <div id = {msg.id} className = "inline-flex items-start gap-2">
+                                {msg.receiver.name === "All" ? <span className = "text-green-500">{msg.sender.name}:</span> : <span className = "text-purple-500">{msg.sender.name}:</span> }
+                                
                                 <span>{msg.content}</span>
                             </div>
                         ))}
                     </div>
-                {/* ) } */}
+                ) } 
 
-                <div className = "flex justify-start items-center gap-0">
+                <div className = "flex justify-start items-center w-full">
                     <input list = "receivers" ref = {receiverRef} type = "text" name = "receiver" className = "text-center w-[15%]" value = {receiver} onChange = {(e) => setReceiver(e.target.value)} onFocus={handleReceiverFocus} onBlur={handleReceiverBlur} />
                     <datalist id = "receivers">
                         <option value = "all" />
@@ -124,7 +146,7 @@ const MessageSection = () => {
                             <option key = {rm.userId} value = {rm.userName} />
                         ))}
                     </datalist>
-                    <input ref = {inputRef} type = "text" name = "message" className = " text-white pl-2 placeholder:text-white" disabled = {!isMsgActive} placeholder = "Press Enter to Type" onChange = {(e) => handleMessageChange(e)} /> 
+                    <input ref = {inputRef} type = "text" name = "message" value = {message} className = "flex-1 text-white pl-2 placeholder:text-white" disabled = {!isMsgActive} placeholder = "Press Enter to Type" onChange = {(e) => handleMessageChange(e)} /> 
                 </div>
             </div>
         </div>
