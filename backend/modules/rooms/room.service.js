@@ -165,18 +165,28 @@ const leaveRoom = async({roomId, userId}) => {
     }
 }
 
-const getRoomMember = async({roomId}) => {
+const getRoomMember = async(roomId) => {
     try {
         const members = await prisma.room_members.findMany({
             where: {room_id: roomId, is_active: true},
-            include: {
+            select: {
+                role: true,
+                is_active: true,
                 user: {
-                    select: {user_id: true, name: true}
+                    select: {
+                        user_id: true,
+                        name: true
+                    }
                 }
             }
         })
 
-        return members
+        return members.map(member => ({
+            id: member.user.user_id,
+            name: member.user.name,
+            role: member.role,
+            is_active: member.is_active
+        }))
     }
     catch (err) {
         throw err
