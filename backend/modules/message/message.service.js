@@ -1,16 +1,23 @@
 const prisma = require("../../src/db")
 
-const getMessage = async({roomId}) => {
+const getAllMessages = async({roomId, userId}) => {
     try {
         const messages = await prisma.messages.findMany({
             where: {
                 room_id: roomId,
-                sent_to: null
+                OR: [
+                    {sent_to: null},
+                    {sent_by: userId},
+                    {sent_to: userId}
+                ]
             
             },
             orderBy: {sent_at: "asc"},
             include: {
                 sender: {
+                    select: {name: true, user_id: true}
+                },
+                receiver: {
                     select: {name: true, user_id: true}
                 }
             }
@@ -53,11 +60,12 @@ const getDM = async({roomId, userId, targetUserId}) => {
     }
 }
 
-const sendMessage = async({content, roomId, userId, vectorClock}) => {
+const sendMessage = async({message, roomId, userId, iv,  vectorClock}) => {
     try {
         const response = await prisma.messages.create({
             data: {
-                message: content,
+                message,
+                iv,
                 room_id: roomId,
                 sent_by: userId,
                 vector_clock: vectorClock
@@ -74,14 +82,16 @@ const sendMessage = async({content, roomId, userId, vectorClock}) => {
     }
 }
 
-const sendDM = async({roomId, userId, sentToId, message, encryptedKey, iv}) => {
+const sendDM = async({roomId, sentToId, sentBy, message, iv, vectorClock}) => {
     try {
         const response = await prisma.messages.create({
             data: {
                 message,
+                iv,
                 room_id: roomId,
-                sent_by: userId,
-                sent_to: sentToId
+                sent_by: sentBy,
+                sent_to: sentToId,
+                vector_clock: vectorClock
             }
         })
 
@@ -95,4 +105,4 @@ const sendDM = async({roomId, userId, sentToId, message, encryptedKey, iv}) => {
     }
 }
 
-module.exports = {getMessage, sendMessage, sendDM, getDM}
+module.exports = {getAllMessages, sendMessage, sendDM, getDM}
