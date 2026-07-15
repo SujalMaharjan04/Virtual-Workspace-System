@@ -14,11 +14,11 @@
 
 
 .inputStyle {
-    @apply bg-[#D9D9D9] w-full h-10 rounded-2xl text-black p-4 focus:outline-none;
+    @apply bg-[#D9D9D9] w-full h-10 rounded-2xl text-black p-4 focus:outline-none focus:ring-2 focus:ring-[#6C63FF] focus:border-transparent;
 }
 
 .submitBtn {
-    @apply bg-[#6C63FF] w-[50%] h-12 rounded-2xl hover:cursor-pointer hover:bg-[#5f58e5];
+    @apply bg-[#6C63FF] px-6 h-12 rounded-2xl hover:cursor-pointer hover:bg-[#5f58e5];
 }
 
 
