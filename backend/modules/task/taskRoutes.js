@@ -9,9 +9,9 @@ taskRouter.get("/all-task", userExtractor, roomExtractor, taskController.getTask
 taskRouter.post("/add-task", userExtractor, roomExtractor, taskPermission, taskController.addTask)
 
 //Route for signing the task complete
-taskRouter.put("/completed", userExtractor, roomExtractor, taskController.checkTask)
+taskRouter.put("/udpate-task", userExtractor, roomExtractor, taskController.checkTask)
 
 //Route for deleting a task
-taskRouter.delete("/remove", userExtractor, roomExtractor, taskPermission, taskController.deleteTask)
+taskRouter.delete("/remove-task", userExtractor, roomExtractor, taskPermission, taskController.deleteTask)
 
 module.exports = taskRouter
