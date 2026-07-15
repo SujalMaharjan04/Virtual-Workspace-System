@@ -19,6 +19,18 @@ enum Status {
   online
 }
 
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
 model User {
   user_id    String   @id @unique @default(uuid())
   name       String
@@ -62,6 +74,8 @@ model Task {
   task_id   String  @id @unique @default(uuid())
   task      String
 
+  description String?
+
   // Link to Room
   room_id   String
   room      Room    @relation( fields: [room_id], references: [room_id])
@@ -74,7 +88,11 @@ model Task {
   created_by  String
   creator User  @relation("TaskCreator", fields: [created_by], references: [user_id])
 
-  completed     Boolean   @default(false)
+  priority  Priority      @default(MEDIUM)
+  status    TaskStatus    @default(PENDING)
+  deadline  DateTime
+
+  created_at  DateTime    @default(now())
 }
 
 model room_members {
