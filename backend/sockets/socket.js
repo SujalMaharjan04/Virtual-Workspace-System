@@ -6,7 +6,7 @@ const socketMiddleware = require('./socket.middleware')
 const registerRoomHandler = require('./handlers/room.handler')
 const registerMessageHandler = require("./handlers/message.handler")
 const registerAvatarHandler = require('./handlers/avatar.handler')
-const registerTaskHandler = require('./handlers/task.handler')
+const registerTaskEvents = require('./handlers/task.events')
 const registerCallHandler = require('./handlers/call.handler')
 const registerDisconnectHandler = require('./handlers/disconnect.handler')
 
@@ -23,6 +23,7 @@ const initializeServer = (server) => {
 
     io.use(socketMiddleware)
 
+    registerTaskEvents(io)
     io.on("connection",  (socket) => {  
         console.log("Socket.id", socket.id)      
         try {
@@ -33,7 +34,6 @@ const initializeServer = (server) => {
             console.error("Error in registerRoomHandler:", err)
         }
         
-        registerTaskHandler(io, socket)
         registerCallHandler(io, socket)   
 
         //When the user leaves the room
