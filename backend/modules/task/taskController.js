@@ -1,3 +1,4 @@
+const eventBus = require('../../utils/eventBus')
 const taskService = require('./task.service')
 
 const getTask = async(req, res) => {
@@ -19,10 +20,13 @@ const addTask = async(req,res) => {
     try {
         const {roomId} = req.room
         const {userId} = req.user
-        const {newTask, targetUser} = req.body
+        const newTask = req.body
 
-        const task = await taskService.addTask({roomId, userId, targetUser, newTask})
+        const task = await taskService.addTask({roomId, userId, newTask})
 
+        eventBus.emit("task:added", {
+            roomId, task
+        })
         return res.status(200).json(task)
     }
 
