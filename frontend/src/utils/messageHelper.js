@@ -9,7 +9,7 @@ const arrayToBufferToBase64 = (buffer) => {
 }
 
 const base64ToBufferToArray = (base64) => {
-    const binary = window.atoa(base64)
+    const binary = window.atob(base64)
     const bytes = new Uint8Array(binary.length)
     for (let i = 0; i < binary.length; i++) {
         bytes[i] = binary.charCodeAt(i)
@@ -17,6 +17,7 @@ const base64ToBufferToArray = (base64) => {
 
     return bytes.buffer
 }
+
 const encryptMessage = async(aesKey, plainMessage) => {
     const iv = window.crypto.getRandomValues(new Uint8Array(12))
 
@@ -33,7 +34,7 @@ const encryptMessage = async(aesKey, plainMessage) => {
 
 
     return {
-        cipherMessage: arrayToBufferToBase64(cipherTextBuffer),
+        message: arrayToBufferToBase64(cipherTextBuffer),
         iv: arrayToBufferToBase64(iv)
     }
 }
