@@ -6,6 +6,7 @@ import useAuthStore from "../../store/authStore"
 import useAvatarStore from "../../store/avatarStore"
 import useRoomStore from "../../store/roomStore"
 import { decryptAESKey, encryptAESKey, generateAESkey } from "../../utils/AESkey"
+import useTaskStore from "../../store/taskStore"
 
 const registerRoomHandler = () => {
     const socket = getSocket()
@@ -18,7 +19,7 @@ const registerRoomHandler = () => {
         const isAdmin = userId === room.created_by
 
 
-        useNotificationStore.getState().setNotification(data.message, "message")
+        useNotificationStore.getState().setNotification(data.message, "success")
 
         if (isAdmin) {
             const aesKey = await generateAESkey()
@@ -28,7 +29,7 @@ const registerRoomHandler = () => {
 
     //When other user joins the room
     const onUserJoined = (data) => {
-        useRoomStore.getState().addRoomMembers({id: data.userId, name: data.userName})
+        useRoomStore.getState().addRoomMembers({id: data.userId, name: data.userName, role: data.role, is_active: data.is_active})
         useNotificationStore.getState().setNotification(data.message, "success")
     }
 
@@ -49,9 +50,13 @@ const registerRoomHandler = () => {
         const isAdmin = room?.created_by === useAuthStore.getState().user.id
 
         if (!isAdmin) {
-        socket.emit(ROOM_EVENTS.SHARE_PUBLIC_KEY)
+            socket.emit(ROOM_EVENTS.SHARE_PUBLIC_KEY)
+        }
     }
-        
+
+    //When the user joins the room, they get the tasks
+    const onTasks = (tasks) => {
+        useTaskStore.getState().setTask(tasks)
     }
 
     const adminEncryptsKey = async({userPublicKey, requesterSocketId}) => {
@@ -104,6 +109,7 @@ const registerRoomHandler = () => {
 
     socket.on(ROOM_EVENTS.ADMIN_JOINED, onAdminJoined)
     socket.on(ROOM_EVENTS.JOIN, onUserJoined)
+    socket.on(ROOM_EVENTS.TASKS, onTasks)
     socket.once(ROOM_EVENTS.MEMBERS, onMembers)
     
     socket.on(ROOM_EVENTS.ADMIN_ENCRYPT_KEY, adminEncryptsKey)
@@ -115,6 +121,8 @@ const registerRoomHandler = () => {
         socket.off(ROOM_EVENTS.USER_LEFT, onUserLeft)
         socket.off(ROOM_EVENTS.ADMIN_ENCRYPT_KEY, adminEncryptsKey)
         socket.off(ROOM_EVENTS.RECEIVE_AES_KEY)
+        socket.off(ROOM_EVENTS.MEMBERS, onMembers)
+        socket.off(ROOM_EVENTS.TASKS, onTasks)
     }
 }
 
