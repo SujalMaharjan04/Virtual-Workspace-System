@@ -35,15 +35,18 @@ const addTask = async(req,res) => {
     }
 }
 
-const checkTask = async(req, res) => {
+const updateTask = async(req, res) => {
     try {
         const {roomId} = req.room
         const {userId} = req.user
-        const {taskId} = req.body
+        const {id: taskId, ...updates} = req.body
 
-        const checked = await taskService.checkTask({roomId, userId, taskId})
+        const updated = await taskService.updateTask({roomId, userId, taskId, changes: updates})
+        eventBus.emit("task:updated", {
+            roomId, updated
+        })
 
-        return res.status(200).json(checked)
+        return res.status(200).json(updated)
     }
 
     catch (err) {
@@ -54,11 +57,14 @@ const checkTask = async(req, res) => {
 const deleteTask = async(req, res) => {
     try {
         const {userId} = req.user
-        const {roomRole} = req.room
+        const {roomId, roomRole} = req.room
         const {taskId} = req.params
-
+        
         await taskService.deleteTask({userId, roomRole, taskId})
-
+        eventBus.emit("task:removed", {
+            roomId,
+            taskId
+        })
         return res.status(200).json({message: "Task Deleted Successfully"})
     }
 
@@ -67,4 +73,4 @@ const deleteTask = async(req, res) => {
     }
 }
 
-module.exports = {getTask, addTask, checkTask, deleteTask}
+module.exports = {getTask, addTask, updateTask, deleteTask}
