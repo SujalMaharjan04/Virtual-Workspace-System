@@ -1,12 +1,12 @@
 import { useState } from "react"
 import taskService from '../../services/task'
 
-const TaskForm = ({submitType, onSuccess}) => {
+const TaskForm = ({submitType, onSuccess, assignedTo = null}) => {
     const [task, setTask] = useState("")
     const [description, setDescription] = useState("")
     const [priority, setPriority] = useState("MEDIUM")
     const [deadline, setDeadline] = useState("")
-
+    console.log(assignedTo)
     const handleSubmit = async(e) =>  {
         e.preventDefault()
         if (submitType === "Add Task") {
@@ -15,6 +15,20 @@ const TaskForm = ({submitType, onSuccess}) => {
                 description,
                 priority,
                 deadline,
+            }
+            await taskService.addTask(newTask)
+            setTask("")
+            setDescription("")
+            setPriority("")
+            setDeadline("")
+            onSuccess?.()
+        } else if (submitType === "Assign Task") {
+            const newTask = {
+                title: task,
+                description,
+                priority,
+                deadline,
+                assignedTo
             }
             await taskService.addTask(newTask)
             setTask("")
