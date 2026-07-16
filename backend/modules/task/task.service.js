@@ -1,37 +1,32 @@
 const prisma = require('../../src/db')
 
-const getTask = async({roomId, userId, roomRole}) => {
+const getTask = async(roomId) => {
     try {
-        let tasks
-        if (roomRole === "admin") {
-            tasks = await prisma.task.findMany({
-                where: {room_id: roomId},
-                include: {
-                    assignee: {select: {name: true, user_id: true}},
-                    creator: {select: {name: true, user_id: true}}
-                },
-                orderBy: {
-                    created_at: "asc"
-                }
-            })
-        } else {
-            tasks = await prisma.task.findMany({
-                where: {
-                    room_id: roomId,
-                    OR: [
-                        {assigned_to: userId},
-                        {created_by: userId}
-                    ]
-                }, 
-                include: {
-                    assignee: {select: {name: true, user_id: true}},
-                    creator: {select: {name: true, user_id: true}}
-                },
-                orderBy: {
-                    created_at: "asc"
-                }
-            })
-        }
+
+        const allTasks = await prisma.task.findMany({
+            where: {room_id: roomId},
+            include: {
+                assignee: {select: {name: true, user_id: true}},
+                creator: {select: {name: true, user_id: true}}
+            },
+            orderBy: {
+                created_at: "asc"
+            }
+        })
+
+        const tasks = allTasks.map(({assignee, creator, ...task}) => ({
+            ...task,
+            assigned_to: {
+                id: assignee.user_id,
+                name: assignee.name
+            },
+            created_by: {
+                id: creator.user_id,
+                name: creator.name
+            }
+        }),
+    )
+
 
         return tasks
     }
@@ -151,7 +146,7 @@ const updateTask = async({roomId, userId, taskId, changes}) => {
             throw new Error("Only admins can update priority or deadline")
         }
             
-        if (updatingStatus && task.assigned_to !== userId) {
+        if (updatingStatus && task.assigned_to !== userId && roomRole !== 'admin') {
             throw new Error("Only the assignee can update task status")
         }
                     
@@ -167,10 +162,29 @@ const updateTask = async({roomId, userId, taskId, changes}) => {
             where: {
                 task_id: taskId,
             },
-            data
+            data,
+            include: {
+                assignee: {select: {name: true, user_id: true}},
+                creator: {select: {name: true, user_id: true}}
+            }
         })
 
-        return updatedTask
+        const updated = {
+            ...updatedTask,
+            created_by: {
+                id: updatedTask.creator.user_id,
+                name: updatedTask.creator.name
+            },
+            assigned_to: {
+                id: updatedTask.assignee.user_id,
+                name: updatedTask.assignee.name
+            }
+        }
+
+        delete updated.assignee
+        delete updated.creator
+
+        return updated
     }
     catch (err) {
         throw err
