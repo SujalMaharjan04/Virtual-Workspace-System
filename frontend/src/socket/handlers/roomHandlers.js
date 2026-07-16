@@ -22,14 +22,13 @@ const registerRoomHandler = () => {
 
         if (isAdmin) {
             const aesKey = await generateAESkey()
-            console.log("AES key: ", aesKey)
             useRoomStore.getState().setAESKey(aesKey)
         }
     }
 
     //When other user joins the room
     const onUserJoined = (data) => {
-        useRoomStore.getState().setRoomMember(data.userId, data.userName)
+        useRoomStore.getState().addRoomMembers({id: data.userId, name: data.userName})
         useNotificationStore.getState().setNotification(data.message, "success")
     }
 
@@ -39,7 +38,20 @@ const registerRoomHandler = () => {
         if (!scene) return 
         scene.removeOtherPlayer(data.userId)
         useAvatarStore.getState().removePlayer(data.userId)
+        useRoomStore.getState().removeRoomMembers({id: data.userId})
         useNotificationStore.getState().setNotification(`${data.userName} has left the room`, "success")
+    }
+
+    //When the user joins the room, they get the members list
+    const onMembers = (members) => {
+        useRoomStore.getState().setRoomMembers(members)
+        const room = useRoomStore.getState().room
+        const isAdmin = room?.created_by === useAuthStore.getState().user.id
+
+        if (!isAdmin) {
+        socket.emit(ROOM_EVENTS.SHARE_PUBLIC_KEY)
+    }
+        
     }
 
     const adminEncryptsKey = async({userPublicKey, requesterSocketId}) => {
@@ -92,14 +104,7 @@ const registerRoomHandler = () => {
 
     socket.on(ROOM_EVENTS.ADMIN_JOINED, onAdminJoined)
     socket.on(ROOM_EVENTS.JOIN, onUserJoined)
-    socket.once(ROOM_EVENTS.USER_JOINED, () => {
-        const room = useRoomStore.getState().room
-        const isAdmin = room?.created_by === useAuthStore.getState().user.id
-
-        if (!isAdmin) {
-        socket.emit(ROOM_EVENTS.SHARE_PUBLIC_KEY)
-    }
-    })
+    socket.once(ROOM_EVENTS.MEMBERS, onMembers)
     
     socket.on(ROOM_EVENTS.ADMIN_ENCRYPT_KEY, adminEncryptsKey)
     socket.on(ROOM_EVENTS.USER_LEFT, onUserLeft)
