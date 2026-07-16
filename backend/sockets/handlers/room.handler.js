@@ -1,8 +1,9 @@
-const {ROOM_EVENTS} = require("../events")
+const {ROOM_EVENTS, TASK_EVENTS} = require("../events")
 const prisma = require("../../src/db")
 const avatarService = require('../../modules/avatar/avatar.service')
 const userService = require('../../modules/user/user.service')
 const roomService = require('../../modules/rooms/room.service')
+const taskService = require("../../modules/task/task.service")
 
 const registerRoomHandler = async(io, socket) => {
     const userId = socket.userId
@@ -64,7 +65,7 @@ const registerRoomHandler = async(io, socket) => {
     }
         
         try {
-            await prisma.room_members.upsert({
+            const userData = await prisma.room_members.upsert({
                 where: {
                     room_id_user_id: {
                         user_id: socket.userId,
@@ -78,14 +79,22 @@ const registerRoomHandler = async(io, socket) => {
                     room_id: socket.roomId,
                     user_id: socket.userId,
                     is_active: true
+                },
+                select: {
+                    role: true,
+                    is_active: true
                 }
             })
             
             const members = await roomService.getRoomMember(roomId)
+            const tasks = await taskService.getTask(roomId)
             socket.emit(ROOM_EVENTS.MEMBERS, members)
+            socket.emit(ROOM_EVENTS.TASKS, tasks)
             socket.to(roomId).emit(ROOM_EVENTS.JOIN, {
                 userId,
                 userName,
+                role: userData.role,
+                is_active: userData.is_active,
                 message: `${socket.userName} has joined the room`
             })
         }
