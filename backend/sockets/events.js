@@ -4,7 +4,7 @@ const ROOM_EVENTS = {
     JOIN: "room:join",
     LEAVE: "room:leave",
     JOINED: "room:joined",
-    USER_JOINED: "room:user_joined",
+    TASKS: "all-task",
     USER_LEFT: "room:user_left",
     MEMBERS: "room:members",
     ERROR: "room:error",
@@ -32,9 +32,14 @@ const AVATAR_EVENTS = {
 }
 
 const TASK_EVENTS = {
+    ALL_TASK: "all-task",
     TASK_CREATED: "task-created",
     TASK_UPDATED: "task-updated",
-    TASK_DELETED: "task-deleted"
+    TASK_DELETED: "task-deleted",
+    TASK_ASSIGNED: "task-assigned",
+    TASK_CREATED_NOTIFY: "task-created-notify",
+    TASK_UPDATED_NOTIFY: "task-updated-notify",
+    TASK_DELETED_NOTIFY: "task-deleted-notify"
 }
 
 
