@@ -13,7 +13,8 @@ const useRoomStore = create(
                         //     {
                         //         id,
                         //         name,
-                        //         role
+                        //         role,
+                                    // is_active,
                         //     }
                         // ]
             emitLeave: null,
@@ -28,12 +29,14 @@ const useRoomStore = create(
             setRoom: (room) => set({room}),
             setRoomToken: (token) =>  set({token}),
             setRoomMembers: (members) => set({roomMembers: members}),
-            addRoomMembers: ({userId, userName}) => set((state) => ({
-                roomMembers: [
-                    ...state.roomMembers,
-                    {id: userId, name: userName}
-                ]
-            })),
+            addRoomMembers: ({id, name, role, is_active}) => set((state)  => {
+                if (state.roomMembers.some(member => member.id === id)) {
+                    return state
+                }
+                return {
+                    roomMembers: [...state.roomMembers, {id, name, role, is_active}]
+                }
+            }),
             removeRoomMembers: ({userId}) => set((state) => ({
                 roomMembers: state.roomMembers.filter(member => member.id !== userId)
             })),
