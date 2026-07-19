@@ -6,6 +6,7 @@ import { handleAuthError, handleRoomError } from "../utils/tokenError";
 import registerAvatarHandler from "../socket/handlers/avatarHandlers";
 import registerMessageHandler from "../socket/handlers/messageHandlers";
 import registerTaskHandler from "../socket/handlers/taskHandlers";
+import registerCallHandler from "../socket/handlers/callHandlers";
 
 let socket
 
@@ -23,6 +24,7 @@ const useSocket = () => {
             registerAvatarHandler()
             registerMessageHandler()
             registerTaskHandler()
+            registerCallHandler()
         }
 
         const handleConnectError = (error) => {
