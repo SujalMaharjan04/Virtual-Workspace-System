@@ -52,7 +52,9 @@ const CALL_EVENTS = {
     LEAVE_CALL: "call-leave",
     USER_JOINED_CALL: "user-joined-call",
     USER_LEFT_CALL: "user-left-call",
-    EXISTING_MEMBER: "existing-member"
+    EXISTING_MEMBER: "existing-member",
+    INVITE_TO_CALL: "invite-to-call",
+    CALL_INVITE: "call-invite"
     
 }
 
