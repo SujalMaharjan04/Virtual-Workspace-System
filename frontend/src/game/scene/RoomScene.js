@@ -5,6 +5,7 @@ import useRoomStore from "../../store/roomStore"
 import { getSocket } from "../../socket";
 import { AVATAR_EVENTS } from "../../socket/events";
 import { setActiveScene } from "./SceneRegistry";
+import useCallStore from "../../store/callStore";
 
 
 
@@ -37,6 +38,12 @@ export default class RoomScene extends Phaser.Scene {
         this.createLocalPlayer()
         this.createAnimation()
         this.setupInput()
+        const zoneLayer = this.map.getObjectLayer("MeetingZones")
+        this.meetingZones = (zoneLayer?.objects ?? []).map(obj => ({
+            name: obj.name,
+            rect: new Phaser.Geom.Rectangle(obj.x, obj.y, obj.width, obj.height)
+        }))
+        this.currentZone = null
         this.events.on('shutdown', this.shutdown, this)
     }
 
@@ -45,6 +52,7 @@ export default class RoomScene extends Phaser.Scene {
         this.handleMovement()
         this.updateLabelPosition()
         this.updateOtherPlayer()
+        this.checkMeetingZone(this.localPlayer.x, this.localPlayer.y)
     }
 
 
@@ -75,7 +83,7 @@ export default class RoomScene extends Phaser.Scene {
         const collisionLayer = [
             "Shelves",
             "Table",
-            "Workstation",
+            "WorkStation",
             "Chair",
             "FlowerPot",
             "FlowerPot2",
@@ -105,7 +113,6 @@ export default class RoomScene extends Phaser.Scene {
                     
                     body.setVisible(false) //setting the collision body visibility to falsae
                     body.body.setSize(bounds.width, bounds.height)
-                    body.refreshBody()
                     this.colliders.push(body)
                 } else if (obj.width && obj.height) {
                     const isRotated = obj.rotation === 90 || obj.rotation === 270 //checking for any rotation occur or not during tile creation
@@ -120,7 +127,6 @@ export default class RoomScene extends Phaser.Scene {
 
                     body.setVisible(false)
                     body.body.setSize(effectiveWidth, effectiveHeight)
-                    body.refreshBody()
                     this.colliders.push(body)
                 }
             })
@@ -288,7 +294,7 @@ export default class RoomScene extends Phaser.Scene {
         const avatarId = player.avatarId
         const userId = localPlayer.userId
         const roomId = localPlayer.roomId
-        const speed = 120
+        const speed = 300
         let moved = false
         let direction = this.lastDirection
 
@@ -412,6 +418,20 @@ export default class RoomScene extends Phaser.Scene {
 
         const id = avatarId || player.sprite.avatarId
         player.sprite.anims.play(`${id}-walk-${direction}`, true)
+    }
+
+    checkMeetingZone(playerX, playerY) {
+        const zone = this.meetingZones.find(z => Phaser.Geom.Rectangle.Contains(z.rect, playerX, playerY))
+        const zoneName = zone?.name ?? null
+        if (zoneName === this.currentZone) return
+
+        this.currentZone = zoneName
+
+        if (zoneName) {
+            useCallStore.getState().enterMeetingZone(zoneName)
+        } else {
+            useCallStore.getState().exitMeetingZone()
+        }
     }
 
 
