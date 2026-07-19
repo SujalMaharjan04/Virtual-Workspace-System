@@ -5,6 +5,9 @@ import RoomNavbar from "../components/Room/RoomNavbar"
 import AvatarSelection from "../components/Avatar/AvatarSelection"
 import useSocket from "../hooks/useSocket"
 import useAuthStore from "../store/authStore"
+import MeetingPrompt from "../components/Call/MeetingPrompt"
+import CallInviteToast from "../components/Call/CallInviteToast"
+import CallView from "../components/Call/CallView"
 
 const RoomJoined = () => {
     useSocket()
@@ -21,6 +24,11 @@ const RoomJoined = () => {
             <RoomNavbar />
             <main className = "flex flex-1 w-full overflow-hidden">
                 {avatarSelect ? <GameCanvas /> : <AvatarSelection onSelect = {() => setAvatarSelect(true)} />}
+
+
+                <MeetingPrompt />
+                <CallInviteToast />
+                <CallView />
             </main>
             <RoomFooter />
         </div>
