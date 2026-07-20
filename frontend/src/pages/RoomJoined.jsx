@@ -29,6 +29,7 @@ const RoomJoined = () => {
                 <MeetingPrompt />
                 <CallInviteToast />
                 <CallView />
+                <CallInviteToast />
             </main>
             <RoomFooter />
         </div>
