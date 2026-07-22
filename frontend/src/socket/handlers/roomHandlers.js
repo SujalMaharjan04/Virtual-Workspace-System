@@ -48,9 +48,7 @@ const registerRoomHandler = () => {
         useRoomStore.getState().setRoomMembers(members)
         const room = useRoomStore.getState().room
         const isAdmin = room?.created_by === useAuthStore.getState().user.id
-        console.log(`OnMembers fired: room: ${room}, isAdmin: ${isAdmin}`)
         if (!isAdmin) {
-            console.log("EMITTING SHARE_PUBLIC_KEY")
             socket.emit(ROOM_EVENTS.SHARE_PUBLIC_KEY)
         }
     }
@@ -61,7 +59,6 @@ const registerRoomHandler = () => {
     }
 
     const adminEncryptsKey = async({userPublicKey, requesterSocketId}) => {
-        console.log("Admin encrypts key")
         const aesKey = useRoomStore.getState().aesKey
 
         const publicKeyBuffer = Uint8Array.from(atob(userPublicKey), c => c.charCodeAt(0)).buffer
@@ -89,7 +86,6 @@ const registerRoomHandler = () => {
     socket.on(ROOM_EVENTS.RECEIVE_AES_KEY, async(encryptedKey) => {
         
         let  privateKey = localStorage.getItem("privateKey")
-        console.log(privateKey)
         privateKey = Uint8Array.from(atob(privateKey), c => c.charCodeAt(0)).buffer
         
         privateKey = await window.crypto.subtle.importKey(
@@ -99,10 +95,8 @@ const registerRoomHandler = () => {
             false,
             ["decrypt"]
         )
-        console.log(privateKey)
         const key =  await decryptAESKey(encryptedKey, privateKey)
 
-        console.log(key)
         useRoomStore.getState().setAESKey(key)
         const {room} = useRoomStore.getState()
         const roomId = room.room_id
