@@ -2,6 +2,7 @@ import { useState } from "react"
 import authService from "../../services/auth"
 import useAuthStore from "../../store/authStore"
 import useNotificationStore from "../../store/notificationStore"
+import { generateKeyPair } from "../../utils/crypto"
 
 
 
@@ -38,6 +39,8 @@ const LogIn = ({onSwitch}) => {
 
     const handleSubmit = async(e) => {
         e.preventDefault()
+        const existingPrivateKey = localStorage.getItem("privateKey")
+        let publicKey, privateKey
         
         const newError = {}
 
@@ -49,10 +52,20 @@ const LogIn = ({onSwitch}) => {
             newError.password = "Enter a password"
         }
 
+        if (!existingPrivateKey) {
+            ({publicKey, privateKey} =  await generateKeyPair())
+            localStorage.setItem("privateKey", privateKey)
+        }
+
+        const payload = {
+            form, 
+            publicKey
+        }
+
         setError(newError)
 
         if (Object.keys(newError).length === 0) {
-            const response = await authService.login(form)
+            const response = await authService.login(payload)
             
             if (response.success) {
                 setUser(response.data.user)
