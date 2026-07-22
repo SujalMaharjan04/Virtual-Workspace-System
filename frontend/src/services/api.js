@@ -4,7 +4,7 @@ import useRoomStore from '../store/roomStore'
 import { handleAuthError, handleRoomError } from '../utils/tokenError'
 
 const api = axios.create({
-    baseURL: "http://localhost:3001/api",
+    baseURL: `${import.meta.env.VITE_APP_BACKEND_URL}/api`
 })
 
 
