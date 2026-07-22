@@ -26,7 +26,7 @@ const signUp = async(req, res) => {
 
 const login = async(req, res) => {
     try {
-        const {email, password} = req.body
+        const {email, password, publicKey} = req.body
 
         if (!email) {
             return res.status(400).json({message: "Email is required"})
@@ -36,7 +36,7 @@ const login = async(req, res) => {
             return res.status(400).json({message: "Password is required and should be of length 6 or greater"})
         }
 
-        const {token, user} = await authService.loginService({email, password})
+        const {token, user} = await authService.loginService({email, password, publicKey})
 
         res.status(201).json({token, user})
     } 
