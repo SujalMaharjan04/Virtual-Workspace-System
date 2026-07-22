@@ -96,7 +96,7 @@ const registerCallHandler = async(io, socket) => {
             const sockets = await io.in(roomId).fetchSockets()
             const targets = targetUserIds === "all"
                 ? sockets.filter(s => s.userId !== userId)
-                : sockets.filter(s => s.targetUserIds.includes(s.userId))
+                : sockets.filter(s => targetUserIds.includes(s.userId))
 
             targets.forEach(s => {
                 io.to(s.id).emit(CALL_EVENTS.CALL_INVITE, {
