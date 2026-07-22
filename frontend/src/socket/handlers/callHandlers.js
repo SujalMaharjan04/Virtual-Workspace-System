@@ -50,7 +50,7 @@ const registerCallHandler = () => {
     }
 
     useCallStore.getState().registerCallAction({startCall, leaveCall, inviteToCall})
-    console.log(useCallStore.getState().emitStartCall)
+
 
     const onExistingMember = async({member}) => {
         for (const {userId, userName} of member) {
