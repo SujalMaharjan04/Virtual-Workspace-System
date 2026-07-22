@@ -4,8 +4,9 @@ const createPeerConnection = (targetUserId, targetUserName, onIceCandidate) => {
     const {rtcConfig, localStream} = useCallStore.getState()
 
     const connection = new RTCPeerConnection(rtcConfig)
-
+    
     localStream?.getTracks().forEach(track => {
+
         connection.addTrack(track, localStream)
     })
 
@@ -15,8 +16,9 @@ const createPeerConnection = (targetUserId, targetUserName, onIceCandidate) => {
         }
     }
 
-    connection.ontrack = () => {
-        useCallStore.getState().setPeerStream(targetUserId, event.stream[0])
+    connection.ontrack = (event) => {
+        const stream = event.streams?.[0] ?? new MediaStream([event.track])
+        useCallStore.getState().setPeerStream(targetUserId, stream)
     }
 
     connection.onconnectionstatechange = () => {
