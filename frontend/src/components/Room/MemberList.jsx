@@ -3,6 +3,7 @@ import useRoomStore from "../../store/roomStore"
 import Togglable from "../Shared/Togglable"
 import TaskForm from "../Tasks/TaskForm"
 import useAuthStore from "../../store/authStore"
+import GetRoomCode from "./GetRoomCode"
 
 const MemberList = (props) => {
     const roomMembers = useRoomStore(state => state.roomMembers)
@@ -11,6 +12,7 @@ const MemberList = (props) => {
     const currentUser = roomMembers.find(member => member.id === currentUserId)
     const isViewerAdmin = currentUser?.role === "admin"
     const assignToggleRef = useRef()
+    const roomCodeRef = useRef()
     return (
         <div className = "flex flex-col h-full">
             <div className = "flex flex-col items-center gap-4 flex-1 overflow-y-auto py-6 w-full">
@@ -39,7 +41,10 @@ const MemberList = (props) => {
 
             <div className = "flex justify-between items-center gap-8 w-[50%] mx-auto py-6 mt-auto">
                 <button className = "submitBtn">Send the Invite Link</button>
-                <button className = "submitBtn">Get Room Id</button>
+                <Togglable  ref = {roomCodeRef} wrapperClass = "flex justify-center" buttonClass = "submitBtn" buttonLabel = "Get Room Code" isOpen = {activeModal === "Code"} onOpen = {() => setActiveModal("Code")} onClose = {() => setActiveModal(null)}>
+                    <GetRoomCode />
+                </Togglable>
+                {/* <button className = "submitBtn">Get Room Id</button> */}
             </div>
 
         </div>
