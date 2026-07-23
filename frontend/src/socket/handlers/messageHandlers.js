@@ -77,8 +77,8 @@ const registerMessageHandler = () => {
                     roomId, 
                     message: {
                         content: decrypted,
-                        sender: msg.sender.name,
-                        receiver: msg.sent_to ?? "All",
+                        sender: {name: msg.sender.name, id: msg.sender.user_id},
+                        receiver: msg.sent_to ? {name: msg.receiver.name, id: msg.receiver.user_id} : {name: "All", id: null},
                         time: Date.now(),
                         vectorClock: msg.vectorClock
                     }
