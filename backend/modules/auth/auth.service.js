@@ -45,11 +45,9 @@ const loginService = async({email, password, publicKey}) => {
 
         if (!passwordCheck) throw new Error("Incorrect Credentials")
 
-        if (publicKey) {
-            await prisma.user.update({where: {user_id: user.user_id}, data: {public_key: publicKey}})
-            user.public_key = publicKey
-        }
-        
+        await prisma.user.update({where: {user_id: user.user_id}, data: {public_key: publicKey}})
+        user.public_key = publicKey
+
         const payload = {userId: user.user_id, email: user.email, userName: user.name}
 
         const token = jwt.sign(payload, config.SECRET, {expiresIn: "1d"})

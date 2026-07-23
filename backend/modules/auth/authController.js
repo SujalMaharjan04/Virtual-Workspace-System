@@ -26,7 +26,9 @@ const signUp = async(req, res) => {
 
 const login = async(req, res) => {
     try {
-        const {email, password, publicKey} = req.body
+        const {form} = req.body
+        const {email, password} = form
+        const {publicKey} = req.body
 
         if (!email) {
             return res.status(400).json({message: "Email is required"})
@@ -34,6 +36,9 @@ const login = async(req, res) => {
 
         if (!password || password.length < 6) {
             return res.status(400).json({message: "Password is required and should be of length 6 or greater"})
+        }
+        if (!publicKey) {
+            return res.status(400).json({message: "Public Key should be present"})
         }
 
         const {token, user} = await authService.loginService({email, password, publicKey})

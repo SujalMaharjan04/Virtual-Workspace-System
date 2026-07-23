@@ -39,7 +39,6 @@ const LogIn = ({onSwitch}) => {
 
     const handleSubmit = async(e) => {
         e.preventDefault()
-        const existingPrivateKey = localStorage.getItem("privateKey")
         let publicKey, privateKey
         
         const newError = {}
@@ -52,10 +51,9 @@ const LogIn = ({onSwitch}) => {
             newError.password = "Enter a password"
         }
 
-        if (!existingPrivateKey) {
-            ({publicKey, privateKey} =  await generateKeyPair())
-            localStorage.setItem("privateKey", privateKey)
-        }
+        ({publicKey, privateKey} =  await generateKeyPair())
+        localStorage.setItem("privateKey", privateKey)
+
 
         const payload = {
             form, 
