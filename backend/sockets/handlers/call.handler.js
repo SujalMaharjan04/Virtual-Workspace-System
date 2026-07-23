@@ -35,12 +35,11 @@ const registerCallHandler = async(io, socket) => {
 
     //forward offer to target user
     socket.on(CALL_EVENTS.CALL_OFFER, async(data) => {
-        try {
-            const sockets = await io.in(roomId).fetchSockets()
+        try {            
+            const sockets = await io.in(roomId).fetchSockets()           
             const targetSocket = await sockets.find(s => s.userId === data.userId)
 
             if (!targetSocket) return
-
             io.to(targetSocket.id).emit(CALL_EVENTS.CALL_OFFER, {
                 offer: data.offer,
                 callerId: userId,

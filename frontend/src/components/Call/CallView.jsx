@@ -28,6 +28,7 @@ const CallView = () => {
                 )}
                 
                 {peerList.map(([userId, peer]) => (
+                    
                     <VideoTile key = {userId} stream = {peer.stream} name = {peer.userName} />
                 ))}
             </div>

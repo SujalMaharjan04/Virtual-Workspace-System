@@ -31,6 +31,7 @@ const registerCallHandler = () => {
             useCallStore.getState().setRTCConfig(rtcConfig)
 
             useCallStore.getState().setInCall(true)
+            await Promise.resolve()
             socket.emit(CALL_EVENTS.JOIN_CALL)
             return true
         } catch (err) {
@@ -66,19 +67,25 @@ const registerCallHandler = () => {
     }
 
     const onCallOffer = async({offer, callerId, callerName}) => {
+
         const connection = createPeerConnection(callerId, callerName, sendIceCandidate)
         await connection.setRemoteDescription(new RTCSessionDescription(offer))
 
         const answer = await connection.createAnswer()
+
         await connection.setLocalDescription(answer)
+
 
         socket.emit(CALL_EVENTS.CALL_ANSWER, {userId: callerId, answer})
     }
 
     const onCallAnswer = async({answer, answerId}) => {
+
         const peer = useCallStore.getState().peers[answerId]
+
         if (!peer?.connection) return
         await peer.connection.setRemoteDescription(new RTCSessionDescription(answer))
+
     }
 
     const onIceCandidate = async({candidate, fromUser}) => {
