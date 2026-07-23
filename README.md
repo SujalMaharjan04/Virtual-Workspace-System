@@ -78,7 +78,22 @@ A Web System incorporating Node.js, Express, PostgreSQL, React, PhaserJs and Web
 2. Install Dependencies
 - cd backend && npm install
 - cd frontend && npm install
-3. Set up .env in backend (DATABASE_URL using SUPABASE, PORT, SECRET)
+3. Set up .env in backend (DATABASE_URL using SUPABASE, PORT, SECRET) anf frontend
+  The .env file in backend should have the structure
+  
+  DIRECT_URL = <DB_url_either_Supabase_or_local>
+  
+  SECRET = <your_secret_key>
+  
+  PORT = <your_port_number>
+  
+  FRONTEND = <your_frontend_url>
+
+
+  the .env file in frontend should have:
+  
+  VITE_APP_BACKEND_URL = <your_backend_url>
+  
 4. Run the app
 - Backend: npm run dev
 - Frontend: npm run dev
