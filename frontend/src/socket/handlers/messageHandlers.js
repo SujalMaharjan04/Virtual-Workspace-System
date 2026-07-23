@@ -6,8 +6,7 @@ import { decryptMessage } from "../../utils/messageHelper";
 
 const registerMessageHandler = () => {
     const socket = getSocket()
-    const {room} = useRoomStore.getState()
-    const roomId = room.room_id
+    const roomId = useRoomStore.getState().room.room_id
 
     useMessageStore.getState().registerEmitSend((roomId, message, vectorClock) => {
         // console.log("RoomID:", roomId)
@@ -43,14 +42,15 @@ const registerMessageHandler = () => {
     })
     
     socket.on(MESSAGE_EVENTS.RECEIVE_DM, async (data) => {
+        console.log("RECEIVED DM")
         const addMessage = useMessageStore.getState().addMessage
         const aesKey = useRoomStore.getState().aesKey
 
-        console.log(data)
 
         try {
+            console.log(aesKey)
             const decryptedContent = await decryptMessage(aesKey, data.content, data.iv)
-
+            console.log(decryptedContent)
             addMessage({
                 roomId, 
                 message: {

@@ -116,7 +116,6 @@ const MessageSection = () => {
             },
             time: Date.now()
         }
-        console.log("msgToSend", msgToSend)
         setMessage("")
         messageRef.current = ""
 

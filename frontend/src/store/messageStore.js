@@ -64,6 +64,7 @@ const useMessageStore = create(
 
         //Send the message 
         sendMessage: (roomId, message, vectorClock) => {
+            console.log("Send message called")
             const {emitSend} = get()
             if (emitSend) {
                 emitSend(roomId, message, vectorClock)
@@ -72,11 +73,12 @@ const useMessageStore = create(
 
         //This function firstly merges the vector clock of the sender with the user and then uses the inserInCasualOrder function to insert the msg at the correct index
         addMessage: ({roomId, message}) => {
+            console.log("ADDMESSAGE CAlled")
             set((state) => {
                 const existing = get().messages[roomId] || []
                 const userId = useAuthStore.getState().user?.id
-
-                if (message.userId !== userId) {
+                console.log(message)
+                if (message.sender.id !== userId) {
                     get().mergeClock(message.vectorClock || {})
                 }
 

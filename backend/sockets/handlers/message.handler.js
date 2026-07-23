@@ -63,7 +63,7 @@ const registerMessageHandler = async(io, socket) => {
                 vectorClock: data.vectorClock
 
             }
-            const sockets = await io.in(roomId).fetchSockets()
+            const sockets = await io.in(data.roomId).fetchSockets()
             const receiverSocket = sockets.find(s => s.userId === data.message.receiver.id)
 
 
