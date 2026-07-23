@@ -52,7 +52,7 @@ const LogIn = ({onSwitch}) => {
         }
 
         ({publicKey, privateKey} =  await generateKeyPair())
-        localStorage.setItem("privateKey", privateKey)
+        sessionStorage.setItem("privateKey", privateKey)
 
 
         const payload = {

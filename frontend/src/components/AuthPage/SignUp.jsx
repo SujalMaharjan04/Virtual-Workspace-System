@@ -60,7 +60,7 @@ const SignUp = ({onSwitch}) => {
         if (Object.keys(newErrors).length === 0) {
             const {publicKey, privateKey} = await generateKeyPair()
 
-            localStorage.setItem("privateKey", privateKey)
+            sessionStorage.setItem("privateKey", privateKey)
 
             if (!publicKey) return 
             
