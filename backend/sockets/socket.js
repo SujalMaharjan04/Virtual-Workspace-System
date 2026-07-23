@@ -15,7 +15,7 @@ let io
 const initializeServer = (server) => {
     io = new Server(server, {
         cors: {
-            origin: "http://192.168.1.17:5173",
+            origin: `${config.FRONTEND}`,
             methods: ["GET", "POST"],
             credentials: true
         },

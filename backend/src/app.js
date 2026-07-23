@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors')
+const config = require('./../utils/config')
 const path = require('path')
 const {initializeServer} = require('../sockets/socket')
 const http = require('http')
@@ -14,8 +15,9 @@ const avatarRouter = require('../modules/avatar/avatarRoutes')
 const app = express()
 const server = http.createServer(app)
 app.use(express.json())
+
 app.use(cors({
-    origin: 'http://192.168.1.17:5173',
+    origin: `${config.FRONTEND}`,
     credentials: true
 }))
 app.use(express.static(path.resolve('./public')))

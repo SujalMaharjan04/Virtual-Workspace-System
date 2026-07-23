@@ -8,5 +8,7 @@ const DIRECT_URL = process.env.DIRECT_URL
 
 const PORT = process.env.PORT
 
+const FRONTEND = process.env.FRONTEND
 
-module.exports = {SECRET, DATABASE_URL, DIRECT_URL, PORT}
+
+module.exports = {SECRET, DATABASE_URL, DIRECT_URL, PORT, FRONTEND}
