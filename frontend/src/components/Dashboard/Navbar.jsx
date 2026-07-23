@@ -4,6 +4,8 @@ import Togglable from "../Shared/Togglable"
 import RoomForm from "../Room/RoomForm"
 import roomService from '../../services/room'
 import useRoomStore from "../../store/roomStore"
+import {HiOutlineUser} from "react-icons/hi2"
+import useAuthStore from "../../store/authStore"
 
 const Navbar = () => {
     const joinToggleRef = useRef()
@@ -120,6 +122,12 @@ const Navbar = () => {
         })
     }
 
+    const handleLogout = () => {
+        const logout = useAuthStore.getState().logout
+        logout()
+        navigate("/auth")
+    }
+
 
     return (
         <div className = "flex justify-between items-start m-6">
@@ -133,6 +141,7 @@ const Navbar = () => {
                 <Togglable ref = {newToggleRef} buttonClass = "roomButton" buttonLabel = "New +" isOpen = {activeModal === 'new'} onOpen = {() => setActiveModal("new")} onClose = {() => setActiveModal(null)}>
                     <RoomForm topic = "Create A Room" name1 = "roomName" label1 = "Room Name" input1 = {newRoom.roomName} error1 = {error.roomName} error2 = {error.password} input2 = {newRoom.password} handleInput = {handleNew} handleSubmit = {handleNewSubmit} />
                 </Togglable>
+                <button onClick={handleLogout} className = "bg-red-500 px-6 h-12 rounded-2xl hover:cursor-pointer hover:bg-red-700">Logout</button>
             </div>
         </div>
     )
