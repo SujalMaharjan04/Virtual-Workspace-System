@@ -38,7 +38,7 @@ const initializeServer = (server) => {
 
         //When the user leaves the room
         socket.on("disconnect", async() => {
-            registerDisconnectHandler(io, socket)
+            await registerDisconnectHandler(io, socket)
         })
     }) 
 

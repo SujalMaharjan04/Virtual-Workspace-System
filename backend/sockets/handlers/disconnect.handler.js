@@ -33,6 +33,12 @@ const registerDisconnectHandler = async(io, socket) => {
                 where: {room_id: roomId},
                 data: {is_active: false}
             })
+
+            await prisma.messages.deleteMany({
+                where: {
+                    room_id: roomId
+                }
+            })
         }
 
         
