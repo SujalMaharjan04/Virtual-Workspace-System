@@ -59,4 +59,18 @@ const loginService = async({email, password, publicKey}) => {
     }
 }
 
-module.exports = {signUpService, loginService}
+const logoutService = async(userId) => {
+    try {
+        const user = await prisma.user.findUnique({where: {user_id: userId}})
+
+        if (!user) throw new Error("User Not Found")
+
+        const userInfo = await prisma.user.update({where: {user_id: userId}, data: {status: offline }})
+        console.log(userInfo)
+    }
+    catch (err) {
+        throw err
+    }
+}
+
+module.exports = {signUpService, loginService, logoutService}
