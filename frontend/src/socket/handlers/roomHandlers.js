@@ -1,14 +1,16 @@
 import { getSocket } from "../index"
 import {MESSAGE_EVENTS, ROOM_EVENTS} from "../events"
 import useNotificationStore from "../../store/notificationStore"
-import { getActiveScene } from "../../game/scene/SceneRegistry"
+import { getActiveScene, setActiveScene } from "../../game/scene/SceneRegistry"
 import useAuthStore from "../../store/authStore"
 import useAvatarStore from "../../store/avatarStore"
 import useRoomStore from "../../store/roomStore"
 import { decryptAESKey, encryptAESKey, generateAESkey } from "../../utils/AESkey"
 import useTaskStore from "../../store/taskStore"
+import {saveAESKey, loadAESKey} from "../../utils/indexedDb"
 
 const registerRoomHandler = () => {
+
     const socket = getSocket()
 
 
@@ -22,7 +24,11 @@ const registerRoomHandler = () => {
         useNotificationStore.getState().setNotification(data.message, "success")
 
         if (isAdmin) {
-            const aesKey = await generateAESkey()
+            let aesKey = await loadAESKey(room.room_id)
+            if (!aesKey) {
+                aesKey = await generateAESkey()
+                await saveAESKey(room.room_id, aesKey)
+            }
             useRoomStore.getState().setAESKey(aesKey)
         }
     }
@@ -85,7 +91,7 @@ const registerRoomHandler = () => {
 
     socket.on(ROOM_EVENTS.RECEIVE_AES_KEY, async(encryptedKey) => {
         
-        let  privateKey = localStorage.getItem("privateKey")
+        let  privateKey = sessionStorage.getItem("privateKey")
         privateKey = Uint8Array.from(atob(privateKey), c => c.charCodeAt(0)).buffer
         
         privateKey = await window.crypto.subtle.importKey(
@@ -100,6 +106,8 @@ const registerRoomHandler = () => {
         useRoomStore.getState().setAESKey(key)
         const {room} = useRoomStore.getState()
         const roomId = room.room_id
+        const aesKey = useRoomStore.getState().aesKey
+        console.log(aesKey)
         socket.emit(MESSAGE_EVENTS.LOAD_HISTORY, {roomId})
     })
 

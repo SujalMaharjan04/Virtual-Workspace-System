@@ -24,6 +24,7 @@ const encryptAESKey = async(aesKey, userPublicKey) => {
 }
 
 const decryptAESKey = async(encryptedAESKey, privateKey) => {
+    console.log(encryptAESKey)
     const encryptedBuffer = Uint8Array.from(
         atob(encryptedAESKey), c => c.charCodeAt(0)
     ).buffer
