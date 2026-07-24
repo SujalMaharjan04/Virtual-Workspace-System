@@ -65,9 +65,9 @@ const RoomCard = ({id, name, maxCapacity}) => {
     }
 
     return (
-        <div className = "bg-[#1A1D2E] flex flex-col justify-start items-start p-4 h-48 w-full gap-6 rounded-2xl">
-            <div>
-                <h1 className = "font-bold text-2xl">{name}</h1>
+        <div className = "bg-[#1A1D2E] flex flex-col justify-start items-start p-4 h-48 w-80 min-w-0 gap-6 rounded-2xl">
+            <div className = "w-full min-w-0">
+                <h1 className = "font-bold text-2xl truncate" title = {name}>{name}</h1>
             </div>
 
             <div className = "px-2">

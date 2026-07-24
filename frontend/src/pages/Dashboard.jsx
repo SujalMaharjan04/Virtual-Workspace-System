@@ -3,16 +3,16 @@ import useAuthStore from "../store/authStore"
 import useRoomStore from "../store/roomStore"
 import RoomCard from "../components/Dashboard/RoomCard"
 import roomService from "../services/room"
-import { jwtDecode } from "jwt-decode"
+
 
 import Navbar from "../components/Dashboard/Navbar"
 const DashBoard = () => {
     const user = useAuthStore(state => state.user)
     const token = useAuthStore(state => state.token)
     const rooms = useRoomStore(state => state.rooms)
-    const roomToken = useRoomStore(state => state.token)
+
     const setRooms = useRoomStore(state => state.setRooms)
-    const leave = useRoomStore(state => state.leave)
+
 
 
     // useEffect(() => {
@@ -75,7 +75,7 @@ const DashBoard = () => {
                     </div>
 
                     {rooms && rooms.length > 0
-                    ? <div className = "flex justify-around items-center w-full gap-6">
+                    ? <div className = "flex flex-wrap justify-start items-start gap-6 w-full">
                         {rooms.map(r => (
                             <RoomCard name = {r.room_name} key = {r.id} maxCapacity = {r.max_capacity} id = {r.room_id} />
                         ))}
